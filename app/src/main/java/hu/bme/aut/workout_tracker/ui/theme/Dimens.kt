@@ -17,7 +17,9 @@ data class WorkoutTrackerDimens(
     val gapLarge: Dp = 24.dp,
     val gapVeryLarge: Dp = 32.dp,
     val gapVeryVeryLarge: Dp = 56.dp,
-    val gapExtraLarge: Dp = 64.dp
+    val gapExtraLarge: Dp = 64.dp,
+
+    val settingsImageSize: Dp = 200.dp,
 )
 
 val MaterialTheme.workoutTrackerDimens: WorkoutTrackerDimens

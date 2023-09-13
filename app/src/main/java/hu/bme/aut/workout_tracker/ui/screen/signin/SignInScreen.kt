@@ -20,7 +20,10 @@ import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
 @Composable
-fun SignInScreen() {
+fun SignInScreen(
+    onSignInClick: () -> Unit,
+    onRegistrateClick: () -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -54,7 +57,7 @@ fun SignInScreen() {
                     .padding(bottom = MaterialTheme.workoutTrackerDimens.gapLarge)
             )
             TextButton(
-                onClick = { },
+                onClick = { onRegistrateClick() },
             ) {
                 Text(
                     text = "Registrate",
@@ -62,7 +65,7 @@ fun SignInScreen() {
             }
         }
         Button(
-            onClick = { },
+            onClick = { onSignInClick() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = MaterialTheme.workoutTrackerDimens.gapNormal),

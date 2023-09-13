@@ -21,8 +21,15 @@ import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    onRegistrateClick: () -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
+    var firstName by rememberSaveable { mutableStateOf("") }
+    var lastName by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordAgain by rememberSaveable { mutableStateOf("") }
+
 
 
     Column(
@@ -50,32 +57,32 @@ fun RegistrationScreen() {
                 )
             )
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = firstName,
+                onValueChange = { firstName = it },
                 label = { Text(text = "First Name") },
                 modifier = Modifier.padding(
                     bottom = MaterialTheme.workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = lastName,
+                onValueChange = { lastName = it },
                 label = { Text(text = "Last Name") },
                 modifier = Modifier.padding(
                     bottom = MaterialTheme.workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = password,
+                onValueChange = { password = it },
                 label = { Text(text = "Password") },
                 modifier = Modifier.padding(
                     bottom = MaterialTheme.workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = passwordAgain,
+                onValueChange = { passwordAgain = it },
                 label = { Text(text = "Password Again") },
                 modifier = Modifier.padding(
                     bottom = MaterialTheme.workoutTrackerDimens.gapLarge
@@ -83,7 +90,7 @@ fun RegistrationScreen() {
             )
         }
         Button(
-            onClick = { },
+            onClick = { onRegistrateClick() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(

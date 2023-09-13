@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun RegistrationSuccessScreen(
@@ -21,7 +20,7 @@ fun RegistrationSuccessScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = MaterialTheme.workoutTrackerDimens.gapNormal),
+            .padding(horizontal = workoutTrackerDimens.gapNormal),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
@@ -32,18 +31,17 @@ fun RegistrationSuccessScreen(
             Text(
                 text = "Successful Registration",
                 modifier = Modifier.padding(
-                    top = MaterialTheme.workoutTrackerDimens.gapVeryLarge,
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    top = workoutTrackerDimens.gapVeryLarge,
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
         }
-        Button(
+        PrimaryButton(
             onClick = { onClick() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = MaterialTheme.workoutTrackerDimens.gapLarge)
-        ) {
-            Text(text = "Next")
-        }
+                .padding(bottom = workoutTrackerDimens.gapNormal),
+            text = "Next"
+        )
     }
 }

@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -18,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun SignInScreen(
@@ -30,7 +29,7 @@ fun SignInScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = MaterialTheme.workoutTrackerDimens.gapNormal),
+            .padding(horizontal = workoutTrackerDimens.gapNormal),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
@@ -40,21 +39,21 @@ fun SignInScreen(
         ) {
             Text(
                 text = "Sign In",
-                modifier = Modifier.padding(vertical = MaterialTheme.workoutTrackerDimens.gapVeryLarge)
+                modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
             )
             TextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(text = "Email") },
                 modifier = Modifier
-                    .padding(bottom = MaterialTheme.workoutTrackerDimens.gapLarge)
+                    .padding(bottom = workoutTrackerDimens.gapLarge)
             )
             TextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
                 modifier = Modifier
-                    .padding(bottom = MaterialTheme.workoutTrackerDimens.gapLarge)
+                    .padding(bottom = workoutTrackerDimens.gapLarge)
             )
             TextButton(
                 onClick = { onRegistrateClick() },
@@ -64,13 +63,12 @@ fun SignInScreen(
                 )
             }
         }
-        Button(
+        PrimaryButton(
             onClick = { onSignInClick() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = MaterialTheme.workoutTrackerDimens.gapNormal),
-        ) {
-            Text(text = "Sign In")
-        }
+                .padding(bottom = workoutTrackerDimens.gapNormal),
+            text = "Sign In"
+        )
     }
 }

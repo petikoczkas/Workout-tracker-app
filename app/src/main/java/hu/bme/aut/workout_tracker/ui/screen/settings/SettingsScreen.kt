@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -23,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun SettingsScreen(
@@ -33,7 +32,8 @@ fun SettingsScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(horizontal = workoutTrackerDimens.gapNormal),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
@@ -48,8 +48,8 @@ fun SettingsScreen(
             Card(
                 shape = CircleShape,
                 modifier = Modifier
-                    .size(MaterialTheme.workoutTrackerDimens.settingsImageSize)
-                    .padding(MaterialTheme.workoutTrackerDimens.gapNormal)
+                    .size(workoutTrackerDimens.settingsImageSize)
+                    .padding(workoutTrackerDimens.gapNormal)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_person),
@@ -62,18 +62,16 @@ fun SettingsScreen(
                 label = { Text(text = "Name") },
                 modifier = Modifier
                     .padding(
-                        vertical = MaterialTheme.workoutTrackerDimens.gapLarge,
-                        horizontal = MaterialTheme.workoutTrackerDimens.gapNormal
+                        vertical = workoutTrackerDimens.gapLarge,
                     )
             )
         }
-        Button(
+        PrimaryButton(
             onClick = { onClick() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(MaterialTheme.workoutTrackerDimens.gapNormal),
-        ) {
-            Text(text = "Save")
-        }
+                .padding(bottom = workoutTrackerDimens.gapNormal),
+            text = "Save"
+        )
     }
 }

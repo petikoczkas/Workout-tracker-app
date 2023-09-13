@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun RegistrationScreen(
@@ -35,7 +34,7 @@ fun RegistrationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = MaterialTheme.workoutTrackerDimens.gapNormal)
+            .padding(horizontal = workoutTrackerDimens.gapNormal)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -46,14 +45,14 @@ fun RegistrationScreen(
         ) {
             Text(
                 text = "Registration",
-                modifier = Modifier.padding(vertical = MaterialTheme.workoutTrackerDimens.gapVeryLarge)
+                modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
             )
             TextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(text = "Email") },
                 modifier = Modifier.padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
@@ -61,7 +60,7 @@ fun RegistrationScreen(
                 onValueChange = { firstName = it },
                 label = { Text(text = "First Name") },
                 modifier = Modifier.padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
@@ -69,7 +68,7 @@ fun RegistrationScreen(
                 onValueChange = { lastName = it },
                 label = { Text(text = "Last Name") },
                 modifier = Modifier.padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
@@ -77,7 +76,7 @@ fun RegistrationScreen(
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
                 modifier = Modifier.padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
             TextField(
@@ -85,19 +84,16 @@ fun RegistrationScreen(
                 onValueChange = { passwordAgain = it },
                 label = { Text(text = "Password Again") },
                 modifier = Modifier.padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapLarge
+                    bottom = workoutTrackerDimens.gapLarge
                 )
             )
         }
-        Button(
+        PrimaryButton(
             onClick = { onRegistrateClick() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    bottom = MaterialTheme.workoutTrackerDimens.gapNormal
-                ),
-        ) {
-            Text(text = "Registrate")
-        }
+                .padding(bottom = workoutTrackerDimens.gapNormal),
+            text = "Registrate"
+        )
     }
 }

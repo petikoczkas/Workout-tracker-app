@@ -9,7 +9,7 @@ import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsScreen
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeScreen
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsScreen
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingsScreen
-import hu.bme.aut.workout_tracker.ui.screen.workout.WorkoutScreen
+import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
@@ -26,7 +26,7 @@ fun MainNavGraph(navController: NavHostController) {
             )
         }
         composable(route = BottomBarScreen.Workout.route) {
-            WorkoutScreen()
+            YourWorkoutsScreen()
         }
         composable(route = BottomBarScreen.Charts.route) {
             ChartsScreen()

@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import hu.bme.aut.workout_tracker.ui.navigation.RootNavigationGraph
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
 import hu.bme.aut.workout_tracker.ui.theme.WorkoutTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +20,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RootNavigationGraph(navController = rememberNavController())
+                    //RootNavigationGraph(navController = rememberNavController())
+                    WorkoutScreen()
                 }
             }
         }

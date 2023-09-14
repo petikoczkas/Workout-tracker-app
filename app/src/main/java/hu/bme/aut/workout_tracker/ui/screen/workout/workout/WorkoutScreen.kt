@@ -16,70 +16,92 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
 import hu.bme.aut.workout_tracker.ui.view.table.TableRow
 import hu.bme.aut.workout_tracker.ui.view.table.TextTableCell
 
 @Composable
-fun WorkoutScreen() {
+fun WorkoutScreen(
+    onSaveClick: () -> Unit,
+    onSwitchExerciseClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = workoutTrackerDimens.gapNormal),
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Exercise Name")
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = workoutTrackerDimens.gapSmall),
-                ) {
-                    TextTableCell(text = "Sets", weight = 2f)
-                    TextTableCell(text = "Weight (kg)", weight = 3f)
-                    TextTableCell(text = "", weight = 1f)
-                    TextTableCell(text = "Reps", weight = 2f)
-                }
-            }
-            item {
-                TableRow(
-                    set = "1.",
-                    weight = "10",
-                    onWeightChange = {},
-                    reps = "10",
-                    onRepsChange = {}
-                )
-                TableRow(
-                    set = "2.",
-                    weight = "100",
-                    onWeightChange = {},
-                    reps = "10",
-                    onRepsChange = {}
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_remove),
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_add),
-                            contentDescription = null
-                        )
+            Text("Exercise Name")
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = workoutTrackerDimens.gapSmall),
+                    ) {
+                        TextTableCell(text = "Sets", weight = 2f)
+                        TextTableCell(text = "Weight (kg)", weight = 3f)
+                        TextTableCell(text = "", weight = 1f)
+                        TextTableCell(text = "Reps", weight = 2f)
                     }
                 }
+                item {
+                    TableRow(
+                        set = "1.",
+                        weight = "10",
+                        onWeightChange = {},
+                        reps = "10",
+                        onRepsChange = {}
+                    )
+                    TableRow(
+                        set = "2.",
+                        weight = "100",
+                        onWeightChange = {},
+                        reps = "10",
+                        onRepsChange = {}
+                    )
+                }
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_remove),
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_add),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
             }
+            SecondaryButton(
+                onClick = onSwitchExerciseClick,
+                text = "Switch Exercise"
+            )
         }
+        PrimaryButton(
+            onClick = onSaveClick,
+            text = "Save",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = workoutTrackerDimens.gapNormal)
+        )
     }
 }

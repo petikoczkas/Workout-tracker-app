@@ -19,9 +19,16 @@ data class WorkoutTrackerDimens(
     val gapExtraLarge: Dp = 64.dp,
 
     val settingsImageSize: Dp = 200.dp,
+    val settingsImageContentSize: Dp = 150.dp,
 
     val minButtonHeight: Dp = 45.dp,
     val primaryButtonCornerSize: Dp = 16.dp,
+
+    val minWorkoutCardHeight: Dp = 100.dp,
+    val minFavWorkoutCardHeight: Dp = 72.dp,
+    val workoutCardCornerSize: Dp = 12.dp,
+
+    val minUserCardHeight: Dp = 56.dp,
 )
 
 val workoutTrackerDimens: WorkoutTrackerDimens

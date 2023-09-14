@@ -30,14 +30,14 @@ fun WorkoutCompleteScreen(
             verticalArrangement = Arrangement.Center
         ) {
             PrimaryButton(
-                onClick = { onAddExerciseClick() },
+                onClick = onAddExerciseClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = workoutTrackerDimens.gapNormal),
                 text = "Add Exercise"
             )
             PrimaryButton(
-                onClick = { onEndWorkoutClick() },
+                onClick = onEndWorkoutClick,
                 modifier = Modifier.fillMaxWidth(),
                 text = "End Workout"
             )

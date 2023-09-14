@@ -22,7 +22,7 @@ import hu.bme.aut.workout_tracker.ui.navigation.BottomBarScreen
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.Workout,
+        BottomBarScreen.YourWorkouts,
         BottomBarScreen.Charts,
         BottomBarScreen.Standings
     )

@@ -9,6 +9,10 @@ import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsScreen
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeScreen
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsScreen
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingsScreen
+import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseScreen
+import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutScreen
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
+import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompleteScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 
 @Composable
@@ -20,13 +24,20 @@ fun MainNavGraph(navController: NavHostController) {
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
+                onWorkoutClick = {
+                    navController.navigate(Content.Workout.route)
+                },
                 onSettingsClick = {
                     navController.navigate(Content.Settings.route)
                 }
             )
         }
-        composable(route = BottomBarScreen.Workout.route) {
-            YourWorkoutsScreen()
+        composable(route = BottomBarScreen.YourWorkouts.route) {
+            YourWorkoutsScreen(
+                onAddClick = {
+                    navController.navigate(Content.EditWorkout.route)
+                }
+            )
         }
         composable(route = BottomBarScreen.Charts.route) {
             ChartsScreen()
@@ -44,6 +55,32 @@ fun MainNavGraph(navController: NavHostController) {
                 }
             )
         }
+        composable(route = Content.Workout.route) {
+            WorkoutScreen(
+                onSaveClick = {
+                    navController.navigate(Content.WorkoutComplete.route)
+                },
+                onSwitchExerciseClick = {
+                    navController.navigate(Content.AddExercise.route)
+                }
+            )
+        }
+        composable(route = Content.WorkoutComplete.route) {
+            WorkoutCompleteScreen(
+                onAddExerciseClick = {
+                    navController.navigate(Content.AddExercise.route)
+                },
+                onEndWorkoutClick = {
+                    navController.navigate(BottomBarScreen.Home.route)
+                }
+            )
+        }
+        composable(route = Content.EditWorkout.route) {
+            EditWorkoutScreen()
+        }
+        composable(route = Content.AddExercise.route) {
+            AddExerciseScreen()
+        }
     }
 }
 
@@ -55,8 +92,8 @@ sealed class BottomBarScreen(
     data object Home :
         BottomBarScreen(route = "HOME", title = "HOME", icon = R.drawable.ic_home)
 
-    data object Workout :
-        BottomBarScreen(route = "WORKOUT", title = "WORKOUT", icon = R.drawable.ic_workout)
+    data object YourWorkouts :
+        BottomBarScreen(route = "YOUR_WORKOUTS", title = "WORKOUT", icon = R.drawable.ic_workout)
 
     data object Charts :
         BottomBarScreen(route = "CHARTS", title = "CHARTS", icon = R.drawable.ic_charts)
@@ -67,4 +104,8 @@ sealed class BottomBarScreen(
 
 sealed class Content(val route: String) {
     data object Settings : Content(route = "SETTINGS")
+    data object Workout : Content(route = "WORKOUT")
+    data object WorkoutComplete : Content(route = "WORKOUT_COMPLETE")
+    data object EditWorkout : Content(route = "EDIT_WORKOUT")
+    data object AddExercise : Content(route = "ADD_EXERCISE")
 }

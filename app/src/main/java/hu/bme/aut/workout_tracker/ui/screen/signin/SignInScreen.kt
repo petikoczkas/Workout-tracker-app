@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
 
 @Composable
 fun SignInScreen(
@@ -55,16 +55,13 @@ fun SignInScreen(
                 modifier = Modifier
                     .padding(bottom = workoutTrackerDimens.gapLarge)
             )
-            TextButton(
-                onClick = { onRegistrateClick() },
-            ) {
-                Text(
-                    text = "Registrate",
-                )
-            }
+            SecondaryButton(
+                onClick = onRegistrateClick,
+                text = "Registrate"
+            )
         }
         PrimaryButton(
-            onClick = { onSignInClick() },
+            onClick = onSignInClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = workoutTrackerDimens.gapNormal),

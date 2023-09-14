@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.card.FavWorkoutCard
 
 @Composable
 fun HomeScreen(
+    onWorkoutClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Column(
@@ -27,14 +29,8 @@ fun HomeScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
-            IconButton(onClick = { }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_logout),
-                    contentDescription = null
-                )
-            }
             IconButton(onClick = { onSettingsClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_settings),
@@ -43,5 +39,11 @@ fun HomeScreen(
             }
         }
         Text("Home")
+        FavWorkoutCard(
+            name = "Name of the workout",
+            exerciseNum = 8,
+            onClick = onWorkoutClick,
+            modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
+        )
     }
 }

@@ -2,6 +2,7 @@ package hu.bme.aut.workout_tracker.ui.screen.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -42,6 +44,18 @@ fun SettingsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = { }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        contentDescription = null
+                    )
+                }
+            }
             Text(
                 text = "Settings",
             )
@@ -54,6 +68,9 @@ fun SettingsScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_person),
                     contentDescription = null,
+                    modifier = Modifier
+                        .size(workoutTrackerDimens.settingsImageContentSize)
+                        .align(Alignment.CenterHorizontally),
                 )
             }
             TextField(

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.view.card.UserCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +54,7 @@ fun StandingsScreen() {
 
         ExposedDropdownMenuBox(
             expanded = expanded,
+            modifier = Modifier.padding(bottom = workoutTrackerDimens.gapNormal),
             onExpandedChange = {
                 expanded = !expanded
             }
@@ -103,5 +105,6 @@ fun StandingsScreen() {
                 }
             }
         }
+        UserCard()
     }
 }

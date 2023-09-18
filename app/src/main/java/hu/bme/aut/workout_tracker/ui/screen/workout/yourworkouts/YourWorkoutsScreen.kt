@@ -16,7 +16,9 @@ import hu.bme.aut.workout_tracker.ui.view.card.WorkoutCard
 
 @Composable
 fun YourWorkoutsScreen(
-    onAddClick: () -> Unit
+    onWorkoutClick: () -> Unit,
+    onWorkoutEditClick: () -> Unit,
+    onCreateWorkoutClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -33,12 +35,12 @@ fun YourWorkoutsScreen(
             WorkoutCard(
                 name = "Name of the workout",
                 exerciseNum = 8,
-                onClick = { /*TODO*/ },
-                onEditClick = { /*TODO*/ },
+                onClick = onWorkoutClick,
+                onEditClick = onWorkoutEditClick,
                 onFavClick = { /*TODO*/ })
         }
         AddButton(
-            onClick = onAddClick,
+            onClick = onCreateWorkoutClick,
             text = "Create Workout",
             modifier = Modifier
                 .fillMaxWidth()

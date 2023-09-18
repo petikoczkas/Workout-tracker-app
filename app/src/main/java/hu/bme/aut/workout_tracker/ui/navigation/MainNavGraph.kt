@@ -34,7 +34,13 @@ fun MainNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.YourWorkouts.route) {
             YourWorkoutsScreen(
-                onAddClick = {
+                onWorkoutClick = {
+                    navController.navigate(Content.Workout.route)
+                },
+                onWorkoutEditClick = {
+                    navController.navigate(Content.EditWorkout.route)
+                },
+                onCreateWorkoutClick = {
                     navController.navigate(Content.EditWorkout.route)
                 }
             )
@@ -76,7 +82,11 @@ fun MainNavGraph(navController: NavHostController) {
             )
         }
         composable(route = Content.EditWorkout.route) {
-            EditWorkoutScreen()
+            EditWorkoutScreen(
+                onAddExerciseClick = {
+                    navController.navigate(Content.AddExercise.route)
+                }
+            )
         }
         composable(route = Content.AddExercise.route) {
             AddExerciseScreen()

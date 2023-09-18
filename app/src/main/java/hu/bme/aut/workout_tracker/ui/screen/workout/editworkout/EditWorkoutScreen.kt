@@ -9,17 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
+import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 
 @Composable
-fun EditWorkoutScreen() {
+fun EditWorkoutScreen(
+    onAddExerciseClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = workoutTrackerDimens.gapNormal),
     ) {
         Text("Workout Name")
+        ExerciseCard(
+            text = "Barbell Bench Press"
+        )
         AddButton(
-            onClick = { /*TODO*/ },
+            onClick = onAddExerciseClick,
             text = "Add Exercise",
             modifier = Modifier.fillMaxWidth()
         )

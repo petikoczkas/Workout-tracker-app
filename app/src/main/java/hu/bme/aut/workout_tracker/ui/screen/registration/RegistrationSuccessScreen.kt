@@ -14,7 +14,7 @@ import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun RegistrationSuccessScreen(
-    onClick: () -> Unit
+    navigateToHome: () -> Unit
 ) {
 
     Column(
@@ -37,11 +37,11 @@ fun RegistrationSuccessScreen(
             )
         }
         PrimaryButton(
-            onClick = { onClick() },
+            onClick = { navigateToHome() },
+            text = "Next",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = workoutTrackerDimens.gapNormal),
-            text = "Next"
+                .padding(bottom = workoutTrackerDimens.gapNormal)
         )
     }
 }

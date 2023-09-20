@@ -5,5 +5,5 @@ object Constants {
     const val EXERCISE_COLLECTION = "exercise"
     const val WORKOUT_COLLECTION = "workout"
     const val PICTURE_FOLDER = "profilePicture"
-
+    const val NAME_PROPERTY = "name"
 }

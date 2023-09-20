@@ -1,5 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.screen.signin
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,64 +9,91 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
+import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
+import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
 
 @Composable
 fun SignInScreen(
-    onSignInClick: () -> Unit,
-    onRegistrateClick: () -> Unit
+    navigateToHome: () -> Unit,
+    navigateToRegistration: () -> Unit,
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = workoutTrackerDimens.gapNormal),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    val signInFailedEvent by viewModel.signInFailedEvent.collectAsState()
 
-        ) {
-            Text(
-                text = "Sign In",
-                modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
-            )
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(text = "Email") },
+    when (uiState) {
+
+        is SignInLoaded -> {
+            Column(
                 modifier = Modifier
-                    .padding(bottom = workoutTrackerDimens.gapLarge)
-            )
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(text = "Password") },
-                modifier = Modifier
-                    .padding(bottom = workoutTrackerDimens.gapLarge)
-            )
-            SecondaryButton(
-                onClick = onRegistrateClick,
-                text = "Registrate"
-            )
+                    .fillMaxSize()
+                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+                    Text(
+                        text = "Sign In",
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
+                    TextField(
+                        value = (uiState as SignInLoaded).email,
+                        onValueChange = viewModel::onEmailChange,
+                        label = { Text(text = "Email") },
+                        modifier = Modifier
+                            .padding(bottom = workoutTrackerDimens.gapLarge)
+                    )
+                    TextField(
+                        value = (uiState as SignInLoaded).password,
+                        onValueChange = viewModel::onPasswordChange,
+                        label = { Text(text = "Password") },
+                        modifier = Modifier
+                            .padding(bottom = workoutTrackerDimens.gapLarge)
+                    )
+                    SecondaryButton(
+                        onClick = navigateToRegistration,
+                        text = "Registrate"
+                    )
+                }
+                PrimaryButton(
+                    onClick = { viewModel.buttonOnClick() },
+                    enabled = viewModel.isButtonEnabled(),
+                    text = "Sign In",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = workoutTrackerDimens.gapNormal)
+                )
+                if (signInFailedEvent.isLoginFailed) {
+                    Toast.makeText(
+                        LocalContext.current,
+                        signInFailedEvent.exception?.message.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.handledSignInFailedEvent()
+                }
+            }
         }
-        PrimaryButton(
-            onClick = onSignInClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = workoutTrackerDimens.gapNormal),
-            text = "Sign In"
-        )
+
+        SignInInit -> {
+            if (viewModel.isLoggedIn()) navigateToHome()
+        }
+
+        SignInSuccess -> {
+            navigateToHome()
+        }
     }
 }

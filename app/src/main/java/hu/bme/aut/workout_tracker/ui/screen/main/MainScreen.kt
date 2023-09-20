@@ -11,12 +11,16 @@ import hu.bme.aut.workout_tracker.ui.view.bottombar.BottomBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
+    mainNavController: NavHostController,
     navController: NavHostController = rememberNavController()
 ) {
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        MainNavGraph(navController = navController)
+        MainNavGraph(
+            mainNavController = mainNavController,
+            navController = navController
+        )
     }
 }

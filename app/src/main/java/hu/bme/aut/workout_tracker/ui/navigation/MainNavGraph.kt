@@ -1,5 +1,7 @@
 package hu.bme.aut.workout_tracker.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,11 +18,16 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompl
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(
+    mainNavController: NavHostController,
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomBarScreen.Home.route,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
@@ -56,8 +63,15 @@ fun MainNavGraph(navController: NavHostController) {
         }
         composable(route = Content.Settings.route) {
             SettingsScreen(
-                onClick = {
+                navigateBack = {
                     navController.navigate(BottomBarScreen.Home.route)
+                },
+                signOut = {
+                    mainNavController.navigate(AuthScreen.SignIn.route) {
+                        popUpTo(Graph.ROOT) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

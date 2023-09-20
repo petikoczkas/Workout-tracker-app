@@ -1,5 +1,7 @@
 package hu.bme.aut.workout_tracker.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,11 +13,13 @@ fun RootNavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
-        startDestination = Graph.AUTHENTICATION
+        startDestination = Graph.AUTHENTICATION,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
         authNavGraph(navController = navController)
         composable(route = Graph.MAIN) {
-            MainScreen()
+            MainScreen(mainNavController = navController)
         }
     }
 }

@@ -2,7 +2,9 @@ package hu.bme.aut.workout_tracker.ui
 
 import android.net.Uri
 import hu.bme.aut.workout_tracker.data.WorkoutTrackerInteractor
+import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import javax.inject.Inject
 
 class WorkoutTrackerPresenter @Inject constructor(
@@ -63,5 +65,17 @@ class WorkoutTrackerPresenter @Inject constructor(
             imageUri = imageUri,
             onSuccess = onSuccess
         )
+    }
+
+    fun getExercises() = workoutTrackerInteractor.getExercises()
+
+    fun getUserWorkouts(user: User) = workoutTrackerInteractor.getUserWorkouts(user = user)
+
+    suspend fun createExercise(exercise: Exercise) {
+        workoutTrackerInteractor.createExercise(exercise = exercise)
+    }
+
+    suspend fun updateWorkout(workout: Workout) {
+        workoutTrackerInteractor.updateWorkout(workout = workout)
     }
 }

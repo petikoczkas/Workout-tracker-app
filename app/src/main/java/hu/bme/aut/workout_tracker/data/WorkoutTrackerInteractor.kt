@@ -4,7 +4,9 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.service.FirebaseAuthService
 import hu.bme.aut.workout_tracker.service.FirebaseStorageService
 import hu.bme.aut.workout_tracker.utils.Constants.PICTURE_FOLDER
@@ -104,6 +106,30 @@ class WorkoutTrackerInteractor @Inject constructor() {
             userId = userId,
             imageUri = imageUri,
             onSuccess = onSuccess
+        )
+    }
+
+    fun getExercises() = FirebaseStorageService.getExercises(
+        firebaseFirestore = firebaseFirestore
+    )
+
+    fun getUserWorkouts(user: User) =
+        FirebaseStorageService.getUserWorkouts(
+            firebaseFirestore = firebaseFirestore,
+            user = user
+        )
+
+    suspend fun createExercise(exercise: Exercise) {
+        FirebaseStorageService.createExercise(
+            firebaseFirestore = firebaseFirestore,
+            exercise = exercise
+        )
+    }
+
+    suspend fun updateWorkout(workout: Workout) {
+        FirebaseStorageService.updateWorkout(
+            firebaseFirestore = firebaseFirestore,
+            workout = workout
         )
     }
 }

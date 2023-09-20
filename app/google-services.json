@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623120387012",
+    "project_id": "workout-tracker-e64a3",
+    "storage_bucket": "workout-tracker-e64a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623120387012:android:208c98d91b39e8c538f291",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.workout_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByZyVP45ByUgxRhMvaEvWG5dfdYBCgDzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

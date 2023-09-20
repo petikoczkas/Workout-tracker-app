@@ -5,8 +5,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
+import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.utils.Constants.EXERCISE_COLLECTION
+import hu.bme.aut.workout_tracker.utils.Constants.NAME_PROPERTY
 import hu.bme.aut.workout_tracker.utils.Constants.USER_COLLECTION
+import hu.bme.aut.workout_tracker.utils.Constants.WORKOUT_COLLECTION
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 object FirebaseStorageService {
@@ -62,5 +70,78 @@ object FirebaseStorageService {
                     onSuccess(it.toString())
                 }
             }.await()
+    }
+
+    fun getExercises(
+        firebaseFirestore: FirebaseFirestore,
+    ): Flow<List<Exercise>> {
+        return callbackFlow {
+            val listener = firebaseFirestore.collection(EXERCISE_COLLECTION)
+                .orderBy(NAME_PROPERTY, Query.Direction.ASCENDING)
+                .addSnapshotListener { value, e ->
+                    e?.let {
+                        return@addSnapshotListener
+                    }
+                    value?.let {
+                        val tmp = mutableListOf<Exercise>()
+                        for (d in it.documents) {
+                            d.toObject(Exercise::class.java)
+                                ?.let { doc -> tmp.add(doc) }
+                        }
+                        trySend(tmp.toList())
+                    }
+                }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
+    fun getUserWorkouts(
+        firebaseFirestore: FirebaseFirestore,
+        user: User
+    ): Flow<List<Workout>> {
+        return callbackFlow {
+            val listener = firebaseFirestore.collection(WORKOUT_COLLECTION)
+                .addSnapshotListener { value, e ->
+                    e?.let {
+                        return@addSnapshotListener
+                    }
+                    value?.let {
+                        val tmp = mutableListOf<Workout>()
+                        for (d in it.documents) {
+                            for (wId in user.workouts) {
+                                if (wId == d.id) {
+                                    d.toObject(Workout::class.java)?.let { doc ->
+                                        tmp.add(doc)
+                                    }
+                                }
+                            }
+                        }
+                        trySend(tmp.toList())
+                    }
+                }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
+    suspend fun createExercise(
+        firebaseFirestore: FirebaseFirestore,
+        exercise: Exercise
+    ) {
+        firebaseFirestore.collection(EXERCISE_COLLECTION).document(exercise.id).set(exercise)
+            .await()
+    }
+
+    suspend fun updateWorkout(
+        firebaseFirestore: FirebaseFirestore,
+        workout: Workout
+    ) {
+        if (workout.exercises.isEmpty()) firebaseFirestore.collection(WORKOUT_COLLECTION)
+            .document(workout.id).delete().await()
+        else firebaseFirestore.collection(WORKOUT_COLLECTION).document(workout.id).set(workout)
+            .await()
     }
 }

@@ -31,10 +31,10 @@ fun MainNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
-                onWorkoutClick = {
+                navigateToWorkout = {
                     navController.navigate(Content.Workout.route)
                 },
-                onSettingsClick = {
+                navigateToSettings = {
                     navController.navigate(Content.Settings.route)
                 }
             )

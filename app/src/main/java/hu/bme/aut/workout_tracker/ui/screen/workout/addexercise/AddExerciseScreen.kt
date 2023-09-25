@@ -5,64 +5,95 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
+import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
+import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseSaved
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
-import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
+import hu.bme.aut.workout_tracker.ui.view.dialog.AddExerciseDialog
+import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
 
 @Composable
 fun AddExerciseScreen(
-
+    viewModel: AddExerciseViewModel = hiltViewModel()
 ) {
-    var showDialog by remember { mutableStateOf(false) }
-    var exercise by rememberSaveable { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+    val exercises by viewModel.exercises.observeAsState()
 
-    if (showDialog) {
-        Dialog(onDismissRequest = { showDialog = false }) {
+    when (uiState) {
+        AddExerciseInit -> {
+            viewModel.getExercises()
+        }
+
+        is AddExerciseLoaded -> {
+            AddExerciseDialog(
+                newExercise = (uiState as AddExerciseLoaded).newExercise,
+                onNewExerciseChange = viewModel::onNewExerciseChange,
+                showDialog = (uiState as AddExerciseLoaded).showDialog,
+                onDismissRequest = viewModel::onShowDialogChange,
+                onSaveButtonClick = { }
+            )
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(workoutTrackerDimens.gapNormal),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                TextField(
-                    value = exercise,
-                    onValueChange = { exercise = it },
-                    label = { Text(text = "Name") },
-                )
-                PrimaryButton(
-                    onClick = { showDialog = false },
-                    text = "Save",
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+                    Text("Add Exercise")
+
+                    WorkoutTrackerDropDownMenu(
+                        selectedItem = (uiState as AddExerciseLoaded).selectedItem,
+                        onSelectedItemChange = viewModel::onSelectedItemChange
+                    )
+
+                    if (exercises == null) {
+                        //TODO("ProgressIndicator")
+                    } else {
+                        val categoryList = viewModel.getExercisesByCategory(exercises)
+                        LazyColumn(
+                            modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
+                        ) {
+                            if (categoryList.isEmpty()) {
+                                item {
+                                    Text(text = "You have no workouts")
+                                }
+                            } else {
+                                items(categoryList) { e ->
+                                    ExerciseCard(
+                                        text = e.name,
+                                        onClick = { }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                AddButton(
+                    onClick = { viewModel.onShowDialogChange(true) },
+                    text = "Create a custom exercise",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = workoutTrackerDimens.gapNormal)
+                        .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
             }
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = workoutTrackerDimens.gapNormal),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text("Add Exercise")
-        AddButton(
-            onClick = { showDialog = true },
-            text = "Create a custom exercise",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = workoutTrackerDimens.gapNormal)
-        )
+
+        AddExerciseSaved -> TODO()
     }
 }

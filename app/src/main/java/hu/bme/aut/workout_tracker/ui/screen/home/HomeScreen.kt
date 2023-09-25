@@ -33,6 +33,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val workouts by viewModel.workouts.observeAsState()
 
+    viewModel.getWorkouts()
     when (uiState) {
         HomeInit -> {
             viewModel.getWorkouts()
@@ -49,7 +50,7 @@ fun HomeScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = { navigateToSettings() }) {
+                    IconButton(onClick = navigateToSettings) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_settings),
                             contentDescription = null
@@ -65,7 +66,7 @@ fun HomeScreen(
                     ) {
                         if (workouts!!.isEmpty()) {
                             item {
-                                Text(text = "You have no workouts")
+                                Text(text = "You have no favorite workouts")
                             }
                         } else {
                             items(workouts!!) { w ->

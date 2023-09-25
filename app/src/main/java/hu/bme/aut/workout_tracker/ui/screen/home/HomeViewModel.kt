@@ -11,7 +11,6 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeLoaded
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,10 +34,9 @@ class HomeViewModel @Inject constructor(
     fun getWorkouts() {
         _uiState.value = HomeLoaded
         viewModelScope.launch {
-            delay(500)
             currentUser = workoutTrackerPresenter.getCurrentUser()
             withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getUserWorkouts(currentUser).collect {
+                workoutTrackerPresenter.getUserFavoriteWorkouts(currentUser).collect {
                     _workouts.postValue(it)
                 }
             }

@@ -127,6 +127,77 @@ object FirebaseStorageService {
         }
     }
 
+    fun getUserFavoriteWorkouts(
+        firebaseFirestore: FirebaseFirestore,
+        user: User
+    ): Flow<List<Workout>> {
+        return callbackFlow {
+            val listener = firebaseFirestore.collection(WORKOUT_COLLECTION)
+                .addSnapshotListener { value, e ->
+                    e?.let {
+                        return@addSnapshotListener
+                    }
+                    value?.let {
+                        val tmp = mutableListOf<Workout>()
+                        for (d in it.documents) {
+                            for (wId in user.favoriteWorkouts) {
+                                if (wId == d.id) {
+                                    d.toObject(Workout::class.java)?.let { doc ->
+                                        tmp.add(doc)
+                                    }
+                                }
+                            }
+                        }
+                        trySend(tmp.toList())
+                    }
+                }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
+    fun getWorkoutExercises(
+        firebaseFirestore: FirebaseFirestore,
+        workout: Workout
+    ): Flow<List<Exercise>> {
+        return callbackFlow {
+            val listener = firebaseFirestore.collection(EXERCISE_COLLECTION)
+                .addSnapshotListener { value, e ->
+                    e?.let {
+                        return@addSnapshotListener
+                    }
+                    value?.let {
+                        val tmp = mutableListOf<Exercise>()
+                        for (d in it.documents) {
+                            for (eId in workout.exercises) {
+                                if (eId == d.id) {
+                                    d.toObject(Exercise::class.java)?.let { doc ->
+                                        tmp.add(doc)
+                                    }
+                                }
+                            }
+                        }
+                        trySend(tmp.toList())
+                    }
+                }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
+    suspend fun getWorkout(
+        firebaseFirestore: FirebaseFirestore,
+        workoutId: String
+    ): Workout {
+        var wokrout = Workout()
+        firebaseFirestore.collection(WORKOUT_COLLECTION).get().await().map { document ->
+            if (document.id == workoutId) wokrout = document.toObject(Workout::class.java)
+        }
+        return wokrout
+    }
+
     suspend fun createExercise(
         firebaseFirestore: FirebaseFirestore,
         exercise: Exercise

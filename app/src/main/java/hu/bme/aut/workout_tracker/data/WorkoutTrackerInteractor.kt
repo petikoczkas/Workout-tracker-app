@@ -119,6 +119,24 @@ class WorkoutTrackerInteractor @Inject constructor() {
             user = user
         )
 
+    fun getUserFavoriteWorkouts(user: User) =
+        FirebaseStorageService.getUserFavoriteWorkouts(
+            firebaseFirestore = firebaseFirestore,
+            user = user
+        )
+
+    fun getWorkoutExercises(workout: Workout) =
+        FirebaseStorageService.getWorkoutExercises(
+            firebaseFirestore = firebaseFirestore,
+            workout = workout
+        )
+
+    suspend fun getWorkout(workoutId: String) =
+        FirebaseStorageService.getWorkout(
+            firebaseFirestore = firebaseFirestore,
+            workoutId = workoutId
+        )
+
     suspend fun createExercise(exercise: Exercise) {
         FirebaseStorageService.createExercise(
             firebaseFirestore = firebaseFirestore,

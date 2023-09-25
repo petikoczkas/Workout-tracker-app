@@ -71,6 +71,15 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     fun getUserWorkouts(user: User) = workoutTrackerInteractor.getUserWorkouts(user = user)
 
+    fun getUserFavoriteWorkouts(user: User) =
+        workoutTrackerInteractor.getUserFavoriteWorkouts(user = user)
+
+    fun getWorkoutExercises(workout: Workout) =
+        workoutTrackerInteractor.getWorkoutExercises(workout = workout)
+
+    suspend fun getWorkout(workoutId: String) =
+        workoutTrackerInteractor.getWorkout(workoutId = workoutId)
+
     suspend fun createExercise(exercise: Exercise) {
         workoutTrackerInteractor.createExercise(exercise = exercise)
     }

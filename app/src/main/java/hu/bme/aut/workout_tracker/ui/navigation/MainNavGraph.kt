@@ -4,8 +4,10 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsScreen
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeScreen
@@ -41,14 +43,14 @@ fun MainNavGraph(
         }
         composable(route = BottomBarScreen.YourWorkouts.route) {
             YourWorkoutsScreen(
-                onWorkoutClick = {
+                navigateToWorkout = {
                     navController.navigate(Content.Workout.route)
                 },
-                onWorkoutEditClick = {
-                    navController.navigate(Content.EditWorkout.route)
+                navigateToEditWorkout = {
+                    navController.navigate("${Content.EditWorkout.route}/$it")
                 },
-                onCreateWorkoutClick = {
-                    navController.navigate(Content.EditWorkout.route)
+                navigateToCreateWorkout = {
+                    navController.navigate("${Content.EditWorkout.route}/create")
                 }
             )
         }
@@ -95,12 +97,21 @@ fun MainNavGraph(
                 }
             )
         }
-        composable(route = Content.EditWorkout.route) {
-            EditWorkoutScreen(
-                onAddExerciseClick = {
-                    navController.navigate(Content.AddExercise.route)
-                }
-            )
+        composable(
+            route = "${Content.EditWorkout.route}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            it.arguments?.getString("id")?.let { it1 ->
+                EditWorkoutScreen(
+                    workoutId = it1,
+                    navigateToAddExercise = {
+                        navController.navigate(Content.AddExercise.route)
+                    },
+                    navigateBack = {
+                        navController.navigate(BottomBarScreen.YourWorkouts.route)
+                    }
+                )
+            }
         }
         composable(route = Content.AddExercise.route) {
             AddExerciseScreen()

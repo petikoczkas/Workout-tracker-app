@@ -9,6 +9,4 @@ sealed class AddExerciseUiState {
         val showDialog: Boolean,
         val newExercise: String
     ) : AddExerciseUiState()
-
-    data object AddExerciseSaved : AddExerciseUiState()
 }

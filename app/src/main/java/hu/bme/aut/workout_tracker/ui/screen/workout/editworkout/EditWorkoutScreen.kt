@@ -1,5 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.screen.workout.editworkout
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutLoaded
@@ -27,12 +29,13 @@ import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 @Composable
 fun EditWorkoutScreen(
     workoutId: String,
-    navigateToAddExercise: () -> Unit,
+    navigateToAddExercise: (id: String) -> Unit,
     navigateBack: () -> Unit,
     viewModel: EditWorkoutViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val exercises by viewModel.exercises.observeAsState()
+    val workoutExercises by viewModel.workoutExercises.observeAsState()
+    val updateWorkoutFailedEvent by viewModel.updateWorkoutFailedEvent.collectAsState()
 
     when (uiState) {
         EditWorkoutInit -> {
@@ -40,6 +43,7 @@ fun EditWorkoutScreen(
         }
 
         is EditWorkoutLoaded -> {
+            viewModel.getWorkoutExercises()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -57,45 +61,55 @@ fun EditWorkoutScreen(
                         onValueChange = viewModel::onNameChange,
                         label = { Text(text = "Name") }
                     )
-                    if (exercises == null) {
+                    if (workoutExercises == null) {
                         //TODO("ProgressIndicator")
                     } else {
                         LazyColumn(
                             modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
                         ) {
-                            if (exercises!!.isEmpty()) {
+                            if (viewModel.exercises.isEmpty()) {
                                 item {
                                     Text(text = "No exercises in this workout")
                                 }
                             } else {
-                                items(exercises!!) { e ->
+                                items(viewModel.exercises) { e ->
                                     ExerciseCard(
                                         text = e.name,
                                         withIcon = true,
-                                        onRemoveClick = { /*TODO()*/ }
+                                        onRemoveClick = { viewModel.removeButtonOnClick(e) },
+                                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapSmall)
                                     )
                                 }
                             }
                             item {
                                 AddButton(
-                                    onClick = navigateToAddExercise,
+                                    onClick = { navigateToAddExercise(workoutId) },
                                     text = "Add Exercise",
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = workoutTrackerDimens.gapNormal)
                                 )
                             }
                         }
                     }
                 }
                 PrimaryButton(
-                    onClick = { /*viewModel.saveButtonOnClick()*/ },
+                    onClick = { viewModel.saveButtonOnClick(workoutId) },
                     text = "Save",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
+                if (updateWorkoutFailedEvent.isUpdateWorkoutFailed) {
+                    Toast.makeText(
+                        LocalContext.current,
+                        updateWorkoutFailedEvent.exception?.message.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.handledUpdateWorkoutFailedEvent()
+                }
             }
         }
-
         EditWorkoutSaved -> {
             navigateBack()
         }

@@ -101,11 +101,11 @@ fun MainNavGraph(
             route = "${Content.EditWorkout.route}/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
-            it.arguments?.getString("id")?.let { it1 ->
+            it.arguments?.getString("id")?.let { id ->
                 EditWorkoutScreen(
-                    workoutId = it1,
-                    navigateToAddExercise = {
-                        navController.navigate(Content.AddExercise.route)
+                    workoutId = id,
+                    navigateToAddExercise = { it1 ->
+                        navController.navigate("${Content.AddExercise.route}/$it1")
                     },
                     navigateBack = {
                         navController.navigate(BottomBarScreen.YourWorkouts.route)
@@ -113,8 +113,18 @@ fun MainNavGraph(
                 )
             }
         }
-        composable(route = Content.AddExercise.route) {
-            AddExerciseScreen()
+        composable(
+            route = "${Content.AddExercise.route}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            it.arguments?.getString("id")?.let { id ->
+                AddExerciseScreen(
+                    workoutId = id,
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
     }
 }

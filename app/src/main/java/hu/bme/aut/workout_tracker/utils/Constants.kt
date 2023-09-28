@@ -1,5 +1,7 @@
 package hu.bme.aut.workout_tracker.utils
 
+import hu.bme.aut.workout_tracker.data.model.Exercise
+
 object Constants {
     const val USER_COLLECTION = "user"
     const val EXERCISE_COLLECTION = "exercise"
@@ -17,4 +19,5 @@ object Constants {
         "Core",
         "Forearms"
     )
+    val addedExercises = mutableListOf<Exercise>()
 }

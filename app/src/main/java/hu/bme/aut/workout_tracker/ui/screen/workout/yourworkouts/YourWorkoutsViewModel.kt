@@ -26,7 +26,7 @@ class YourWorkoutsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<YourWorkoutsUiState>(YourWorkoutsInit)
     val uiState: StateFlow<YourWorkoutsUiState> = _uiState.asStateFlow()
 
-    var currentUser = User()
+    private var currentUser = User()
 
     private val _workouts = MutableLiveData<List<Workout>>()
     val workouts: LiveData<List<Workout>> = _workouts

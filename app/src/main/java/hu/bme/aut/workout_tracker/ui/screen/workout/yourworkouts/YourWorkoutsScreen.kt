@@ -24,8 +24,8 @@ import hu.bme.aut.workout_tracker.ui.view.card.WorkoutCard
 
 @Composable
 fun YourWorkoutsScreen(
-    navigateToWorkout: () -> Unit,
-    navigateToEditWorkout: (id: String) -> Unit,
+    navigateToWorkout: (String) -> Unit,
+    navigateToEditWorkout: (String) -> Unit,
     navigateToCreateWorkout: () -> Unit,
     viewModel: YourWorkoutsViewModel = hiltViewModel()
 ) {
@@ -65,10 +65,11 @@ fun YourWorkoutsScreen(
                                     WorkoutCard(
                                         name = w.name,
                                         exerciseNum = w.exercises.size,
-                                        onClick = navigateToWorkout,
+                                        onClick = { navigateToWorkout(w.id) },
                                         onEditClick = { navigateToEditWorkout(w.id) },
                                         isFav = viewModel.isFavorite(w.id),
-                                        onFavClick = { viewModel.isFavoriteOnClick(w.id) }
+                                        onFavClick = { viewModel.isFavoriteOnClick(w.id) },
+                                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapSmall)
                                     )
                                 }
                             }

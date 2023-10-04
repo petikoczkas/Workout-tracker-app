@@ -29,7 +29,7 @@ import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 @Composable
 fun EditWorkoutScreen(
     workoutId: String,
-    navigateToAddExercise: (id: String) -> Unit,
+    navigateToAddExercise: (String) -> Unit,
     navigateBack: () -> Unit,
     viewModel: EditWorkoutViewModel = hiltViewModel()
 ) {

@@ -26,7 +26,7 @@ import hu.bme.aut.workout_tracker.ui.view.card.FavWorkoutCard
 
 @Composable
 fun HomeScreen(
-    navigateToWorkout: () -> Unit,
+    navigateToWorkout: (String) -> Unit,
     navigateToSettings: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -73,7 +73,7 @@ fun HomeScreen(
                                 FavWorkoutCard(
                                     name = w.name,
                                     exerciseNum = w.exercises.size,
-                                    onClick = navigateToWorkout,
+                                    onClick = { navigateToWorkout(w.id) },
                                     modifier = Modifier.padding(
                                         horizontal = workoutTrackerDimens.gapNormal,
                                         vertical = workoutTrackerDimens.gapSmall

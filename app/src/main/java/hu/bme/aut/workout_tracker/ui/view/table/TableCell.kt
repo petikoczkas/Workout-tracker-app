@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -12,23 +14,31 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.ContentAlpha
 
 @Composable
 fun RowScope.TextTableCell(
     text: String,
-    weight: Float
+    weight: Float,
+    modifier: Modifier = Modifier
 ) {
 
     Text(
         text = text,
-        Modifier
+        modifier = modifier
             .weight(weight)
             .padding(8.dp),
         textAlign = TextAlign.Center
@@ -39,20 +49,57 @@ fun RowScope.TextTableCell(
 @Composable
 fun RowScope.TextFieldTableCell(
     text: String,
-    onValueChange: () -> Unit,
-    weight: Float
+    onValueChange: (String) -> Unit,
+    weight: Float,
+    enabled: Boolean,
+    cleared: Boolean,
+    keyboardActions: KeyboardActions,
+    imeAction: ImeAction,
+    modifier: Modifier = Modifier
 ) {
+    val alpha = if (enabled) 1f else ContentAlpha.disabled
+
+    val textFieldValue = remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = text,
+                selection = TextRange(text.length)
+            )
+        )
+    }
+
+    if (cleared) textFieldValue.value = TextFieldValue(
+        text = "",
+    )
+    else textFieldValue.value = TextFieldValue(
+        text = text,
+        selection = TextRange(text.length)
+    )
+
     BasicTextField(
-        value = text,
-        onValueChange = { onValueChange() },
-        modifier = Modifier
+        value = textFieldValue.value,
+        onValueChange = {
+            textFieldValue.value = TextFieldValue(
+                text = it.text,
+                selection = TextRange(it.text.length)
+            )
+            onValueChange(it.text)
+        },
+        enabled = enabled,
+        modifier = modifier
             .height(45.dp)
             .weight(weight)
+            .alpha(alpha)
             .padding(8.dp),
         textStyle = LocalTextStyle.current.copy(
             color = Color.White,
             textAlign = TextAlign.Center
         ),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.NumberPassword,
+            imeAction = imeAction
+        ),
+        keyboardActions = keyboardActions,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
     ) { innerTextField ->
         OutlinedTextFieldDefaults.DecorationBox(

@@ -34,7 +34,7 @@ fun MainNavGraph(
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
                 navigateToWorkout = {
-                    navController.navigate(Content.Workout.route)
+                    navController.navigate("${Content.Workout.route}/$it")
                 },
                 navigateToSettings = {
                     navController.navigate(Content.Settings.route)
@@ -44,7 +44,7 @@ fun MainNavGraph(
         composable(route = BottomBarScreen.YourWorkouts.route) {
             YourWorkoutsScreen(
                 navigateToWorkout = {
-                    navController.navigate(Content.Workout.route)
+                    navController.navigate("${Content.Workout.route}/$it")
                 },
                 navigateToEditWorkout = {
                     navController.navigate("${Content.EditWorkout.route}/$it")
@@ -77,15 +77,21 @@ fun MainNavGraph(
                 }
             )
         }
-        composable(route = Content.Workout.route) {
-            WorkoutScreen(
-                onSaveClick = {
-                    navController.navigate(Content.WorkoutComplete.route)
-                },
-                onSwitchExerciseClick = {
-                    navController.navigate(Content.AddExercise.route)
-                }
-            )
+        composable(
+            route = "${Content.Workout.route}/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            it.arguments?.getString("id")?.let { id ->
+                WorkoutScreen(
+                    workoutId = id,
+                    navigateToWorkoutComplete = {
+                        navController.navigate(Content.WorkoutComplete.route)
+                    },
+                    navigateToAddExercise = {
+                        navController.navigate("${Content.AddExercise.route}/$it")
+                    }
+                )
+            }
         }
         composable(route = Content.WorkoutComplete.route) {
             WorkoutCompleteScreen(

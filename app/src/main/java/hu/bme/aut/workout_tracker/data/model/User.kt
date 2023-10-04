@@ -5,5 +5,7 @@ data class User(
     var name: String = "",
     var photo: String = "",
     val workouts: MutableList<String> = mutableListOf(),
-    val favoriteWorkouts: MutableList<String> = mutableListOf()
+    val favoriteWorkouts: MutableList<String> = mutableListOf(),
+    val exercises: HashMap<String, MutableList<String>> = HashMap(),
+    val charts: HashMap<String, MutableList<Int>> = HashMap()
 )

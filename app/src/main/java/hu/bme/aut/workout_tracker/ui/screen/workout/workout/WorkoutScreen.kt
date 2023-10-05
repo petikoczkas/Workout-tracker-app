@@ -29,6 +29,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -39,6 +40,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -107,12 +109,14 @@ fun WorkoutScreen(
                                 )
                             } else {
                                 WorkoutCompleteScreen(
-                                    viewModel = viewModel,
                                     navigateToAddExercise = {
                                         viewModel.changeLoadedUiState(AddExercise)
                                         navigateToAddExercise(workoutId)
                                     },
-                                    navigateBack = navigateBack
+                                    navigateBack = {
+                                        viewModel.endWorkoutOnClick()
+                                        navigateBack()
+                                    }
                                 )
                             }
                         }
@@ -123,9 +127,9 @@ fun WorkoutScreen(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            repeat((loadedUiState as Loaded).pageCount) { iteration ->
+                            repeat((loadedUiState as Loaded).pageCount) {
                                 val color =
-                                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                    if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
                                 Box(
                                     modifier = Modifier
                                         .padding(2.dp)
@@ -151,7 +155,7 @@ fun WorkoutScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun WorkoutScreenContent(
     pagerState: PagerState,
@@ -163,7 +167,7 @@ fun WorkoutScreenContent(
 ) {
     val alpha = if ((uiState as WorkoutLoaded).isEnabledList[page]) 1f else ContentAlpha.disabled
     val focusRequester = remember { FocusRequester() }
-
+    val keyboardController = LocalSoftwareKeyboardController.current
     val requestFocus by remember {
         derivedStateOf {
             pagerState.currentPageOffsetFraction == 0f && page == pagerState.currentPage
@@ -173,6 +177,7 @@ fun WorkoutScreenContent(
     LaunchedEffect(key1 = requestFocus) {
         if (requestFocus) {
             delay(200)
+            keyboardController?.show()
             focusRequester.requestFocus()
         }
     }
@@ -290,7 +295,11 @@ fun WorkoutScreenContent(
             onClick = {
                 viewModel.saveButtonOnClick(page)
                 if (page + 1 < pagerState.pageCount) {
-                    if (uiState.isEnabledList[page + 1]) {
+                    if (pagerState.pageCount - 1 == page + 1) {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(page + 1)
+                        }
+                    } else if (uiState.isEnabledList[page + 1]) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(page + 1)
                         }

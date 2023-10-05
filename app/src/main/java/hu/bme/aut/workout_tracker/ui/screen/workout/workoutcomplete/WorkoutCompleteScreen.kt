@@ -8,17 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutViewModel
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WorkoutCompleteScreen(
-    viewModel: WorkoutViewModel,
     navigateToAddExercise: () -> Unit,
     navigateBack: () -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    keyboardController?.hide()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,10 +42,7 @@ fun WorkoutCompleteScreen(
                     .padding(bottom = workoutTrackerDimens.gapNormal)
             )
             PrimaryButton(
-                onClick = {
-                    viewModel.endWorkoutOnClick()
-                    navigateBack()
-                },
+                onClick = navigateBack,
                 text = "End Workout",
                 modifier = Modifier.fillMaxWidth()
             )

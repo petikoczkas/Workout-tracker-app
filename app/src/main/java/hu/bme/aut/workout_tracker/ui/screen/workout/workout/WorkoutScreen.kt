@@ -45,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ContentAlpha
 import hu.bme.aut.workout_tracker.R
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.*
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.*
+import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompleteScreen
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
@@ -58,20 +60,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun WorkoutScreen(
     workoutId: String,
-    navigateToWorkoutComplete: () -> Unit,
     navigateToAddExercise: (String) -> Unit,
+    navigateBack: () -> Unit,
     viewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val loadedUiState by viewModel.loadedUiState.collectAsState()
     val workoutExercises by viewModel.workoutExercises.observeAsState()
     val saveFailedEvent by viewModel.saveFailedEvent.collectAsState()
-
-    val pageCount = workoutExercises?.size ?: 0
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        initialPageOffsetFraction = 0f,
-        pageCount = { pageCount }
-    )
     when (uiState) {
         WorkoutInit -> {
             viewModel.getWorkout(workoutId)
@@ -79,36 +75,68 @@ fun WorkoutScreen(
 
         is WorkoutLoaded -> {
             workoutExercises?.let {
-                viewModel.getWorkoutExercises()
-                HorizontalPager(state = pagerState) { page ->
-                    WorkoutScreenContent(
-                        pagerState = pagerState,
-                        page = page,
-                        uiState = uiState,
-                        viewModel = viewModel,
-                        navigateToAddExercise = { navigateToAddExercise(workoutId) },
-                        localFocusManager = LocalFocusManager.current
-                    )
-                }
-            }
-            Row(
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = workoutTrackerDimens.gapNormal),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                repeat(pageCount) { iteration ->
-                    val color =
-                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                    Box(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                            .size(10.dp)
+                when (loadedUiState) {
+                    AddExercise -> {
+                        viewModel.switchOrAddCurrentExercise("addExercise")
+                    }
 
-                    )
+                    is Loaded -> {
+                        viewModel.getWorkoutExercises()
+                        val pagerState = rememberPagerState(
+                            initialPage = 0,
+                            initialPageOffsetFraction = 0f,
+                            pageCount = {
+                                when (loadedUiState) {
+                                    is Loaded -> {
+                                        (loadedUiState as Loaded).pageCount
+                                    }
+
+                                    else -> 0
+                                }
+                            }
+                        )
+                        HorizontalPager(state = pagerState) { page ->
+                            if (viewModel.exercises.size > page) {
+                                WorkoutScreenContent(
+                                    pagerState = pagerState,
+                                    page = page,
+                                    uiState = uiState,
+                                    viewModel = viewModel,
+                                    navigateToAddExercise = { navigateToAddExercise(workoutId) },
+                                    localFocusManager = LocalFocusManager.current
+                                )
+                            } else {
+                                WorkoutCompleteScreen(
+                                    viewModel = viewModel,
+                                    navigateToAddExercise = {
+                                        viewModel.changeLoadedUiState(AddExercise)
+                                        navigateToAddExercise(workoutId)
+                                    },
+                                    navigateBack = navigateBack
+                                )
+                            }
+                        }
+                        Row(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(bottom = workoutTrackerDimens.gapNormal),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            repeat((loadedUiState as Loaded).pageCount) { iteration ->
+                                val color =
+                                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                Box(
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(10.dp)
+
+                                )
+                            }
+                        }
+                    }
                 }
             }
             if (saveFailedEvent.isSaveFailed) {
@@ -119,10 +147,6 @@ fun WorkoutScreen(
                 ).show()
                 viewModel.handledSaveFailedEvent()
             }
-        }
-
-        WorkoutSuccess -> {
-            navigateToWorkoutComplete()
         }
     }
 }
@@ -220,7 +244,7 @@ fun WorkoutScreenContent(
                             )
                         },
                         enabled = uiState.isEnabledList[page],
-                        cleared = viewModel.switchCurrentExercise(page),
+                        cleared = viewModel.switchOrAddCurrentExercise(page.toString()),
                         keyboardActions = keyboardActions,
                         imeAction = imeAction,
                         isLast = set + 1 == uiState.weightList[page].size,
@@ -274,7 +298,9 @@ fun WorkoutScreenContent(
                 }
             },
             text = "Save",
-            enabled = uiState.isEnabledList[page] && viewModel.isSaveButtonEnabled(page),
+            enabled = uiState.isEnabledList[page] && viewModel.isSaveButtonEnabled(
+                page
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = workoutTrackerDimens.gapMedium)

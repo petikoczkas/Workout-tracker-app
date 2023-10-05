@@ -16,7 +16,6 @@ import hu.bme.aut.workout_tracker.ui.screen.standings.StandingsScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
-import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompleteScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 
 @Composable
@@ -84,24 +83,14 @@ fun MainNavGraph(
             it.arguments?.getString("id")?.let { id ->
                 WorkoutScreen(
                     workoutId = id,
-                    navigateToWorkoutComplete = {
-                        navController.navigate(Content.WorkoutComplete.route)
+                    navigateBack = {
+                        navController.popBackStack()
                     },
                     navigateToAddExercise = {
                         navController.navigate("${Content.AddExercise.route}/$it")
                     }
                 )
             }
-        }
-        composable(route = Content.WorkoutComplete.route) {
-            WorkoutCompleteScreen(
-                onAddExerciseClick = {
-                    navController.navigate(Content.AddExercise.route)
-                },
-                onEndWorkoutClick = {
-                    navController.navigate(BottomBarScreen.Home.route)
-                }
-            )
         }
         composable(
             route = "${Content.EditWorkout.route}/{id}",
@@ -156,7 +145,6 @@ sealed class BottomBarScreen(
 sealed class Content(val route: String) {
     data object Settings : Content(route = "SETTINGS")
     data object Workout : Content(route = "WORKOUT")
-    data object WorkoutComplete : Content(route = "WORKOUT_COMPLETE")
     data object EditWorkout : Content(route = "EDIT_WORKOUT")
     data object AddExercise : Content(route = "ADD_EXERCISE")
 }

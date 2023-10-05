@@ -70,6 +70,8 @@ fun WorkoutScreen(
     val loadedUiState by viewModel.loadedUiState.collectAsState()
     val workoutExercises by viewModel.workoutExercises.observeAsState()
     val saveFailedEvent by viewModel.saveFailedEvent.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
     when (uiState) {
         WorkoutInit -> {
             viewModel.getWorkout(workoutId)
@@ -77,26 +79,30 @@ fun WorkoutScreen(
 
         is WorkoutLoaded -> {
             workoutExercises?.let {
+                viewModel.getWorkoutExercises()
+                val pagerState = rememberPagerState(
+                    initialPage = 0,
+                    initialPageOffsetFraction = 0f,
+                    pageCount = {
+                        when (loadedUiState) {
+                            is Loaded -> {
+                                (loadedUiState as Loaded).pageCount
+                            }
+
+                            else -> 0
+                        }
+                    }
+                )
                 when (loadedUiState) {
                     AddExercise -> {
                         viewModel.switchOrAddCurrentExercise("addExercise")
+                        coroutineScope.launch {
+                            delay(200)
+                            pagerState.animateScrollToPage(pagerState.pageCount - 2)
+                        }
                     }
 
                     is Loaded -> {
-                        viewModel.getWorkoutExercises()
-                        val pagerState = rememberPagerState(
-                            initialPage = 0,
-                            initialPageOffsetFraction = 0f,
-                            pageCount = {
-                                when (loadedUiState) {
-                                    is Loaded -> {
-                                        (loadedUiState as Loaded).pageCount
-                                    }
-
-                                    else -> 0
-                                }
-                            }
-                        )
                         HorizontalPager(state = pagerState) { page ->
                             if (viewModel.exercises.size > page) {
                                 WorkoutScreenContent(
@@ -166,6 +172,7 @@ fun WorkoutScreenContent(
     navigateToAddExercise: () -> Unit
 ) {
     val alpha = if ((uiState as WorkoutLoaded).isEnabledList[page]) 1f else ContentAlpha.disabled
+    val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val requestFocus by remember {
@@ -290,7 +297,6 @@ fun WorkoutScreenContent(
                 }
             }
         }
-        val coroutineScope = rememberCoroutineScope()
         PrimaryButton(
             onClick = {
                 viewModel.saveButtonOnClick(page)

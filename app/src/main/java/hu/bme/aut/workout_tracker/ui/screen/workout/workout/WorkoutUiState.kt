@@ -6,8 +6,13 @@ sealed class WorkoutUiState {
     data class WorkoutLoaded(
         val weightList: List<List<String>>,
         val repsList: List<List<String>>,
-        val isEnabledList: List<Boolean>
+        val isEnabledList: List<Boolean>,
     ) : WorkoutUiState()
+}
 
-    data object WorkoutSuccess : WorkoutUiState()
+sealed class WorkoutLoadedUiState {
+    data object AddExercise : WorkoutLoadedUiState()
+    data class Loaded(
+        val pageCount: Int
+    ) : WorkoutLoadedUiState()
 }

@@ -10,9 +10,9 @@ import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.Loaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutLoaded
-import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutSuccess
 import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +30,9 @@ class WorkoutViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<WorkoutUiState>(WorkoutInit)
     val uiState: StateFlow<WorkoutUiState> = _uiState.asStateFlow()
+
+    private val _loadedUiState = MutableStateFlow<WorkoutLoadedUiState>(Loaded(pageCount = 0))
+    val loadedUiState: StateFlow<WorkoutLoadedUiState> = _loadedUiState.asStateFlow()
 
     private var _workout = Workout()
     val workout = _workout
@@ -63,9 +66,9 @@ class WorkoutViewModel @Inject constructor(
     }
 
     fun getWorkout(workoutId: String) {
-        clearAddedExercises()
         viewModelScope.launch {
             _workout = workoutTrackerPresenter.getWorkout(workoutId)
+            _loadedUiState.update { (_loadedUiState.value as Loaded).copy(pageCount = _workout.exercises.size + 1) }
             currentUser = workoutTrackerPresenter.getCurrentUser()
             setDefaultValues()
             withContext(Dispatchers.IO) {
@@ -78,6 +81,7 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun setAddedExercises(exercises: List<Exercise>) {
+        clearAddedExercises()
         for (w in _workout.exercises) {
             for (e in exercises) {
                 if (w == e.id)
@@ -179,8 +183,10 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    fun switchCurrentExercise(page: Int): Boolean {
+    fun switchOrAddCurrentExercise(pageString: String): Boolean {
+        val page = if (pageString == "addExercise") addedExercises.size - 1 else pageString.toInt()
         if (addedExercises.size > _workout.exercises.size) {
+            if (pageString == "addExercise") changeLoadedUiState(Loaded(pageCount = addedExercises.size + 1))
             var newExercise = Exercise()
             for (e in addedExercises) {
                 if (!_workout.exercises.contains(e.id)) {
@@ -188,8 +194,8 @@ class WorkoutViewModel @Inject constructor(
                     break
                 }
             }
-            _workout.exercises[page] = newExercise.id
-            clearAddedExercises()
+            if (page == _workout.exercises.size) _workout.exercises.add(page, newExercise.id)
+            else _workout.exercises[page] = newExercise.id
             val list = _exercises
             for (i in list.indices) {
                 if (list[i].id == _workout.exercises[page]) {
@@ -197,12 +203,13 @@ class WorkoutViewModel @Inject constructor(
                 }
             }
             _workoutExercises.value = list
-            setAddedExercises(list)
+            if (pageString != "addExercise") setAddedExercises(list)
 
             val weightList = (_uiState.value as WorkoutLoaded).weightList.toMutableList()
             val weightPageList = mutableListOf<String>()
             val repsList = (_uiState.value as WorkoutLoaded).repsList.toMutableList()
             val repsPageList = mutableListOf<String>()
+            val isEnabledList = (_uiState.value as WorkoutLoaded).isEnabledList.toMutableList()
 
             val setList: List<String>
             if (currentUser.exercises.contains(newExercise.id)) {
@@ -216,13 +223,21 @@ class WorkoutViewModel @Inject constructor(
                 weightPageList.add("")
                 repsPageList.add("")
             }
-            weightList[page] = weightPageList
-            repsList[page] = repsPageList
+            if (page == weightList.size) {
+                weightList.add(page, weightPageList)
+                repsList.add(page, repsPageList)
+                isEnabledList.add(page, true)
+            } else {
+                weightList[page] = weightPageList
+                repsList[page] = repsPageList
+
+            }
 
             _uiState.update {
                 (_uiState.value as WorkoutLoaded).copy(
                     weightList = weightList,
-                    repsList = repsList
+                    repsList = repsList,
+                    isEnabledList = isEnabledList
                 )
             }
             return !currentUser.exercises.contains(newExercise.id)
@@ -257,18 +272,18 @@ class WorkoutViewModel @Inject constructor(
         }
         currentUser.exercises[exerciseId] = pageList
         currentUser.charts[exerciseId] = volumeList
-        if (!(_uiState.value as WorkoutLoaded).isEnabledList.contains(true)) {
-            viewModelScope.launch {
-                try {
-                    workoutTrackerPresenter.updateUser(user = currentUser)
-                } catch (e: Exception) {
-                    _saveFailedEvent.value = SaveFailed(
-                        isSaveFailed = true,
-                        exception = e
-                    )
-                }
+    }
+
+    fun endWorkoutOnClick() {
+        viewModelScope.launch {
+            try {
+                workoutTrackerPresenter.updateUser(user = currentUser)
+            } catch (e: Exception) {
+                _saveFailedEvent.value = SaveFailed(
+                    isSaveFailed = true,
+                    exception = e
+                )
             }
-            _uiState.value = WorkoutSuccess
         }
     }
 
@@ -280,6 +295,10 @@ class WorkoutViewModel @Inject constructor(
 
     fun handledSaveFailedEvent() {
         _saveFailedEvent.update { _saveFailedEvent.value.copy(isSaveFailed = false) }
+    }
+
+    fun changeLoadedUiState(value: WorkoutLoadedUiState) {
+        _loadedUiState.value = value
     }
 
     data class SaveFailed(

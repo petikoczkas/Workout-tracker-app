@@ -9,13 +9,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutViewModel
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun WorkoutCompleteScreen(
-    onAddExerciseClick: () -> Unit,
-    onEndWorkoutClick: () -> Unit
+    viewModel: WorkoutViewModel,
+    navigateToAddExercise: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -30,14 +32,17 @@ fun WorkoutCompleteScreen(
             verticalArrangement = Arrangement.Center
         ) {
             PrimaryButton(
-                onClick = onAddExerciseClick,
+                onClick = navigateToAddExercise,
                 text = "Add Exercise",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = workoutTrackerDimens.gapNormal)
             )
             PrimaryButton(
-                onClick = onEndWorkoutClick,
+                onClick = {
+                    viewModel.endWorkoutOnClick()
+                    navigateBack()
+                },
                 text = "End Workout",
                 modifier = Modifier.fillMaxWidth()
             )

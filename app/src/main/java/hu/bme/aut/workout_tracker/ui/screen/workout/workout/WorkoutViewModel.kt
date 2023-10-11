@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -259,19 +260,44 @@ class WorkoutViewModel @Inject constructor(
         disableCurrentPage(page)
         val pageList = mutableListOf<String>()
         var volume = 0
+        var maxOneRepMax = 0.0
+        var averageOneRepMax = 0.0
         val exerciseId = _workout.exercises[page]
         for (i in weightPageList.indices) {
             pageList.add("${weightPageList[i]} ${repsPageList[i]}")
             volume += weightPageList[i].toInt() * repsPageList[i].toInt()
+            val estimatedOneRepMax =
+                weightPageList[i].toDouble() * (1 + repsPageList[i].toDouble() / 30)
+            averageOneRepMax += estimatedOneRepMax
+            if (estimatedOneRepMax > maxOneRepMax) maxOneRepMax = estimatedOneRepMax
         }
-        var volumeList = currentUser.charts[exerciseId]
+        averageOneRepMax /= weightPageList.size
+        averageOneRepMax =
+            averageOneRepMax.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+        maxOneRepMax = maxOneRepMax.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+        var volumeList = currentUser.volumeCharts[exerciseId]
         if (volumeList == null) {
             volumeList = mutableListOf(volume)
         } else {
             volumeList.add(volume)
         }
+        var averageOneRepMaxList = currentUser.averageOneRepMaxCharts[exerciseId]
+        if (averageOneRepMaxList == null) {
+            averageOneRepMaxList = mutableListOf(averageOneRepMax)
+        } else {
+            averageOneRepMaxList.add(averageOneRepMax)
+        }
+        var oneRepMaxList = currentUser.oneRepMaxCharts[exerciseId]
+        if (oneRepMaxList == null) {
+            oneRepMaxList = mutableListOf(maxOneRepMax)
+        } else {
+            oneRepMaxList.add(maxOneRepMax)
+        }
+
         currentUser.exercises[exerciseId] = pageList
-        currentUser.charts[exerciseId] = volumeList
+        currentUser.volumeCharts[exerciseId] = volumeList
+        currentUser.averageOneRepMaxCharts[exerciseId] = averageOneRepMaxList
+        currentUser.oneRepMaxCharts[exerciseId] = oneRepMaxList
     }
 
     fun endWorkoutOnClick() {

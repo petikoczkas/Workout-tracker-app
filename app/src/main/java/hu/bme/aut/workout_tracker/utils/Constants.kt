@@ -19,5 +19,10 @@ object Constants {
         "Core",
         "Forearms"
     )
+    val chartsList = listOf(
+        "Volume Chart",
+        "Average 1RM Chart",
+        "1RM Chart",
+    )
     val addedExercises = mutableListOf<Exercise>()
 }

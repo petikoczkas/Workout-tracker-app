@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     private val _workouts = MutableLiveData<List<Workout>>()
     val workouts: LiveData<List<Workout>> = _workouts
 
-    fun getWorkouts() {
+    fun getFavoriteWorkouts() {
         _uiState.value = HomeLoaded
         viewModelScope.launch {
             currentUser = workoutTrackerPresenter.getCurrentUser()

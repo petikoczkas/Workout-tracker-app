@@ -12,13 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import hu.bme.aut.workout_tracker.utils.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutTrackerDropDownMenu(
     selectedItem: String,
-    onSelectedItemChange: (String) -> Unit
+    onSelectedItemChange: (String) -> Unit,
+    items: List<String>,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -26,7 +27,8 @@ fun WorkoutTrackerDropDownMenu(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
     ) {
         TextField(
             value = selectedItem,
@@ -45,7 +47,7 @@ fun WorkoutTrackerDropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            Constants.BODY_PARTS.forEach { selectedOption ->
+            items.forEach { selectedOption ->
                 DropdownMenuItem(
                     text = {
                         Text(text = selectedOption)

@@ -51,7 +51,9 @@ fun EditWorkoutScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -65,7 +67,7 @@ fun EditWorkoutScreen(
                         //TODO("ProgressIndicator")
                     } else {
                         LazyColumn(
-                            modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
+                            modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
                         ) {
                             if (viewModel.exercises.isEmpty()) {
                                 item {
@@ -87,7 +89,10 @@ fun EditWorkoutScreen(
                                     text = "Add Exercise",
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = workoutTrackerDimens.gapNormal)
+                                        .padding(
+                                            top = workoutTrackerDimens.gapNormal,
+                                            bottom = workoutTrackerDimens.gapSmall
+                                        )
                                 )
                             }
                         }
@@ -98,7 +103,7 @@ fun EditWorkoutScreen(
                     text = "Save",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = workoutTrackerDimens.gapNormal)
+                        .padding(vertical = workoutTrackerDimens.gapNormal)
                 )
                 if (updateWorkoutFailedEvent.isUpdateWorkoutFailed) {
                     Toast.makeText(

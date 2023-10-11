@@ -45,7 +45,9 @@ fun YourWorkoutsScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -54,7 +56,7 @@ fun YourWorkoutsScreen(
                         //TODO("ProgressIndicator")
                     } else {
                         LazyColumn(
-                            modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
+                            modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
                         ) {
                             if (workouts!!.isEmpty()) {
                                 item {
@@ -81,7 +83,10 @@ fun YourWorkoutsScreen(
                     text = "Create Workout",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 80.dp + workoutTrackerDimens.gapNormal)
+                        .padding(
+                            top = workoutTrackerDimens.gapMedium,
+                            bottom = 80.dp + workoutTrackerDimens.gapMedium
+                        )
                 )
             }
         }

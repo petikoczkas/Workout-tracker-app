@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
@@ -33,17 +34,21 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val workouts by viewModel.workouts.observeAsState()
 
-    viewModel.getWorkouts()
+    viewModel.getFavoriteWorkouts()
     when (uiState) {
         HomeInit -> {
-            viewModel.getWorkouts()
+            viewModel.getFavoriteWorkouts()
         }
 
         HomeLoaded -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(
+                        start = workoutTrackerDimens.gapNormal,
+                        end = workoutTrackerDimens.gapNormal,
+                        bottom = 80.dp
+                    ),
             ) {
                 Row(
                     modifier = Modifier
@@ -62,24 +67,28 @@ fun HomeScreen(
                     //TODO("ProgressIndicator")
                 } else {
                     LazyColumn(
-                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
+                        modifier = Modifier.padding(
+                            top = workoutTrackerDimens.gapNormal,
+                            start = workoutTrackerDimens.gapNormal,
+                            end = workoutTrackerDimens.gapNormal,
+                        ),
                     ) {
                         if (workouts!!.isEmpty()) {
                             item {
                                 Text(text = "You have no favorite workouts")
                             }
                         } else {
-                            items(workouts!!) { w ->
+                            itemsIndexed(workouts!!) { i, w ->
                                 FavWorkoutCard(
                                     name = w.name,
                                     exerciseNum = w.exercises.size,
                                     onClick = { navigateToWorkout(w.id) },
-                                    modifier = Modifier.padding(
-                                        horizontal = workoutTrackerDimens.gapNormal,
-                                        vertical = workoutTrackerDimens.gapSmall
-                                    )
+                                    modifier = Modifier
+                                        .padding(
+                                            top = workoutTrackerDimens.gapSmall,
+                                            bottom = if (i == workouts!!.size - 1) workoutTrackerDimens.gapMedium else workoutTrackerDimens.gapSmall
+                                        )
                                 )
-
                             }
                         }
                     }

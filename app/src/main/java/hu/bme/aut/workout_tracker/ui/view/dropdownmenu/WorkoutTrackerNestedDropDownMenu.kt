@@ -1,11 +1,13 @@
 package hu.bme.aut.workout_tracker.ui.view.dropdownmenu
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -77,7 +79,10 @@ fun WorkoutTrackerNestedDropDownMenu(
             modifier = Modifier.exposedDropdownSize()
         ) {
             if (exercises.none { it.category == selectedParent }) {
-                Text(text = "You have not completed an exercise in this category yet.")
+                Text(
+                    text = "There is not enough data to display on the chart",
+                    modifier = Modifier.padding(MenuDefaults.DropdownMenuItemContentPadding)
+                )
             } else {
                 exercises.filter { it.category == selectedParent }.forEach { selectedOption ->
                     DropdownMenuItem(

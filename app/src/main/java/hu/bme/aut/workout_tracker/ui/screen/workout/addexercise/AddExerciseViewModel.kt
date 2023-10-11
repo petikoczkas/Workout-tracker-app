@@ -79,24 +79,28 @@ class AddExerciseViewModel @Inject constructor(
         }
     }
 
-    fun dialogSaveButtonOnClick() {
+    fun dialogSaveButtonOnClick(exercises: List<Exercise>) {
         val category = (_uiState.value as AddExerciseLoaded).selectedItem
         val name = (_uiState.value as AddExerciseLoaded).newExercise
         onNewExerciseChange("")
-        viewModelScope.launch {
-            try {
-                workoutTrackerPresenter.createExercise(
-                    Exercise(
-                        category = category,
-                        name = name
+        if (exercises.none { it.name == name }) {
+            viewModelScope.launch {
+                try {
+                    workoutTrackerPresenter.createExercise(
+                        Exercise(
+                            category = category,
+                            name = name
+                        )
                     )
-                )
-            } catch (e: Exception) {
-                _createExerciseFailedEvent.value = CreateExerciseFailure(
-                    isCreateExerciseFailed = true,
-                    exception = e
-                )
+                } catch (e: Exception) {
+                    _createExerciseFailedEvent.value = CreateExerciseFailure(
+                        isCreateExerciseFailed = true,
+                        exception = e
+                    )
+                }
             }
+        } else {
+            //TODO Exercise already exists
         }
     }
 

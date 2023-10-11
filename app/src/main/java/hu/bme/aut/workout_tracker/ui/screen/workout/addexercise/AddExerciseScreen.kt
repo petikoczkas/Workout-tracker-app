@@ -24,6 +24,7 @@ import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 import hu.bme.aut.workout_tracker.ui.view.dialog.AddExerciseDialog
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
+import hu.bme.aut.workout_tracker.utils.Constants
 
 @Composable
 fun AddExerciseScreen(
@@ -41,13 +42,6 @@ fun AddExerciseScreen(
         }
 
         is AddExerciseLoaded -> {
-            AddExerciseDialog(
-                newExercise = (uiState as AddExerciseLoaded).newExercise,
-                onNewExerciseChange = viewModel::onNewExerciseChange,
-                showDialog = (uiState as AddExerciseLoaded).showDialog,
-                onDismissRequest = viewModel::onShowDialogChange,
-                onSaveButtonClick = { viewModel.dialogSaveButtonOnClick() }
-            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -55,7 +49,9 @@ fun AddExerciseScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -63,15 +59,24 @@ fun AddExerciseScreen(
 
                     WorkoutTrackerDropDownMenu(
                         selectedItem = (uiState as AddExerciseLoaded).selectedItem,
-                        onSelectedItemChange = viewModel::onSelectedItemChange
+                        onSelectedItemChange = viewModel::onSelectedItemChange,
+                        items = Constants.BODY_PARTS,
+                        modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
                     )
-
                     if (exercises == null) {
                         //TODO("ProgressIndicator")
                     } else {
+                        AddExerciseDialog(
+                            newExercise = (uiState as AddExerciseLoaded).newExercise,
+                            onNewExerciseChange = viewModel::onNewExerciseChange,
+                            showDialog = (uiState as AddExerciseLoaded).showDialog,
+                            onDismissRequest = viewModel::onShowDialogChange,
+                            onSaveButtonClick = { viewModel.dialogSaveButtonOnClick(exercises!!) }
+                        )
+
                         val categoryList = viewModel.getExercisesByCategory(exercises)
                         LazyColumn(
-                            modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal),
+                            modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
                         ) {
                             if (categoryList.isEmpty()) {
                                 item {
@@ -98,7 +103,7 @@ fun AddExerciseScreen(
                     text = "Create a custom exercise",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = workoutTrackerDimens.gapNormal)
+                        .padding(vertical = workoutTrackerDimens.gapNormal)
                 )
                 if (createExerciseFailedEvent.isCreateExerciseFailed) {
                     Toast.makeText(

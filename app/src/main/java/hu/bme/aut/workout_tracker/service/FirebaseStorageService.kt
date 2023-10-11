@@ -35,6 +35,29 @@ object FirebaseStorageService {
             }.await()
     }
 
+    fun getUsers(
+        queryUsersByName: Query,
+    ): Flow<List<User>> {
+        return callbackFlow {
+            val listener = queryUsersByName.addSnapshotListener { value, e ->
+                e?.let {
+                    return@addSnapshotListener
+                }
+                value?.let {
+                    val tmp = mutableListOf<User>()
+                    for (d in it.documents) {
+                        d.toObject(User::class.java)
+                            ?.let { doc -> tmp.add(doc) }
+                    }
+                    trySend(tmp.toList())
+                }
+            }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
     suspend fun getCurrentUser(
         queryUsers: Query,
         userId: String
@@ -89,6 +112,35 @@ object FirebaseStorageService {
                                 ?.let { doc -> tmp.add(doc) }
                         }
                         trySend(tmp.toList())
+                    }
+                }
+            awaitClose {
+                listener.remove()
+            }
+        }
+    }
+
+    fun getStandingsExercises(
+        firebaseFirestore: FirebaseFirestore,
+    ): Flow<List<Exercise>> {
+        val standingExerciseList =
+            listOf("Barbell Bench Press", "Barbell Deadlift", "Barbell Squat")
+        return callbackFlow {
+            val listener = firebaseFirestore.collection(EXERCISE_COLLECTION)
+                .orderBy(NAME_PROPERTY, Query.Direction.ASCENDING)
+                .addSnapshotListener { value, e ->
+                    e?.let {
+                        return@addSnapshotListener
+                    }
+                    value?.let {
+                        val tmp = mutableListOf<Exercise>()
+                        for (d in it.documents) {
+                            d.toObject(Exercise::class.java)
+                                ?.let { doc ->
+                                    if (standingExerciseList.contains(doc.name)) tmp.add(doc)
+                                }
+                        }
+                        trySend(tmp.toList().sortedBy { i -> i.name })
                     }
                 }
             awaitClose {

@@ -53,6 +53,8 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     fun isLoggedIn() = workoutTrackerInteractor.isLoggedIn()
 
+    fun getUsers() = workoutTrackerInteractor.getUsers()
+
     suspend fun getCurrentUser() = workoutTrackerInteractor.getCurrentUser()
 
     suspend fun updateUser(user: User) {
@@ -68,6 +70,9 @@ class WorkoutTrackerPresenter @Inject constructor(
     }
 
     fun getExercises() = workoutTrackerInteractor.getExercises()
+
+    fun getStandingsExercises() = workoutTrackerInteractor.getStandingsExercises()
+
 
     fun getUserWorkouts(user: User) = workoutTrackerInteractor.getUserWorkouts(user = user)
 

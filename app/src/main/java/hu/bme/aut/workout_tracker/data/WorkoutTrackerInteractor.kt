@@ -3,12 +3,14 @@ package hu.bme.aut.workout_tracker.data
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.service.FirebaseAuthService
 import hu.bme.aut.workout_tracker.service.FirebaseStorageService
+import hu.bme.aut.workout_tracker.utils.Constants.NAME_PROPERTY
 import hu.bme.aut.workout_tracker.utils.Constants.PICTURE_FOLDER
 import hu.bme.aut.workout_tracker.utils.Constants.USER_COLLECTION
 import kotlinx.coroutines.delay
@@ -84,6 +86,10 @@ class WorkoutTrackerInteractor @Inject constructor() {
         return currentUser != null
     }
 
+    fun getUsers() = FirebaseStorageService.getUsers(
+        queryUsersByName = queryUsers.orderBy(NAME_PROPERTY, Query.Direction.ASCENDING),
+    )
+
     suspend fun getCurrentUser() = FirebaseStorageService.getCurrentUser(
         queryUsers = queryUsers,
         userId = currentUser?.uid.toString()
@@ -110,6 +116,10 @@ class WorkoutTrackerInteractor @Inject constructor() {
     }
 
     fun getExercises() = FirebaseStorageService.getExercises(
+        firebaseFirestore = firebaseFirestore
+    )
+
+    fun getStandingsExercises() = FirebaseStorageService.getStandingsExercises(
         firebaseFirestore = firebaseFirestore
     )
 

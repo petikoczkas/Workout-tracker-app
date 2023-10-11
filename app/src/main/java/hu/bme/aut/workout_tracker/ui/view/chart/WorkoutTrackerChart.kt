@@ -20,12 +20,12 @@ fun WorkoutTrackerChart(
     chartEntryModel: ChartEntryModel,
 ) {
     val marker = rememberMarker()
-
+    val difference = chartEntryModel.maxY - chartEntryModel.minY
     Chart(
         chart = lineChart(
             axisValuesOverrider = AxisValuesOverrider.fixed(
-                minY = chartEntryModel.minY - (chartEntryModel.maxY - chartEntryModel.minY) / 8,
-                maxY = chartEntryModel.maxY + (chartEntryModel.maxY - chartEntryModel.minY) / 8,
+                minY = if (difference != 0f) chartEntryModel.minY - difference / 8 else chartEntryModel.minY - 10,
+                maxY = if (difference != 0f) chartEntryModel.maxY + difference / 8 else chartEntryModel.maxY + 10,
             ),
         ),
         model = chartEntryModel,

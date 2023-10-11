@@ -1,5 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.view.card
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,15 +20,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
 @Composable
 fun UserCard(
+    place: Int,
+    name: String,
+    photo: String,
+    weight: Double,
     modifier: Modifier = Modifier
 ) {
+    val weightNumber =
+        if (weight.toInt().toDouble() == weight) {
+            weight.toInt()
+        } else {
+            weight
+        }
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -46,36 +61,56 @@ fun UserCard(
         ) {
             Row(
                 modifier = Modifier
-                    .weight(2f),
-                verticalAlignment = Alignment.CenterVertically
+                    .weight(3f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "1.",
-                    modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapMedium)
+                    text = "$place.",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(end = workoutTrackerDimens.gapSmall)
+
                 )
                 Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.weight(3f)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_person),
-                        contentDescription = null,
-                        modifier = Modifier.size(30.dp)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color.Gray),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (photo.isEmpty()) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_person),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = rememberAsyncImagePainter(model = photo),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
                 }
             }
             Text(
-                text = "Name of the user",
+                text = name,
                 modifier = Modifier
-                    .padding(horizontal = workoutTrackerDimens.gapMedium)
-                    .weight(5f)
+                    .weight(8f)
+                    .padding(start = workoutTrackerDimens.gapMedium)
             )
             Text(
-                text = "100 kg",
-                modifier = Modifier.weight(2f)
+                text = "$weightNumber kg",
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .weight(4f)
+                    .padding(workoutTrackerDimens.gapMedium)
             )
         }
     }

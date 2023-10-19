@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -220,14 +221,22 @@ fun WorkoutScreenContent(
                             .fillMaxWidth()
                             .padding(bottom = workoutTrackerDimens.gapSmall),
                     ) {
-                        TextTableCell(text = "Sets", weight = 2f, modifier = Modifier.alpha(alpha))
                         TextTableCell(
-                            text = "Weight (kg)",
+                            text = stringResource(R.string.sets),
+                            weight = 2f,
+                            modifier = Modifier.alpha(alpha)
+                        )
+                        TextTableCell(
+                            text = stringResource(R.string.weight_kg),
                             weight = 3f,
                             modifier = Modifier.alpha(alpha)
                         )
                         TextTableCell(text = "", weight = 1f, modifier = Modifier.alpha(alpha))
-                        TextTableCell(text = "Reps", weight = 2f, modifier = Modifier.alpha(alpha))
+                        TextTableCell(
+                            text = stringResource(R.string.reps),
+                            weight = 2f,
+                            modifier = Modifier.alpha(alpha)
+                        )
                     }
                 }
                 items(uiState.weightList[page].size) { set ->
@@ -291,7 +300,7 @@ fun WorkoutScreenContent(
                     }
                     SecondaryButton(
                         onClick = navigateToAddExercise,
-                        text = "Switch Exercise",
+                        text = stringResource(R.string.switch_exercise),
                         enabled = uiState.isEnabledList[page]
                     )
                 }
@@ -312,7 +321,7 @@ fun WorkoutScreenContent(
                     }
                 }
             },
-            text = "Save",
+            text = stringResource(R.string.save),
             enabled = uiState.isEnabledList[page] && viewModel.isSaveButtonEnabled(
                 page
             ),

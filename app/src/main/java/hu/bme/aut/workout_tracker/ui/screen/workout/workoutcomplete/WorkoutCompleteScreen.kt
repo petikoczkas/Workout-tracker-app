@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
@@ -28,7 +30,7 @@ fun WorkoutCompleteScreen(
             .padding(horizontal = workoutTrackerDimens.gapNormal),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Workout Complete")
+        Text(stringResource(R.string.workout_complete))
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -36,14 +38,14 @@ fun WorkoutCompleteScreen(
         ) {
             PrimaryButton(
                 onClick = navigateToAddExercise,
-                text = "Add Exercise",
+                text = stringResource(R.string.add_exercise),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = workoutTrackerDimens.gapNormal)
             )
             PrimaryButton(
                 onClick = navigateBack,
-                text = "End Workout",
+                text = stringResource(R.string.end_workout),
                 modifier = Modifier.fillMaxWidth()
             )
         }

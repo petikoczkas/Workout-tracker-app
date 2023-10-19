@@ -14,8 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -51,7 +53,7 @@ fun YourWorkoutsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text("Your Workouts")
+                    Text(stringResource(R.string.your_workouts))
                     if (workouts == null) {
                         //TODO("ProgressIndicator")
                     } else {
@@ -60,7 +62,7 @@ fun YourWorkoutsScreen(
                         ) {
                             if (workouts!!.isEmpty()) {
                                 item {
-                                    Text(text = "You have no workouts")
+                                    Text(text = stringResource(R.string.you_have_no_workouts))
                                 }
                             } else {
                                 items(workouts!!) { w ->
@@ -80,7 +82,7 @@ fun YourWorkoutsScreen(
                 }
                 AddButton(
                     onClick = navigateToCreateWorkout,
-                    text = "Create Workout",
+                    text = stringResource(R.string.create_workout),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(

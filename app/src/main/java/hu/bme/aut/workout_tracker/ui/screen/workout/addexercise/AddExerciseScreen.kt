@@ -16,7 +16,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -55,7 +57,7 @@ fun AddExerciseScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text("Add Exercise")
+                    Text(stringResource(R.string.add_exercise))
 
                     WorkoutTrackerDropDownMenu(
                         selectedItem = (uiState as AddExerciseLoaded).selectedItem,
@@ -80,7 +82,7 @@ fun AddExerciseScreen(
                         ) {
                             if (categoryList.isEmpty()) {
                                 item {
-                                    Text(text = "There is no exercise in this category")
+                                    Text(text = stringResource(R.string.empty_category_error_message))
                                 }
                             } else {
                                 items(categoryList) { e ->
@@ -100,7 +102,7 @@ fun AddExerciseScreen(
                 }
                 AddButton(
                     onClick = { viewModel.onShowDialogChange(true) },
-                    text = "Create a custom exercise",
+                    text = stringResource(R.string.create_a_custom_exercise),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = workoutTrackerDimens.gapNormal)

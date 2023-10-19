@@ -14,7 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
@@ -47,32 +49,32 @@ fun SignInScreen(
 
                 ) {
                     Text(
-                        text = "Sign In",
+                        text = stringResource(R.string.sign_in),
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
                     TextField(
                         value = (uiState as SignInLoaded).email,
                         onValueChange = viewModel::onEmailChange,
-                        label = { Text(text = "Email") },
+                        label = { Text(text = stringResource(R.string.email)) },
                         modifier = Modifier
                             .padding(bottom = workoutTrackerDimens.gapLarge)
                     )
                     TextField(
                         value = (uiState as SignInLoaded).password,
                         onValueChange = viewModel::onPasswordChange,
-                        label = { Text(text = "Password") },
+                        label = { Text(text = stringResource(R.string.password)) },
                         modifier = Modifier
                             .padding(bottom = workoutTrackerDimens.gapLarge)
                     )
                     SecondaryButton(
                         onClick = navigateToRegistration,
-                        text = "Registrate"
+                        text = stringResource(R.string.registrate)
                     )
                 }
                 PrimaryButton(
                     onClick = { viewModel.buttonOnClick() },
                     enabled = viewModel.isButtonEnabled(),
-                    text = "Sign In",
+                    text = stringResource(R.string.sign_in),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = workoutTrackerDimens.gapNormal)

@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.workout_tracker.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +37,7 @@ fun WorkoutTrackerDropDownMenu(
             onValueChange = {},
             readOnly = true,
             modifier = Modifier.menuAnchor(),
-            label = { Text(text = "Select a body part") },
+            label = { Text(text = stringResource(R.string.select_a_body_part)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded

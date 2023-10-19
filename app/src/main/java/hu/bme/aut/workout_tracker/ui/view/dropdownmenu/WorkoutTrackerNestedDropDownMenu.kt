@@ -16,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.utils.Constants
 
@@ -48,7 +50,7 @@ fun WorkoutTrackerNestedDropDownMenu(
             readOnly = true,
             modifier = Modifier
                 .menuAnchor(),
-            label = { Text(text = "Select an exercise") },
+            label = { Text(text = stringResource(R.string.select_an_exercise)) },
             trailingIcon = {
                 TrailingIcon(
                     expanded = parentExpanded
@@ -80,7 +82,7 @@ fun WorkoutTrackerNestedDropDownMenu(
         ) {
             if (exercises.none { it.category == selectedParent }) {
                 Text(
-                    text = "You have not completed an exercise in this category yet.",
+                    text = stringResource(R.string.nesteddropdownmenu_empty_category_error_message),
                     modifier = Modifier.padding(MenuDefaults.DropdownMenuItemContentPadding)
                 )
             } else {

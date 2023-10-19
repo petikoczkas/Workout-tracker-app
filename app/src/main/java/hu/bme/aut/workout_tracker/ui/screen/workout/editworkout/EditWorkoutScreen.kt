@@ -17,7 +17,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutLoaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutSaved
@@ -57,11 +59,11 @@ fun EditWorkoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text("Edit Workout")
+                    Text(stringResource(R.string.edit_workout))
                     TextField(
                         value = (uiState as EditWorkoutLoaded).name,
                         onValueChange = viewModel::onNameChange,
-                        label = { Text(text = "Name") }
+                        label = { Text(text = stringResource(R.string.name)) }
                     )
                     if (workoutExercises == null) {
                         //TODO("ProgressIndicator")
@@ -71,7 +73,7 @@ fun EditWorkoutScreen(
                         ) {
                             if (viewModel.exercises.isEmpty()) {
                                 item {
-                                    Text(text = "No exercises in this workout")
+                                    Text(text = stringResource(R.string.no_exercises))
                                 }
                             } else {
                                 items(viewModel.exercises) { e ->
@@ -86,7 +88,7 @@ fun EditWorkoutScreen(
                             item {
                                 AddButton(
                                     onClick = { navigateToAddExercise(workoutId) },
-                                    text = "Add Exercise",
+                                    text = stringResource(R.string.add_exercise),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(
@@ -100,7 +102,7 @@ fun EditWorkoutScreen(
                 }
                 PrimaryButton(
                     onClick = { viewModel.saveButtonOnClick(workoutId) },
-                    text = "Save",
+                    text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = workoutTrackerDimens.gapNormal)

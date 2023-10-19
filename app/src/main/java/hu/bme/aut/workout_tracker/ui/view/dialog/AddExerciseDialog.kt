@@ -8,7 +8,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
@@ -31,14 +33,14 @@ fun AddExerciseDialog(
                 TextField(
                     value = newExercise,
                     onValueChange = onNewExerciseChange,
-                    label = { Text(text = "Name") },
+                    label = { Text(text = stringResource(R.string.name)) },
                 )
                 PrimaryButton(
                     onClick = {
                         onDismissRequest(false)
                         onSaveButtonClick()
                     },
-                    text = "Save",
+                    text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = workoutTrackerDimens.gapNormal)

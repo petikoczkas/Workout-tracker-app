@@ -12,8 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingInit
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -41,7 +43,7 @@ fun StandingsScreen(
                     .padding(horizontal = workoutTrackerDimens.gapNormal),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Standings")
+                Text(stringResource(R.string.standings))
                 if (exercises.isNullOrEmpty() || users == null) {
                     //TODO ProgressIndicator
                 } else {
@@ -66,7 +68,7 @@ fun StandingsScreen(
                             )
                             if (bestUserList.isEmpty()) {
                                 item {
-                                    Text(text = "There are no users who have completed the exercise.")
+                                    Text(text = stringResource(R.string.standings_error_message))
                                 }
                             } else {
                                 itemsIndexed(bestUserList.take(50)) { i, u ->

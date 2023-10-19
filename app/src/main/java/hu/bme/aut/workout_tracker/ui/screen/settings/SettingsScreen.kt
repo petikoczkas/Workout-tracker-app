@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import hu.bme.aut.workout_tracker.R
@@ -95,7 +96,7 @@ fun SettingsScreen(
                         }
                     }
                     Text(
-                        text = "Settings",
+                        text = stringResource(R.string.settings),
                     )
                     Card(
                         modifier = Modifier
@@ -126,7 +127,7 @@ fun SettingsScreen(
                     TextField(
                         value = (uiState as SettingsLoaded).name,
                         onValueChange = viewModel::onNameChange,
-                        label = { Text(text = "Name") },
+                        label = { Text(text = stringResource(R.string.name)) },
                         modifier = Modifier
                             .padding(
                                 vertical = workoutTrackerDimens.gapLarge,
@@ -135,7 +136,7 @@ fun SettingsScreen(
                 }
                 PrimaryButton(
                     onClick = { viewModel.saveButtonOnClick() },
-                    text = "Save",
+                    text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = workoutTrackerDimens.gapNormal)

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -12,6 +13,7 @@ import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
+import hu.bme.aut.workout_tracker.R
 import java.math.RoundingMode
 
 @SuppressLint("RememberReturnType")
@@ -30,7 +32,7 @@ fun WorkoutTrackerChart(
         ),
         model = chartEntryModel,
         startAxis = rememberStartAxis(
-            title = "Volume",
+            title = stringResource(R.string.volume),
             valueFormatter = { value, _ ->
                 var num =
                     value.toDouble().toBigDecimal().setScale(2, RoundingMode.HALF_UP).toString()
@@ -42,7 +44,7 @@ fun WorkoutTrackerChart(
             ),
         ),
         bottomAxis = rememberBottomAxis(
-            title = "Workout",
+            title = stringResource(R.string.workout),
             valueFormatter = { value, _ ->
                 "${value.toInt() + 1}."
             },

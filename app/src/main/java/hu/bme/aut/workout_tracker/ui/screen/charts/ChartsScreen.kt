@@ -11,8 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -39,7 +41,7 @@ fun ChartsScreen(
                     .padding(horizontal = workoutTrackerDimens.gapNormal),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Charts")
+                Text(stringResource(R.string.charts))
                 if (exercises == null) {
                     //TODO ProgressIndicator
                 } else {
@@ -65,7 +67,7 @@ fun ChartsScreen(
                             )
                             if (data.entries[0].size < 2) {
                                 Text(
-                                    text = "There is not enough data to display on the chart.",
+                                    text = stringResource(R.string.chart_error_message),
                                     modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapSmall),
                                     textAlign = TextAlign.Center
                                 )

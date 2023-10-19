@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ContentAlpha
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
 @Composable
@@ -60,7 +62,11 @@ fun TableRow(
             imeAction = imeAction,
             modifier = modifier
         )
-        TextTableCell(text = "x", weight = 1f, modifier = Modifier.alpha(alpha))
+        TextTableCell(
+            text = stringResource(R.string.x),
+            weight = 1f,
+            modifier = Modifier.alpha(alpha)
+        )
         TextFieldTableCell(
             text = reps,
             onValueChange = onRepsChange,

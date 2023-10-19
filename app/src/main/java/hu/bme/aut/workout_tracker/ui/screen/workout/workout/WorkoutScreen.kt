@@ -52,6 +52,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompl
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.table.TableRow
 import hu.bme.aut.workout_tracker.ui.view.table.TextTableCell
@@ -75,6 +76,7 @@ fun WorkoutScreen(
     when (uiState) {
         WorkoutInit -> {
             viewModel.getWorkout(workoutId)
+            WorkoutTrackerProgressIndicator()
         }
 
         is WorkoutLoaded -> {

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.card.FavWorkoutCard
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 
 @Composable
 fun HomeScreen(
@@ -65,7 +67,12 @@ fun HomeScreen(
                 }
                 Text(stringResource(R.string.home))
                 if (workouts == null) {
-                    //TODO("ProgressIndicator")
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        WorkoutTrackerProgressIndicator()
+                    }
                 } else {
                     LazyColumn(
                         modifier = Modifier.padding(

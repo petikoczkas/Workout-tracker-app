@@ -23,6 +23,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiS
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.WorkoutCard
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 
 @Composable
 fun YourWorkoutsScreen(
@@ -55,7 +56,7 @@ fun YourWorkoutsScreen(
                 ) {
                     Text(stringResource(R.string.your_workouts))
                     if (workouts == null) {
-                        //TODO("ProgressIndicator")
+                        WorkoutTrackerProgressIndicator()
                     } else {
                         LazyColumn(
                             modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),

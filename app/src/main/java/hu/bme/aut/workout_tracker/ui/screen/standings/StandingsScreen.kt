@@ -21,6 +21,7 @@ import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingIn
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.card.UserCard
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
 
 @Composable
@@ -46,7 +47,7 @@ fun StandingsScreen(
             ) {
                 Text(stringResource(R.string.standings))
                 if (exercises.isNullOrEmpty() || users == null) {
-                    //TODO ProgressIndicator
+                    WorkoutTrackerProgressIndicator()
                 } else {
                     WorkoutTrackerDropDownMenu(
                         selectedItem = (uiState as StandingLoaded).selectedItem.name,

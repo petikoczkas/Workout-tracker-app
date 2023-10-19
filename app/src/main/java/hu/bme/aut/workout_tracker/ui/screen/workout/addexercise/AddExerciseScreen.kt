@@ -22,6 +22,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiSta
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dialog.AddExerciseDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
@@ -65,7 +66,7 @@ fun AddExerciseScreen(
                         modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
                     )
                     if (exercises == null) {
-                        //TODO("ProgressIndicator")
+                        WorkoutTrackerProgressIndicator()
                     } else {
                         AddExerciseDialog(
                             newExercise = (uiState as AddExerciseLoaded).newExercise,

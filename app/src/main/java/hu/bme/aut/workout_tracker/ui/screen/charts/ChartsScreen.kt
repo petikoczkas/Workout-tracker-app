@@ -19,6 +19,7 @@ import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.chart.WorkoutTrackerChart
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerNestedDropDownMenu
 import hu.bme.aut.workout_tracker.ui.view.toggle.TriStateToggle
 
@@ -43,7 +44,7 @@ fun ChartsScreen(
             ) {
                 Text(stringResource(R.string.charts))
                 if (exercises == null) {
-                    //TODO ProgressIndicator
+                    WorkoutTrackerProgressIndicator()
                 } else {
                     WorkoutTrackerNestedDropDownMenu(
                         selectedItem = (uiState as ChartsLoaded).selectedExercise,

@@ -80,7 +80,7 @@ fun WorkoutTrackerNestedDropDownMenu(
         ) {
             if (exercises.none { it.category == selectedParent }) {
                 Text(
-                    text = "There is not enough data to display on the chart",
+                    text = "You have not completed an exercise in this category yet.",
                     modifier = Modifier.padding(MenuDefaults.DropdownMenuItemContentPadding)
                 )
             } else {

@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
@@ -57,13 +58,21 @@ fun ChartsScreen(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        if ((uiState as ChartsLoaded).selectedExercise.id.isNotEmpty())
-                            WorkoutTrackerChart(
-                                chartEntryModel = viewModel.getSelectedChart(
-                                    id = (uiState as ChartsLoaded).selectedExercise.id,
-                                    chartName = (uiState as ChartsLoaded).selectedChart
-                                ),
+                        if ((uiState as ChartsLoaded).selectedExercise.id.isNotEmpty()) {
+                            val data = viewModel.getSelectedChart(
+                                id = (uiState as ChartsLoaded).selectedExercise.id,
+                                chartName = (uiState as ChartsLoaded).selectedChart
                             )
+                            if (data.entries[0].size < 2) {
+                                Text(
+                                    text = "There is not enough data to display on the chart.",
+                                    modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapSmall),
+                                    textAlign = TextAlign.Center
+                                )
+                            } else {
+                                WorkoutTrackerChart(chartEntryModel = data)
+                            }
+                        }
                     }
                 }
             }

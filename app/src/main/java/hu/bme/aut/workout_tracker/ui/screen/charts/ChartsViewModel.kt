@@ -61,7 +61,7 @@ class ChartsViewModel @Inject constructor(
 
     fun getUserExercises(exercises: List<Exercise>): List<Exercise> {
         return exercises.filter { currentUser.volumeCharts.containsKey(it.id) }
-            .filter { currentUser.volumeCharts[it.id]!!.size > 1 }
+            .filter { currentUser.volumeCharts[it.id]!!.size > 0 }
     }
 
     fun getSelectedChart(id: String, chartName: String): ChartEntryModel {

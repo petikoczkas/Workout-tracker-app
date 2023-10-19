@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
@@ -37,6 +38,7 @@ fun AddExerciseScreen(
     val uiState by viewModel.uiState.collectAsState()
     val exercises by viewModel.exercises.observeAsState()
     val createExerciseFailedEvent by viewModel.createExerciseFailedEvent.collectAsState()
+    val context = LocalContext.current
 
     when (uiState) {
         AddExerciseInit -> {
@@ -71,9 +73,15 @@ fun AddExerciseScreen(
                         AddExerciseDialog(
                             newExercise = (uiState as AddExerciseLoaded).newExercise,
                             onNewExerciseChange = viewModel::onNewExerciseChange,
+                            selectedItem = (uiState as AddExerciseLoaded).selectedItem,
                             showDialog = (uiState as AddExerciseLoaded).showDialog,
                             onDismissRequest = viewModel::onShowDialogChange,
-                            onSaveButtonClick = { viewModel.dialogSaveButtonOnClick(exercises!!) }
+                            onSaveButtonClick = {
+                                viewModel.dialogSaveButtonOnClick(
+                                    exercises!!,
+                                    context
+                                )
+                            }
                         )
 
                         val categoryList = viewModel.getExercisesByCategory(exercises)

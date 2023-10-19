@@ -70,6 +70,7 @@ fun EditWorkoutScreen(
                     } else {
                         LazyColumn(
                             modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (viewModel.exercises.isEmpty()) {
                                 item {

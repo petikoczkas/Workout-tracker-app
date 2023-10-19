@@ -18,7 +18,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ContentAlpha
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -47,7 +46,7 @@ fun TableRow(
             .padding(bottom = workoutTrackerDimens.gapSmall)
             .background(
                 color = Color.Gray,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(workoutTrackerDimens.tableRowCornerSize)
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {

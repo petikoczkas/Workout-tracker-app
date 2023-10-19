@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ContentAlpha
 import hu.bme.aut.workout_tracker.R
@@ -140,10 +139,10 @@ fun WorkoutScreen(
                                     if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
                                 Box(
                                     modifier = Modifier
-                                        .padding(2.dp)
+                                        .padding(workoutTrackerDimens.gapTiny)
                                         .clip(CircleShape)
                                         .background(color)
-                                        .size(10.dp)
+                                        .size(workoutTrackerDimens.pagerIndicatorSize)
 
                                 )
                             }
@@ -195,7 +194,7 @@ fun WorkoutScreenContent(
             .padding(
                 start = workoutTrackerDimens.gapNormal,
                 end = workoutTrackerDimens.gapNormal,
-                bottom = 50.dp
+                bottom = workoutTrackerDimens.pagerIndicatorHeight
             ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {

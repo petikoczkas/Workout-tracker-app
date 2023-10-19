@@ -16,11 +16,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.utils.Constants.chartsList
 
 @Composable
@@ -28,11 +29,12 @@ fun TriStateToggle(
     selectedOption: String,
     onSelectionChange: (String) -> Unit
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+    val backgroundColor =
+        MaterialTheme.colorScheme.surfaceColorAtElevation(workoutTrackerDimens.triStateToggleBackgroundColorElevation)
 
     Surface(
-        shape = RoundedCornerShape(24.dp),
-        shadowElevation = 4.dp,
+        shape = RoundedCornerShape(workoutTrackerDimens.triStateToggleCornerSize),
+        shadowElevation = workoutTrackerDimens.triStateToggleShadowElevation,
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
@@ -40,7 +42,7 @@ fun TriStateToggle(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(shape = RoundedCornerShape(24.dp))
+                .clip(shape = RoundedCornerShape(workoutTrackerDimens.triStateToggleCornerSize))
                 .background(backgroundColor),
         ) {
             chartsList.forEach { text ->
@@ -48,7 +50,7 @@ fun TriStateToggle(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
-                        .clip(shape = RoundedCornerShape(24.dp))
+                        .clip(shape = RoundedCornerShape(workoutTrackerDimens.triStateToggleCornerSize))
                         .clickable {
                             onSelectionChange(text)
                         }
@@ -60,10 +62,11 @@ fun TriStateToggle(
                             }
                         )
                         .padding(
-                            vertical = 12.dp,
-                            horizontal = 16.dp,
+                            vertical = workoutTrackerDimens.gapMedium,
+                            horizontal = workoutTrackerDimens.gapNormal,
                         ),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = text,

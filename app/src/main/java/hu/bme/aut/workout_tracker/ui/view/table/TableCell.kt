@@ -26,8 +26,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ContentAlpha
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
 @Composable
 fun RowScope.TextTableCell(
@@ -40,7 +40,7 @@ fun RowScope.TextTableCell(
         text = text,
         modifier = modifier
             .weight(weight)
-            .padding(8.dp),
+            .padding(workoutTrackerDimens.gapMedium),
         textAlign = TextAlign.Center
     )
 }
@@ -87,10 +87,10 @@ fun RowScope.TextFieldTableCell(
         },
         enabled = enabled,
         modifier = modifier
-            .height(45.dp)
+            .height(workoutTrackerDimens.tableCellHeight)
             .weight(weight)
             .alpha(alpha)
-            .padding(8.dp),
+            .padding(workoutTrackerDimens.gapMedium),
         textStyle = LocalTextStyle.current.copy(
             color = Color.White,
             textAlign = TextAlign.Center
@@ -115,8 +115,8 @@ fun RowScope.TextFieldTableCell(
                 unfocusedIndicatorColor = Color.Gray,
             ),
             contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
-                top = 0.dp,
-                bottom = 0.dp,
+                top = workoutTrackerDimens.gapNone,
+                bottom = workoutTrackerDimens.gapNone,
             ),
         )
     }

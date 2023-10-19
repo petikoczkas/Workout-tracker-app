@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import hu.bme.aut.workout_tracker.R
@@ -36,7 +35,7 @@ fun AddExerciseDialog(
                     .wrapContentHeight(),
                 shape = AlertDialogDefaults.shape,
                 color = AlertDialogDefaults.containerColor,
-                tonalElevation = 6.dp
+                tonalElevation = workoutTrackerDimens.addExerciseDialogTonalElevation
             ) {
                 Column(modifier = Modifier.padding(workoutTrackerDimens.gapNormal)) {
                     Text(

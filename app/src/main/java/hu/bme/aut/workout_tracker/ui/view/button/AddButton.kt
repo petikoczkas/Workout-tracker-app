@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Text
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -40,7 +39,7 @@ fun AddButton(
             style = TextStyle(fontWeight = FontWeight.Medium),
             modifier = Modifier
                 .weight(1f)
-                .offset(x = (-12).dp)
+                .offset(x = workoutTrackerDimens.addButtonOffset)
         )
     }
 }

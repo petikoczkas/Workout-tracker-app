@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingInit
@@ -62,7 +61,7 @@ fun StandingsScreen(
                     )
                     if ((uiState as StandingLoaded).selectedItem.id.isNotEmpty()) {
                         LazyColumn(
-                            modifier = Modifier.padding(bottom = 80.dp),
+                            modifier = Modifier.padding(bottom = workoutTrackerDimens.bottomNavigationBarHeight),
                         ) {
                             val bestUserList = viewModel.getBestUsers(
                                 users!!,

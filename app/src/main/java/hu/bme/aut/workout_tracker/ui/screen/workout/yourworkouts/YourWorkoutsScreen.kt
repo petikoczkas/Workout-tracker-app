@@ -15,7 +15,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsInit
@@ -88,7 +87,7 @@ fun YourWorkoutsScreen(
                         .fillMaxWidth()
                         .padding(
                             top = workoutTrackerDimens.gapMedium,
-                            bottom = 80.dp + workoutTrackerDimens.gapMedium
+                            bottom = workoutTrackerDimens.bottomNavigationBarHeight + workoutTrackerDimens.gapNormal
                         )
                 )
             }

@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -78,7 +77,7 @@ fun UserCard(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(workoutTrackerDimens.userCardImageSize)
                             .clip(CircleShape)
                             .background(Color.Gray),
                         contentAlignment = Alignment.Center
@@ -87,7 +86,7 @@ fun UserCard(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_person),
                                 contentDescription = null,
-                                modifier = Modifier.size(30.dp)
+                                modifier = Modifier.size(workoutTrackerDimens.userCardIconSize)
                             )
                         } else {
                             Image(

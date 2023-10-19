@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -14,6 +13,7 @@ import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import hu.bme.aut.workout_tracker.R
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import java.math.RoundingMode
 
 @SuppressLint("RememberReturnType")
@@ -51,6 +51,6 @@ fun WorkoutTrackerChart(
             guideline = null,
         ),
         marker = marker,
-        modifier = Modifier.height(400.dp)
+        modifier = Modifier.height(workoutTrackerDimens.chartHeight)
     )
 }

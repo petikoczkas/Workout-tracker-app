@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
@@ -50,7 +49,7 @@ fun HomeScreen(
                     .padding(
                         start = workoutTrackerDimens.gapNormal,
                         end = workoutTrackerDimens.gapNormal,
-                        bottom = 80.dp
+                        bottom = workoutTrackerDimens.bottomNavigationBarHeight
                     ),
             ) {
                 Row(

@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.signin
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
@@ -23,6 +21,7 @@ import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 
 @Composable
 fun SignInScreen(
@@ -80,12 +79,11 @@ fun SignInScreen(
                         .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
                 if (signInFailedEvent.isLoginFailed) {
-                    Toast.makeText(
-                        LocalContext.current,
-                        signInFailedEvent.exception?.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.handledSignInFailedEvent()
+                    WorkoutTrackerAlertDialog(
+                        title = stringResource(R.string.login_failed),
+                        description = signInFailedEvent.exception?.message.toString(),
+                        onDismiss = { viewModel.handledSignInFailedEvent() }
+                    )
                 }
             }
         }

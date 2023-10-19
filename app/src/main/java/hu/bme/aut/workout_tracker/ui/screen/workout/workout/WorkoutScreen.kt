@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.workout.workout
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -54,6 +52,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompl
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.table.TableRow
 import hu.bme.aut.workout_tracker.ui.view.table.TextTableCell
 import kotlinx.coroutines.delay
@@ -151,12 +150,11 @@ fun WorkoutScreen(
                 }
             }
             if (saveFailedEvent.isSaveFailed) {
-                Toast.makeText(
-                    LocalContext.current,
-                    saveFailedEvent.exception?.message.toString(),
-                    Toast.LENGTH_LONG
-                ).show()
-                viewModel.handledSaveFailedEvent()
+                WorkoutTrackerAlertDialog(
+                    title = stringResource(R.string.workout_save_failed),
+                    description = saveFailedEvent.exception?.message.toString(),
+                    onDismiss = { viewModel.handledSaveFailedEvent() }
+                )
             }
         }
     }

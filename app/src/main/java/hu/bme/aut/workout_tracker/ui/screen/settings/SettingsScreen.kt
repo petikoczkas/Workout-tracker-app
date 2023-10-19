@@ -1,7 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -26,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +35,7 @@ import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoa
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsSaved
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 
 @Composable
 fun SettingsScreen(
@@ -142,12 +141,11 @@ fun SettingsScreen(
                         .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
                 if (updateUserFailedEvent.isUpdateUserFailed) {
-                    Toast.makeText(
-                        LocalContext.current,
-                        updateUserFailedEvent.exception?.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.handledUpdateUserFailedEvent()
+                    WorkoutTrackerAlertDialog(
+                        title = stringResource(R.string.update_profile_failed),
+                        description = updateUserFailedEvent.exception?.message.toString(),
+                        onDismiss = { viewModel.handledUpdateUserFailedEvent() }
+                    )
                 }
             }
         }

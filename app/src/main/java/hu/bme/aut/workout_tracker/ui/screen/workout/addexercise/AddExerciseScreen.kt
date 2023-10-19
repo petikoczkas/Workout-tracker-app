@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.workout.addexercise
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
@@ -25,6 +23,7 @@ import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 import hu.bme.aut.workout_tracker.ui.view.dialog.AddExerciseDialog
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
 import hu.bme.aut.workout_tracker.utils.Constants
 
@@ -108,12 +107,11 @@ fun AddExerciseScreen(
                         .padding(vertical = workoutTrackerDimens.gapNormal)
                 )
                 if (createExerciseFailedEvent.isCreateExerciseFailed) {
-                    Toast.makeText(
-                        LocalContext.current,
-                        createExerciseFailedEvent.exception?.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.handledCreateExerciseFailedEvent()
+                    WorkoutTrackerAlertDialog(
+                        title = stringResource(R.string.create_exercise_failed),
+                        description = createExerciseFailedEvent.exception?.message.toString(),
+                        onDismiss = { viewModel.handledCreateExerciseFailedEvent() }
+                    )
                 }
             }
         }

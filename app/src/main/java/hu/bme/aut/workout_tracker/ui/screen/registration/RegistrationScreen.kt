@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.registration
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
@@ -23,6 +21,7 @@ import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.Reg
 import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 
 @Composable
 fun RegistrationScreen(
@@ -100,12 +99,11 @@ fun RegistrationScreen(
                         .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
                 if (registrationFailedEvent.isRegistrationFailed) {
-                    Toast.makeText(
-                        LocalContext.current,
-                        registrationFailedEvent.exception?.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.handledRegistrationFailedEvent()
+                    WorkoutTrackerAlertDialog(
+                        title = stringResource(R.string.registration_failed),
+                        description = registrationFailedEvent.exception?.message.toString(),
+                        onDismiss = { viewModel.handledRegistrationFailedEvent() }
+                    )
                 }
             }
         }

@@ -10,6 +10,7 @@ import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.Reg
 import hu.bme.aut.workout_tracker.utils.isValidEmail
 import hu.bme.aut.workout_tracker.utils.isValidPassword
 import hu.bme.aut.workout_tracker.utils.passwordMatches
+import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,7 @@ class RegistrationViewModel @Inject constructor(
     val registrationFailedEvent = _registrationFailedEvent.asStateFlow()
 
     fun onEmailChange(emailAddress: String) {
-        _uiState.update { (_uiState.value as RegistrationLoaded).copy(email = emailAddress) }
+        _uiState.update { (_uiState.value as RegistrationLoaded).copy(email = emailAddress.removeEmptyLines()) }
     }
 
     fun onFirstNameChange(firstName: String) {

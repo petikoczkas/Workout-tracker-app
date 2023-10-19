@@ -8,6 +8,7 @@ import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
 import hu.bme.aut.workout_tracker.utils.isValidEmail
+import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +29,7 @@ class SignInViewModel @Inject constructor(
     val signInFailedEvent = _signInFailedEvent.asStateFlow()
 
     fun onEmailChange(emailAddress: String) {
-        _uiState.update { (_uiState.value as SignInLoaded).copy(email = emailAddress) }
+        _uiState.update { (_uiState.value as SignInLoaded).copy(email = emailAddress.removeEmptyLines()) }
     }
 
     fun onPasswordChange(password: String) {

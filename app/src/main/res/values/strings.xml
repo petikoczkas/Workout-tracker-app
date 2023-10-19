@@ -21,7 +21,7 @@
     <string name="standings_error_message">There Are No Users Who Have Completed The Exercise.</string>
     <string name="add_exercise">Add Exercise</string>
     <string name="empty_category_error_message">There Is No Exercise In This Category</string>
-    <string name="create_a_custom_exercise">Create A Custom Exercise</string>
+    <string name="create_a_custom_exercise">Create a Custom Exercise</string>
     <string name="edit_workout">Edit Workout</string>
     <string name="no_exercises">No Exercises In This Workout</string>
     <string name="sets">Sets</string>
@@ -35,9 +35,9 @@
     <string name="create_workout">Create Workout</string>
     <string name="volume">Volume</string>
     <string name="workout">Workout</string>
-    <string name="select_a_body_part">Select A Body Part</string>
-    <string name="select_an_exercise">Select An Exercise</string>
-    <string name="nesteddropdownmenu_empty_category_error_message">You Have Not Completed An Exercise In This Category Yet.</string>
+    <string name="select_a_body_part">Select a Body Part</string>
+    <string name="select_an_exercise">Select an Exercise</string>
+    <string name="nesteddropdownmenu_empty_category_error_message">You Have Not Completed an Exercise In This Category Yet.</string>
     <string name="x">x</string>
     <string name="ok">OK</string>
     <string name="login_failed">Login Failed</string>
@@ -46,4 +46,5 @@
     <string name="create_exercise_failed">Failed To Create The Exercise</string>
     <string name="workout_update_failed">Failed to Update The Workout</string>
     <string name="workout_save_failed">Failed To Save The Workout</string>
+    <string name="exercise_already_exists">Exercise Already Exists!</string>
 </resources>

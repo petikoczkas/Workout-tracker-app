@@ -1,10 +1,12 @@
 package hu.bme.aut.workout_tracker.ui.screen.workout.addexercise
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
@@ -12,6 +14,8 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiSta
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
 import hu.bme.aut.workout_tracker.utils.Constants.BODY_PARTS
 import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
+import hu.bme.aut.workout_tracker.utils.capitalizeWords
+import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -79,11 +83,14 @@ class AddExerciseViewModel @Inject constructor(
         }
     }
 
-    fun dialogSaveButtonOnClick(exercises: List<Exercise>) {
+    fun dialogSaveButtonOnClick(exercises: List<Exercise>, context: Context) {
         val category = (_uiState.value as AddExerciseLoaded).selectedItem
-        val name = (_uiState.value as AddExerciseLoaded).newExercise
+        val name =
+            (_uiState.value as AddExerciseLoaded).newExercise.removeEmptyLines().capitalizeWords()
         onNewExerciseChange("")
-        if (exercises.none { it.name == name }) {
+        if (exercises.none {
+                it.name.lowercase().replace(" ", "") == name.lowercase().replace(" ", "")
+            }) {
             viewModelScope.launch {
                 try {
                     workoutTrackerPresenter.createExercise(
@@ -100,7 +107,10 @@ class AddExerciseViewModel @Inject constructor(
                 }
             }
         } else {
-            //TODO Exercise already exists
+            _createExerciseFailedEvent.value = CreateExerciseFailure(
+                isCreateExerciseFailed = true,
+                exception = Exception(context.getString(R.string.exercise_already_exists))
+            )
         }
     }
 

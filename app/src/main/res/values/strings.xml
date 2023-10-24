@@ -47,4 +47,6 @@
     <string name="workout_update_failed">Failed to Update The Workout</string>
     <string name="workout_save_failed">Failed To Save The Workout</string>
     <string name="exercise_already_exists">Exercise Already Exists!</string>
+    <string name="login_error_message">Incorrect email or password.</string>
+    <string name="registration_error_message">The email address is already in use by another account.</string>
 </resources>

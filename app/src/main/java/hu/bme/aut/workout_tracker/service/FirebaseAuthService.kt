@@ -10,14 +10,14 @@ object FirebaseAuthService {
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure(it.exception)
+                    onFailure()
                 }
             }.await()
     }
@@ -31,14 +31,14 @@ object FirebaseAuthService {
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure(it.exception)
+                    onFailure()
                 }
             }.await()
     }

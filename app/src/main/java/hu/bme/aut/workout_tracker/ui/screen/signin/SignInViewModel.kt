@@ -25,7 +25,7 @@ class SignInViewModel @Inject constructor(
     val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()
 
     private val _signInFailedEvent =
-        MutableStateFlow(SignInFailure(isLoginFailed = false, exception = null))
+        MutableStateFlow(SignInFailure(isLoginFailed = false))
     val signInFailedEvent = _signInFailedEvent.asStateFlow()
 
     fun onEmailChange(emailAddress: String) {
@@ -60,11 +60,11 @@ class SignInViewModel @Inject constructor(
                     },
                     onFailure = {
                         _signInFailedEvent.value =
-                            SignInFailure(isLoginFailed = true, exception = it)
+                            SignInFailure(isLoginFailed = true)
                     }
                 )
             } catch (e: Exception) {
-                _signInFailedEvent.value = SignInFailure(isLoginFailed = true, exception = e)
+                _signInFailedEvent.value = SignInFailure(isLoginFailed = true)
             }
         }
     }
@@ -75,7 +75,6 @@ class SignInViewModel @Inject constructor(
     }
 
     data class SignInFailure(
-        val isLoginFailed: Boolean,
-        val exception: Exception?
+        val isLoginFailed: Boolean
     )
 }

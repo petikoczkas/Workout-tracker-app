@@ -28,7 +28,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         password: String,
         user: User,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         var userWithID = user
 
@@ -42,7 +42,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
                 userWithID = user.copy(id = currentUser?.uid.toString())
             },
             onFailure = {
-                onFailure(it)
+                onFailure()
             }
         )
         delay(5)
@@ -53,7 +53,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
                 onSuccess()
             },
             onFailure = {
-                onFailure(it)
+                onFailure()
             }
         )
     }
@@ -62,7 +62,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         FirebaseAuthService.signIn(
             firebaseAuth = firebaseAuth,
@@ -73,7 +73,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
                 currentUser = firebaseAuth.currentUser
             },
             onFailure = {
-                onFailure(it)
+                onFailure()
             }
         )
     }

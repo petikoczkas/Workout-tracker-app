@@ -81,7 +81,7 @@ fun SignInScreen(
                 if (signInFailedEvent.isLoginFailed) {
                     WorkoutTrackerAlertDialog(
                         title = stringResource(R.string.login_failed),
-                        description = signInFailedEvent.exception?.message.toString(),
+                        description = stringResource(R.string.login_error_message),
                         onDismiss = { viewModel.handledSignInFailedEvent() }
                     )
                 }

@@ -35,7 +35,7 @@ class RegistrationViewModel @Inject constructor(
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()
 
     private val _registrationFailedEvent =
-        MutableStateFlow(RegistrationFailure(isRegistrationFailed = false, exception = null))
+        MutableStateFlow(RegistrationFailure(isRegistrationFailed = false))
     val registrationFailedEvent = _registrationFailedEvent.asStateFlow()
 
     fun onEmailChange(emailAddress: String) {
@@ -85,13 +85,12 @@ class RegistrationViewModel @Inject constructor(
                     },
                     onFailure = {
                         _registrationFailedEvent.value =
-                            RegistrationFailure(isRegistrationFailed = true, exception = it)
+                            RegistrationFailure(isRegistrationFailed = true)
                     }
                 )
             } catch (e: Exception) {
                 _registrationFailedEvent.value = RegistrationFailure(
-                    isRegistrationFailed = true,
-                    exception = e
+                    isRegistrationFailed = true
                 )
             }
         }
@@ -109,6 +108,6 @@ class RegistrationViewModel @Inject constructor(
     }
 
     data class RegistrationFailure(
-        val isRegistrationFailed: Boolean, val exception: Exception?
+        val isRegistrationFailed: Boolean
     )
 }

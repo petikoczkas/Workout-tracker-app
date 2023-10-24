@@ -101,7 +101,7 @@ fun RegistrationScreen(
                 if (registrationFailedEvent.isRegistrationFailed) {
                     WorkoutTrackerAlertDialog(
                         title = stringResource(R.string.registration_failed),
-                        description = registrationFailedEvent.exception?.message.toString(),
+                        description = stringResource(R.string.registration_error_message),
                         onDismiss = { viewModel.handledRegistrationFailedEvent() }
                     )
                 }

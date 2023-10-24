@@ -16,7 +16,7 @@ class WorkoutTrackerPresenter @Inject constructor(
         password: String,
         user: User,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         workoutTrackerInteractor.registrate(
             email = email,
@@ -26,7 +26,7 @@ class WorkoutTrackerPresenter @Inject constructor(
                 onSuccess()
             },
             onFailure = {
-                onFailure(it)
+                onFailure()
             }
         )
     }
@@ -35,7 +35,7 @@ class WorkoutTrackerPresenter @Inject constructor(
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: (Exception?) -> Unit
+        onFailure: () -> Unit
     ) {
         workoutTrackerInteractor.signIn(
             email = email,
@@ -44,7 +44,7 @@ class WorkoutTrackerPresenter @Inject constructor(
                 onSuccess()
             },
             onFailure = {
-                onFailure(it)
+                onFailure()
             }
         )
     }

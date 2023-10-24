@@ -15,9 +15,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
@@ -28,9 +33,12 @@ fun WorkoutCard(
     exerciseNum: Int,
     onClick: () -> Unit,
     onEditClick: () -> Unit,
+    isFav: Boolean,
     onFavClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var favorite by remember { mutableStateOf(isFav) }
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -69,14 +77,24 @@ fun WorkoutCard(
                     )
                 }
                 IconButton(
-                    onClick = onFavClick
+                    onClick = {
+                        onFavClick()
+                        favorite = !favorite
+                    }
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_star_empty),
-                        contentDescription = null
-                    )
+                    if (favorite) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_star_full),
+                            contentDescription = null,
+                            tint = Color.Yellow
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_star_empty),
+                            contentDescription = null
+                        )
+                    }
                 }
-                //Box(modifier = Modifier.height(40.dp))
             }
         }
     }

@@ -9,12 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
 @Composable
 fun RegistrationSuccessScreen(
-    onClick: () -> Unit
+    navigateToHome: () -> Unit
 ) {
 
     Column(
@@ -29,7 +31,7 @@ fun RegistrationSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Successful Registration",
+                text = stringResource(R.string.successful_registration),
                 modifier = Modifier.padding(
                     top = workoutTrackerDimens.gapVeryLarge,
                     bottom = workoutTrackerDimens.gapLarge
@@ -37,11 +39,11 @@ fun RegistrationSuccessScreen(
             )
         }
         PrimaryButton(
-            onClick = { onClick() },
+            onClick = { navigateToHome() },
+            text = stringResource(R.string.next),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = workoutTrackerDimens.gapNormal),
-            text = "Next"
+                .padding(bottom = workoutTrackerDimens.gapNormal)
         )
     }
 }

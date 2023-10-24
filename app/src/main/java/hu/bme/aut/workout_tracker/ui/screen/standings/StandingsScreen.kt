@@ -3,108 +3,97 @@ package hu.bme.aut.workout_tracker.ui.screen.standings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
+import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingInit
+import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.card.UserCard
+import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
+import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StandingsScreen() {
-    val listItems = arrayOf(
-        "Chest",
-        "Back",
-        "Triceps"
-    )
-    val chestList = arrayOf(
-        "Barbell bench press",
-        "Dumbbell incline bench press",
-        "Cable seated flys",
-        "Machine incline chest press"
-    )
-    var subListItems = mutableListOf<String>()
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-    var submenuExpanded by remember {
-        mutableStateOf(false)
-    }
+fun StandingsScreen(
+    viewModel: StandingViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val exercises by viewModel.exercises.observeAsState()
+    val users by viewModel.users.observeAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = workoutTrackerDimens.gapNormal),
-        //horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Standings")
 
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            modifier = Modifier.padding(bottom = workoutTrackerDimens.gapNormal),
-            onExpandedChange = {
-                expanded = !expanded
-            }
-        ) {
-            TextField(
-                value = selectedItem,
-                onValueChange = {},
-                readOnly = true,
-                modifier = Modifier.menuAnchor(),
-                label = { Text(text = "Label") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+    when (uiState) {
+        StandingInit -> {
+            viewModel.getStandingExercises()
+        }
+
+        is StandingLoaded -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                listItems.forEach { selectedOption ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = selectedOption)
+                Text(stringResource(R.string.standings))
+                if (exercises.isNullOrEmpty() || users == null) {
+                    WorkoutTrackerProgressIndicator()
+                } else {
+                    WorkoutTrackerDropDownMenu(
+                        selectedItem = (uiState as StandingLoaded).selectedItem.name,
+                        onSelectedItemChange = {
+                            viewModel.onSelectedItemChangeByName(
+                                name = it,
+                                exercises = exercises!!
+                            )
                         },
-                        onClick = {
-                            subListItems = chestList.toMutableList()
-                            submenuExpanded = true
-                        }
+                        items = exercises!!.map { it.name },
+                        modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
                     )
-                }
-                DropdownMenu(
-                    expanded = submenuExpanded,
-                    onDismissRequest = { submenuExpanded = !submenuExpanded }
-                ) {
-                    subListItems.forEach { selectedOption ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = selectedOption)
-                            },
-                            onClick = {
-                                selectedItem = selectedOption
-                                expanded = false
+                    if ((uiState as StandingLoaded).selectedItem.id.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier.padding(bottom = workoutTrackerDimens.bottomNavigationBarHeight),
+                        ) {
+                            val bestUserList = viewModel.getBestUsers(
+                                users!!,
+                                (uiState as StandingLoaded).selectedItem.id
+                            )
+                            if (bestUserList.isEmpty()) {
+                                item {
+                                    Text(
+                                        text = stringResource(R.string.standings_error_message),
+                                        modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapSmall),
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            } else {
+                                itemsIndexed(bestUserList.take(50)) { i, u ->
+                                    UserCard(
+                                        place = i + 1,
+                                        name = u.name,
+                                        photo = u.photo,
+                                        weight = u.oneRepMaxCharts[(uiState as StandingLoaded).selectedItem.id]!!.max(),
+                                        modifier = Modifier
+                                            .padding(
+                                                top = workoutTrackerDimens.gapSmall,
+                                                bottom = if (i == 49) workoutTrackerDimens.gapMedium else workoutTrackerDimens.gapSmall
+                                            )
+                                    )
+                                }
                             }
-                        )
+                        }
                     }
                 }
             }
         }
-        UserCard()
     }
 }

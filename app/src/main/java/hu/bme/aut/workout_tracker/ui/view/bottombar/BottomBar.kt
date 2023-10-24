@@ -56,7 +56,7 @@ fun RowScope.AddItem(
         icon = {
             Icon(
                 painter = painterResource(id = screen.icon),
-                contentDescription = "Navigation Icon"
+                contentDescription = null
             )
         },
         selected = currentDestination?.hierarchy?.any {

@@ -8,38 +8,45 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WorkoutCompleteScreen(
-    onAddExerciseClick: () -> Unit,
-    onEndWorkoutClick: () -> Unit
+    navigateToAddExercise: () -> Unit,
+    navigateBack: () -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    keyboardController?.hide()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = workoutTrackerDimens.gapNormal),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Workout Complete")
+        Text(stringResource(R.string.workout_complete))
         Column(
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
             PrimaryButton(
-                onClick = onAddExerciseClick,
+                onClick = navigateToAddExercise,
+                text = stringResource(R.string.add_exercise),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = workoutTrackerDimens.gapNormal),
-                text = "Add Exercise"
+                    .padding(bottom = workoutTrackerDimens.gapNormal)
             )
             PrimaryButton(
-                onClick = onEndWorkoutClick,
-                modifier = Modifier.fillMaxWidth(),
-                text = "End Workout"
+                onClick = navigateBack,
+                text = stringResource(R.string.end_workout),
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

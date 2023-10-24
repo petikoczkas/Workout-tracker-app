@@ -10,90 +10,106 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import hu.bme.aut.workout_tracker.R
+import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationLoaded
+import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 
 @Composable
 fun RegistrationScreen(
-    onRegistrateClick: () -> Unit
+    navigateToRegistrationSuccess: () -> Unit,
+    viewModel: RegistrationViewModel = hiltViewModel()
 ) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var firstName by rememberSaveable { mutableStateOf("") }
-    var lastName by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordAgain by rememberSaveable { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
+    val registrationFailedEvent by viewModel.registrationFailedEvent.collectAsState()
 
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = workoutTrackerDimens.gapNormal)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "Registration",
-                modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
-            )
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(text = "Email") },
-                modifier = Modifier.padding(
-                    bottom = workoutTrackerDimens.gapLarge
+    when (uiState) {
+        is RegistrationLoaded -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = workoutTrackerDimens.gapNormal)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = stringResource(R.string.registration),
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
+                    TextField(
+                        value = (uiState as RegistrationLoaded).email,
+                        onValueChange = viewModel::onEmailChange,
+                        label = { Text(text = stringResource(R.string.email)) },
+                        modifier = Modifier.padding(
+                            bottom = workoutTrackerDimens.gapLarge
+                        )
+                    )
+                    TextField(
+                        value = (uiState as RegistrationLoaded).firstName,
+                        onValueChange = viewModel::onFirstNameChange,
+                        label = { Text(text = stringResource(R.string.first_name)) },
+                        modifier = Modifier.padding(
+                            bottom = workoutTrackerDimens.gapLarge
+                        )
+                    )
+                    TextField(
+                        value = (uiState as RegistrationLoaded).lastName,
+                        onValueChange = viewModel::onLastNameChange,
+                        label = { Text(text = stringResource(R.string.last_name)) },
+                        modifier = Modifier.padding(
+                            bottom = workoutTrackerDimens.gapLarge
+                        )
+                    )
+                    TextField(
+                        value = (uiState as RegistrationLoaded).password,
+                        onValueChange = viewModel::onPasswordChange,
+                        label = { Text(text = stringResource(R.string.password)) },
+                        modifier = Modifier.padding(
+                            bottom = workoutTrackerDimens.gapLarge
+                        )
+                    )
+                    TextField(
+                        value = (uiState as RegistrationLoaded).passwordAgain,
+                        onValueChange = viewModel::onPasswordAgainChange,
+                        label = { Text(text = stringResource(R.string.password_again)) },
+                        modifier = Modifier.padding(
+                            bottom = workoutTrackerDimens.gapLarge
+                        )
+                    )
+                }
+                PrimaryButton(
+                    onClick = { viewModel.buttonOnClick() },
+                    enabled = viewModel.isButtonEnabled(),
+                    text = stringResource(R.string.registrate),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = workoutTrackerDimens.gapNormal)
                 )
-            )
-            TextField(
-                value = firstName,
-                onValueChange = { firstName = it },
-                label = { Text(text = "First Name") },
-                modifier = Modifier.padding(
-                    bottom = workoutTrackerDimens.gapLarge
-                )
-            )
-            TextField(
-                value = lastName,
-                onValueChange = { lastName = it },
-                label = { Text(text = "Last Name") },
-                modifier = Modifier.padding(
-                    bottom = workoutTrackerDimens.gapLarge
-                )
-            )
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(text = "Password") },
-                modifier = Modifier.padding(
-                    bottom = workoutTrackerDimens.gapLarge
-                )
-            )
-            TextField(
-                value = passwordAgain,
-                onValueChange = { passwordAgain = it },
-                label = { Text(text = "Password Again") },
-                modifier = Modifier.padding(
-                    bottom = workoutTrackerDimens.gapLarge
-                )
-            )
+                if (registrationFailedEvent.isRegistrationFailed) {
+                    WorkoutTrackerAlertDialog(
+                        title = stringResource(R.string.registration_failed),
+                        description = stringResource(R.string.registration_error_message),
+                        onDismiss = { viewModel.handledRegistrationFailedEvent() }
+                    )
+                }
+            }
         }
-        PrimaryButton(
-            onClick = { onRegistrateClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = workoutTrackerDimens.gapNormal),
-            text = "Registrate"
-        )
+
+        RegistrationSuccess -> {
+            navigateToRegistrationSuccess()
+        }
     }
 }

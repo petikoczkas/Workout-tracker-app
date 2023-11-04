@@ -21,7 +21,7 @@ data class WorkoutTrackerDimens(
     val settingsImageSize: Dp = 200.dp,
     val settingsImageContentSize: Dp = 150.dp,
 
-    val minButtonHeight: Dp = 45.dp,
+    val minButtonHeight: Dp = 46.dp,
     val primaryButtonCornerSize: Dp = 16.dp,
     val addButtonOffset: Dp = (-12).dp,
 
@@ -46,6 +46,8 @@ data class WorkoutTrackerDimens(
     val pagerIndicatorSize: Dp = 10.dp,
     val pagerIndicatorHeight: Dp = 50.dp,
     val circularProgressIndicatorSize: Dp = 45.dp,
+
+    val textFieldCornerSize: Dp = 12.dp,
 )
 
 val workoutTrackerDimens: WorkoutTrackerDimens

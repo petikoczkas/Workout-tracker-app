@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,9 +18,12 @@ import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
+import hu.bme.aut.workout_tracker.ui.view.textfield.EmailTextField
+import hu.bme.aut.workout_tracker.ui.view.textfield.PasswordTextField
 
 @Composable
 fun SignInScreen(
@@ -39,7 +41,7 @@ fun SignInScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -49,19 +51,18 @@ fun SignInScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.sign_in),
+                        style = workoutTrackerTypography.titleTextStyle,
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
-                    TextField(
-                        value = (uiState as SignInLoaded).email,
-                        onValueChange = viewModel::onEmailChange,
-                        label = { Text(text = stringResource(R.string.email)) },
+                    EmailTextField(
+                        email = (uiState as SignInLoaded).email,
+                        onEmailChange = viewModel::onEmailChange,
                         modifier = Modifier
                             .padding(bottom = workoutTrackerDimens.gapLarge)
                     )
-                    TextField(
-                        value = (uiState as SignInLoaded).password,
-                        onValueChange = viewModel::onPasswordChange,
-                        label = { Text(text = stringResource(R.string.password)) },
+                    PasswordTextField(
+                        password = (uiState as SignInLoaded).password,
+                        onPasswordChange = viewModel::onPasswordChange,
                         modifier = Modifier
                             .padding(bottom = workoutTrackerDimens.gapLarge)
                     )

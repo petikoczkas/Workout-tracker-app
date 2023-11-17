@@ -7,16 +7,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
 
 @Composable
 fun AddExerciseDialog(
@@ -40,12 +39,12 @@ fun AddExerciseDialog(
                 Column(modifier = Modifier.padding(workoutTrackerDimens.gapNormal)) {
                     Text(
                         text = "Body Part: $selectedItem",
-                        style = TextStyle(fontSize = 24.sp)
+                        style = workoutTrackerTypography.bold24sp
                     )
-                    TextField(
-                        value = newExercise,
-                        onValueChange = onNewExerciseChange,
-                        label = { Text(text = stringResource(R.string.name)) },
+                    WorkoutTrackerTextField(
+                        text = newExercise,
+                        onTextChange = onNewExerciseChange,
+                        placeholder = stringResource(R.string.name),
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal)
                     )
                     PrimaryButton(

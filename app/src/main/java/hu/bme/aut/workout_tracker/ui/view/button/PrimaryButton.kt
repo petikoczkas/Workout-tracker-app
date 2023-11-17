@@ -19,18 +19,12 @@ fun PrimaryButton(
     Button(
         onClick = onClick,
         modifier = modifier.height(workoutTrackerDimens.minButtonHeight),
-        /*colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colorScheme.background,
-            disabledBackgroundColor = MaterialTheme.colorScheme.primaryVariant,
-            disabledContentColor = MaterialTheme.colorScheme.onPrimary
-
-        ),*/
         enabled = enabled,
         shape = RoundedCornerShape(workoutTrackerDimens.primaryButtonCornerSize),
     ) {
         Text(
             text = text,
-            style = workoutTrackerTypography.primaryButtonTextStyle
+            style = workoutTrackerTypography.medium16sp
         )
     }
 }

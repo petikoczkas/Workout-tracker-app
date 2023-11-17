@@ -130,16 +130,16 @@ sealed class BottomBarScreen(
     val icon: Int
 ) {
     data object Home :
-        BottomBarScreen(route = "HOME", title = "HOME", icon = R.drawable.ic_home)
+        BottomBarScreen(route = "HOME", title = "Home", icon = R.drawable.ic_home)
 
     data object YourWorkouts :
-        BottomBarScreen(route = "YOUR_WORKOUTS", title = "WORKOUT", icon = R.drawable.ic_workout)
+        BottomBarScreen(route = "YOUR_WORKOUTS", title = "Workout", icon = R.drawable.ic_workout)
 
     data object Charts :
-        BottomBarScreen(route = "CHARTS", title = "CHARTS", icon = R.drawable.ic_charts)
+        BottomBarScreen(route = "CHARTS", title = "Charts", icon = R.drawable.ic_charts)
 
     data object Standings :
-        BottomBarScreen(route = "STANDINGS", title = "STANDINGS", icon = R.drawable.ic_standings)
+        BottomBarScreen(route = "STANDINGS", title = "Standings", icon = R.drawable.ic_standings)
 }
 
 sealed class Content(val route: String) {

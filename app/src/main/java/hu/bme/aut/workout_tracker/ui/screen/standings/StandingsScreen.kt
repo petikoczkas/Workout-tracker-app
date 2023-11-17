@@ -19,6 +19,7 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingInit
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.card.UserCard
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
@@ -41,10 +42,14 @@ fun StandingsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(R.string.standings))
+                Text(
+                    text = stringResource(R.string.standings),
+                    style = workoutTrackerTypography.titleTextStyle,
+                    modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                )
                 if (exercises.isNullOrEmpty() || users == null) {
                     WorkoutTrackerProgressIndicator()
                 } else {
@@ -57,7 +62,7 @@ fun StandingsScreen(
                             )
                         },
                         items = exercises!!.map { it.name },
-                        modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
+                        modifier = Modifier.padding(bottom = workoutTrackerDimens.gapLarge)
                     )
                     if ((uiState as StandingLoaded).selectedItem.id.isNotEmpty()) {
                         LazyColumn(
@@ -71,7 +76,7 @@ fun StandingsScreen(
                                 item {
                                     Text(
                                         text = stringResource(R.string.standings_error_message),
-                                        modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapSmall),
+                                        style = workoutTrackerTypography.medium18sp,
                                         textAlign = TextAlign.Center
                                     )
                                 }

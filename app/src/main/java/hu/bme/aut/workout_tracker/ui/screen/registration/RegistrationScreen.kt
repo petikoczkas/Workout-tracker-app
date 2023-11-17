@@ -24,6 +24,7 @@ import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.checker.PasswordChecker
+import hu.bme.aut.workout_tracker.ui.view.dialog.LoadingDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.textfield.EmailTextField
 import hu.bme.aut.workout_tracker.ui.view.textfield.PasswordTextField
@@ -36,6 +37,7 @@ fun RegistrationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val registrationFailedEvent by viewModel.registrationFailedEvent.collectAsState()
+    val showSavingDialog by viewModel.savingState.collectAsState()
 
     when (uiState) {
         is RegistrationLoaded -> {
@@ -66,7 +68,7 @@ fun RegistrationScreen(
                     WorkoutTrackerTextField(
                         text = (uiState as RegistrationLoaded).firstName,
                         onTextChange = viewModel::onFirstNameChange,
-                        label = stringResource(R.string.first_name),
+                        placeholder = stringResource(R.string.first_name),
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_person),
@@ -80,7 +82,7 @@ fun RegistrationScreen(
                     WorkoutTrackerTextField(
                         text = (uiState as RegistrationLoaded).lastName,
                         onTextChange = viewModel::onLastNameChange,
-                        label = stringResource(R.string.last_name),
+                        placeholder = stringResource(R.string.last_name),
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_person),
@@ -129,6 +131,9 @@ fun RegistrationScreen(
                         description = stringResource(R.string.registration_error_message),
                         onDismiss = { viewModel.handledRegistrationFailedEvent() }
                     )
+                }
+                if (showSavingDialog) {
+                    LoadingDialog()
                 }
             }
         }

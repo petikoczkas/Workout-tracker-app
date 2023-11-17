@@ -34,6 +34,9 @@ class RegistrationViewModel @Inject constructor(
     )
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()
 
+    private val _savingState = MutableStateFlow(false)
+    val savingState = _savingState.asStateFlow()
+
     private val _registrationFailedEvent =
         MutableStateFlow(RegistrationFailure(isRegistrationFailed = false))
     val registrationFailedEvent = _registrationFailedEvent.asStateFlow()
@@ -72,6 +75,7 @@ class RegistrationViewModel @Inject constructor(
     fun buttonOnClick() {
         val email = (_uiState.value as RegistrationLoaded).email
         val password = (_uiState.value as RegistrationLoaded).password
+        _savingState.value = true
         viewModelScope.launch {
             try {
                 workoutTrackerPresenter.registrate(
@@ -82,6 +86,7 @@ class RegistrationViewModel @Inject constructor(
                     ),
                     onSuccess = {
                         _uiState.value = RegistrationSuccess
+                        _savingState.value = true
                     },
                     onFailure = {
                         _registrationFailedEvent.value =
@@ -89,6 +94,7 @@ class RegistrationViewModel @Inject constructor(
                     }
                 )
             } catch (e: Exception) {
+                _savingState.value = false
                 _registrationFailedEvent.value = RegistrationFailure(
                     isRegistrationFailed = true
                 )

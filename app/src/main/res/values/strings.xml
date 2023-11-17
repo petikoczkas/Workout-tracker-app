@@ -11,7 +11,6 @@
     <string name="successful_registration">Successful Registration</string>
     <string name="next">Next</string>
     <string name="no_favorite_workouts">You Have No Favorite Workouts</string>
-    <string name="home">Home</string>
     <string name="charts">Charts</string>
     <string name="chart_error_message">There Is Not Enough Data To Display On The Chart.</string>
     <string name="settings">Settings</string>
@@ -49,4 +48,15 @@
     <string name="exercise_already_exists">Exercise Already Exists!</string>
     <string name="login_error_message">Incorrect email or password.</string>
     <string name="registration_error_message">The email address is already in use by another account.</string>
+    <string name="volume_chart">Volume Chart</string>
+    <string name="volume_chart_description">This chart calculates the volume for a given exercise based on the following formula:</string>
+    <string name="volume_chart_formula">sum(weight * rep)</string>
+    <string name="average_one_rep_max_chart">Average One Rep Max Chart</string>
+    <string name="average_one_rep_max_chart_description">This chart calculates the maximum weight you can lift per set for a single rep and averages it for a given exercise using the following formula:</string>
+    <string name="average_one_rep_max_chart_formula">average(weight * (1 + reps / 30))</string>
+    <string name="one_rep_max_chart">One Rep Max Chart</string>
+    <string name="one_rep_max_chart_description">This chart calculates the maximum weight you can lift for a single repetition for a given exercise based on the following formula:</string>
+    <string name="one_rep_max_chart_formula">max(weight * (1 + reps / 30))</string>
+    <string name="no_internet">No Internet Connection!</string>
+    <string name="workout_name">Workout Name</string>
 </resources>

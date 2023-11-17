@@ -25,7 +25,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.rememberAsyncImagePainter
 import hu.bme.aut.workout_tracker.R
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerColors
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 
 @Composable
 fun UserCard(
@@ -60,18 +62,43 @@ fun UserCard(
         ) {
             Row(
                 modifier = Modifier
-                    .weight(3f),
+                    .weight(4f),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "$place.",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(end = workoutTrackerDimens.gapSmall)
+                if (place > 3) {
+                    Text(
+                        text = "$place.",
+                        textAlign = TextAlign.Center,
+                        style = workoutTrackerTypography.medium16sp,
+                        modifier = Modifier
+                            .weight(2f)
+                            .padding(end = workoutTrackerDimens.gapSmall)
 
-                )
+                    )
+                } else {
+                    val color = when (place) {
+                        1 -> {
+                            workoutTrackerColors.gold
+                        }
+
+                        2 -> {
+                            workoutTrackerColors.silver
+                        }
+
+                        else -> {
+                            workoutTrackerColors.bronze
+                        }
+                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_trophy),
+                        tint = color,
+                        modifier = Modifier
+                            .weight(2f)
+                            .padding(end = workoutTrackerDimens.gapSmall),
+                        contentDescription = null
+                    )
+                }
                 Box(
                     modifier = Modifier.weight(3f)
                 ) {
@@ -100,15 +127,17 @@ fun UserCard(
             }
             Text(
                 text = name,
+                style = workoutTrackerTypography.medium16sp,
                 modifier = Modifier
                     .weight(8f)
                     .padding(start = workoutTrackerDimens.gapMedium)
             )
             Text(
                 text = "$weightNumber kg",
+                style = workoutTrackerTypography.medium16sp,
                 textAlign = TextAlign.End,
                 modifier = Modifier
-                    .weight(4f)
+                    .weight(5f)
                     .padding(workoutTrackerDimens.gapMedium)
             )
         }

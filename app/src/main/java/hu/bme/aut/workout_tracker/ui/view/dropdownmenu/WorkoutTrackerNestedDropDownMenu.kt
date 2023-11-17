@@ -5,11 +5,9 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
+import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
 import hu.bme.aut.workout_tracker.utils.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,28 +44,32 @@ fun WorkoutTrackerNestedDropDownMenu(
         onExpandedChange = { parentExpanded = !parentExpanded },
         modifier = modifier
     ) {
-        TextField(
-            value = selectedItem.name,
-            onValueChange = {},
-            readOnly = true,
+        WorkoutTrackerTextField(
+            text = selectedItem.name,
+            onTextChange = {},
+            enabled = false,
             modifier = Modifier
                 .menuAnchor(),
-            label = { Text(text = stringResource(R.string.select_an_exercise)) },
+            placeholder = stringResource(R.string.select_an_exercise),
+            textStyle = workoutTrackerTypography.medium16sp,
             trailingIcon = {
                 TrailingIcon(
                     expanded = parentExpanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
-        ExposedDropdownMenu(
+        DropdownMenu(
             expanded = parentExpanded,
-            onDismissRequest = { parentExpanded = false }
+            onDismissRequest = { parentExpanded = false },
+            modifier = Modifier.exposedDropdownSize()
         ) {
             Constants.BODY_PARTS.forEach { selectedOption ->
                 DropdownMenuItem(
                     text = {
-                        Text(text = selectedOption)
+                        Text(
+                            text = selectedOption,
+                            style = workoutTrackerTypography.medium14sp
+                        )
                     },
                     onClick = {
                         selectedParent = selectedOption
@@ -83,13 +87,17 @@ fun WorkoutTrackerNestedDropDownMenu(
             if (exercises.none { it.category == selectedParent }) {
                 Text(
                     text = stringResource(R.string.nesteddropdownmenu_empty_category_error_message),
+                    style = workoutTrackerTypography.medium14sp,
                     modifier = Modifier.padding(MenuDefaults.DropdownMenuItemContentPadding)
                 )
             } else {
                 exercises.filter { it.category == selectedParent }.forEach { selectedOption ->
                     DropdownMenuItem(
                         text = {
-                            Text(text = selectedOption.name)
+                            Text(
+                                text = selectedOption.name,
+                                style = workoutTrackerTypography.medium14sp
+                            )
                         },
                         onClick = {
                             onSelectedItemChange(selectedOption)

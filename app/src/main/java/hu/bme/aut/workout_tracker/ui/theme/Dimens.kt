@@ -18,16 +18,18 @@ data class WorkoutTrackerDimens(
     val gapVeryVeryLarge: Dp = 56.dp,
     val gapExtraLarge: Dp = 64.dp,
 
-    val settingsImageSize: Dp = 200.dp,
-    val settingsImageContentSize: Dp = 150.dp,
+    val settingsImageSize: Dp = 260.dp,
+    val settingsImageContentSize: Dp = 200.dp,
+    val dividerThickness: Dp = 1.dp,
 
     val minButtonHeight: Dp = 46.dp,
     val primaryButtonCornerSize: Dp = 16.dp,
     val addButtonOffset: Dp = (-12).dp,
 
-    val minWorkoutCardHeight: Dp = 100.dp,
+    val minWorkoutCardHeight: Dp = 96.dp,
     val minFavWorkoutCardHeight: Dp = 72.dp,
     val workoutCardCornerSize: Dp = 12.dp,
+    val workoutTrackerTextFieldHeight: Dp = 56.dp,
 
     val triStateToggleCornerSize: Dp = 24.dp,
     val triStateToggleShadowElevation: Dp = 4.dp,
@@ -41,13 +43,15 @@ data class WorkoutTrackerDimens(
     val minUserCardHeight: Dp = 56.dp,
     val userCardImageSize: Dp = 40.dp,
     val userCardIconSize: Dp = 30.dp,
-    val bottomNavigationBarHeight: Dp = 80.dp,
-    val chartHeight: Dp = 400.dp,
+    val bottomNavigationBarHeight: Dp = 70.dp,
+    val chartHeight: Dp = 420.dp,
     val pagerIndicatorSize: Dp = 10.dp,
     val pagerIndicatorHeight: Dp = 50.dp,
     val circularProgressIndicatorSize: Dp = 45.dp,
 
     val textFieldCornerSize: Dp = 12.dp,
+
+    val workoutTitleSize: Dp = 90.dp,
 )
 
 val workoutTrackerDimens: WorkoutTrackerDimens

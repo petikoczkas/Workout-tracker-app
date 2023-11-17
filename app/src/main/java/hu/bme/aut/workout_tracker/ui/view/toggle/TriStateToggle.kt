@@ -19,9 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.utils.Constants.chartsList
 
 @Composable
@@ -70,8 +69,7 @@ fun TriStateToggle(
                 ) {
                     Text(
                         text = text,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
+                        style = workoutTrackerTypography.triStateToggleTextStyle,
                         maxLines = 2,
                     )
                 }

@@ -24,6 +24,9 @@ class SignInViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SignInUiState>(SignInInit)
     val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()
 
+    private val _savingState = MutableStateFlow(false)
+    val savingState = _savingState.asStateFlow()
+
     private val _signInFailedEvent =
         MutableStateFlow(SignInFailure(isLoginFailed = false))
     val signInFailedEvent = _signInFailedEvent.asStateFlow()
@@ -50,6 +53,7 @@ class SignInViewModel @Inject constructor(
     fun buttonOnClick() {
         val email = (_uiState.value as SignInLoaded).email
         val password = (_uiState.value as SignInLoaded).password
+        _savingState.value = true
         viewModelScope.launch {
             try {
                 workoutTrackerPresenter.signIn(
@@ -57,6 +61,7 @@ class SignInViewModel @Inject constructor(
                     password = password,
                     onSuccess = {
                         _uiState.value = SignInSuccess
+                        _savingState.value = true
                     },
                     onFailure = {
                         _signInFailedEvent.value =
@@ -64,6 +69,7 @@ class SignInViewModel @Inject constructor(
                     }
                 )
             } catch (e: Exception) {
+                _savingState.value = false
                 _signInFailedEvent.value = SignInFailure(isLoginFailed = true)
             }
         }

@@ -21,6 +21,7 @@ import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.LoadingDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.textfield.EmailTextField
 import hu.bme.aut.workout_tracker.ui.view.textfield.PasswordTextField
@@ -32,8 +33,9 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     val signInFailedEvent by viewModel.signInFailedEvent.collectAsState()
+    val showSavingDialog by viewModel.savingState.collectAsState()
+
 
     when (uiState) {
 
@@ -85,6 +87,9 @@ fun SignInScreen(
                         description = stringResource(R.string.login_error_message),
                         onDismiss = { viewModel.handledSignInFailedEvent() }
                     )
+                }
+                if (showSavingDialog) {
+                    LoadingDialog()
                 }
             }
         }

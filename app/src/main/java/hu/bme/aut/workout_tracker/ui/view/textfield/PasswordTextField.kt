@@ -30,7 +30,9 @@ fun PasswordTextField(
     WorkoutTrackerTextField(
         text = password,
         onTextChange = onPasswordChange,
-        label = if (isPasswordAgain) stringResource(R.string.password_again) else stringResource(R.string.password),
+        placeholder = if (isPasswordAgain) stringResource(R.string.password_again) else stringResource(
+            R.string.password
+        ),
         isError = if (isPasswordAgain && password.isNotEmpty()) firstPassword != password else false,
         leadingIcon = {
             Icon(

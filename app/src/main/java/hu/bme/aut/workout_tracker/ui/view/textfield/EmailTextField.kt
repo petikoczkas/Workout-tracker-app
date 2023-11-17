@@ -18,7 +18,7 @@ fun EmailTextField(
     WorkoutTrackerTextField(
         text = email,
         onTextChange = onEmailChange,
-        label = stringResource(R.string.email),
+        placeholder = stringResource(R.string.email),
         isError = if (email.isNotEmpty()) !email.isValidEmail() else false,
         leadingIcon = {
             Icon(painter = painterResource(id = R.drawable.ic_email), contentDescription = null)

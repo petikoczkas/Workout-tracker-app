@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,6 +50,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.*
 import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompleteScreen
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.button.SecondaryButton
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
@@ -71,6 +73,7 @@ fun WorkoutScreen(
     val workoutExercises by viewModel.workoutExercises.observeAsState()
     val saveFailedEvent by viewModel.saveFailedEvent.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     when (uiState) {
         WorkoutInit -> {
@@ -116,6 +119,7 @@ fun WorkoutScreen(
                                 )
                             } else {
                                 WorkoutCompleteScreen(
+                                    focusManager = focusManager,
                                     navigateToAddExercise = {
                                         viewModel.changeLoadedUiState(AddExercise)
                                         navigateToAddExercise(workoutId)
@@ -188,12 +192,19 @@ fun WorkoutScreenContent(
             focusRequester.requestFocus()
         }
     }
+
+    val imeAction = ImeAction.Next
+    val keyboardActions = KeyboardActions(
+        onNext = { localFocusManager.moveFocus(FocusDirection.Next) },
+        onDone = { localFocusManager.clearFocus() }
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                start = workoutTrackerDimens.gapNormal,
-                end = workoutTrackerDimens.gapNormal,
+                start = workoutTrackerDimens.gapLarge,
+                end = workoutTrackerDimens.gapLarge,
                 bottom = workoutTrackerDimens.pagerIndicatorHeight
             ),
         verticalArrangement = Arrangement.SpaceBetween
@@ -205,46 +216,56 @@ fun WorkoutScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Text(
-                text = viewModel.getExerciseName(page = page),
-                modifier = Modifier.alpha(alpha)
-            )
+            Box(
+                modifier = Modifier
+                    .heightIn(workoutTrackerDimens.workoutTitleSize),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = viewModel.getExerciseName(page = page),
+                    style = workoutTrackerTypography.workoutTitleTextStyle,
+                    modifier = Modifier
+                        .alpha(alpha)
+                )
+            }
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = workoutTrackerDimens.gapMedium),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = workoutTrackerDimens.gapSmall),
                     ) {
                         TextTableCell(
                             text = stringResource(R.string.sets),
                             weight = 2f,
+                            style = workoutTrackerTypography.medium18sp,
                             modifier = Modifier.alpha(alpha)
                         )
                         TextTableCell(
                             text = stringResource(R.string.weight_kg),
                             weight = 3f,
+                            style = workoutTrackerTypography.medium18sp,
                             modifier = Modifier.alpha(alpha)
                         )
-                        TextTableCell(text = "", weight = 1f, modifier = Modifier.alpha(alpha))
+                        TextTableCell(
+                            text = "",
+                            weight = 1f,
+                            style = workoutTrackerTypography.medium18sp,
+                            modifier = Modifier.alpha(alpha)
+                        )
                         TextTableCell(
                             text = stringResource(R.string.reps),
                             weight = 2f,
+                            style = workoutTrackerTypography.medium18sp,
                             modifier = Modifier.alpha(alpha)
                         )
                     }
                 }
                 items(uiState.weightList[page].size) { set ->
-                    val imeAction = ImeAction.Next
-
-                    val keyboardActions = KeyboardActions(
-                        onNext = { localFocusManager.moveFocus(FocusDirection.Next) }
-                    )
-
                     TableRow(
                         set = "${set + 1}.",
                         weight = uiState.weightList[page][set],
@@ -267,8 +288,7 @@ fun WorkoutScreenContent(
                         cleared = viewModel.switchOrAddCurrentExercise(page.toString()),
                         keyboardActions = keyboardActions,
                         imeAction = imeAction,
-                        isLast = set + 1 == uiState.weightList[page].size,
-                        keyboardActionsLast = KeyboardActions(onDone = { localFocusManager.clearFocus() }),
+                        isLast = set == uiState.weightList[page].lastIndex,
                         modifier = if (set == 0) Modifier.focusRequester(focusRequester) else Modifier
                     )
                 }
@@ -279,7 +299,9 @@ fun WorkoutScreenContent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         IconButton(
-                            onClick = { viewModel.removeButtonOnClick(page) },
+                            onClick = {
+                                viewModel.removeButtonOnClick(page)
+                            },
                             enabled = uiState.isEnabledList[page] && uiState.weightList[page].size != 1
                         ) {
                             Icon(
@@ -288,7 +310,9 @@ fun WorkoutScreenContent(
                             )
                         }
                         IconButton(
-                            onClick = { viewModel.addButtonOnClick(page) },
+                            onClick = {
+                                viewModel.addButtonOnClick(page)
+                            },
                             enabled = uiState.isEnabledList[page]
                         ) {
                             Icon(

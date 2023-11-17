@@ -21,6 +21,7 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
@@ -49,7 +50,7 @@ fun AddExerciseScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -59,13 +60,17 @@ fun AddExerciseScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text(stringResource(R.string.add_exercise))
+                    Text(
+                        text = stringResource(R.string.add_exercise),
+                        style = workoutTrackerTypography.titleTextStyle,
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
 
                     WorkoutTrackerDropDownMenu(
                         selectedItem = (uiState as AddExerciseLoaded).selectedItem,
                         onSelectedItemChange = viewModel::onSelectedItemChange,
                         items = Constants.BODY_PARTS,
-                        modifier = Modifier.padding(workoutTrackerDimens.gapNormal)
+                        modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapNormal)
                     )
                     if (exercises == null) {
                         WorkoutTrackerProgressIndicator()

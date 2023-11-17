@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 
 @Composable
 fun FavWorkoutCard(
@@ -37,8 +38,15 @@ fun FavWorkoutCard(
                 .padding(start = workoutTrackerDimens.gapNormal),
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = name)
-            Text(text = "$exerciseNum exercise")
+            Text(
+                text = name,
+                style = workoutTrackerTypography.medium18sp,
+                modifier = Modifier.padding(bottom = workoutTrackerDimens.gapTiny)
+            )
+            Text(
+                text = "$exerciseNum exercise",
+                style = workoutTrackerTypography.normal14sp
+            )
         }
     }
 }

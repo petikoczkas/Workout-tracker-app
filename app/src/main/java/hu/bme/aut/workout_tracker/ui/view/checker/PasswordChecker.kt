@@ -24,7 +24,7 @@ fun PasswordChecker(
     ) {
         Text(
             text = "Password has to contain:",
-            style = workoutTrackerTypography.passwordCheckerTitleTextStyle,
+            style = workoutTrackerTypography.bold16sp,
         )
         CheckerRow(text = "At least 8 characters ") {
             if (password.length >= 8) CheckIcon() else CancelIcon()
@@ -54,7 +54,7 @@ private fun CheckerRow(
         icon()
         Text(
             text = text,
-            style = workoutTrackerTypography.passwordCheckerDescriptionTextStyle,
+            style = workoutTrackerTypography.bold14sp,
             modifier = Modifier.padding(start = workoutTrackerDimens.gapMedium)
         )
     }

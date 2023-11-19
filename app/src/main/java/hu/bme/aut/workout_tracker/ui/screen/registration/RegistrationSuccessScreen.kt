@@ -14,11 +14,13 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.lottie.SuccessfulRegistrationAnimation
 
 @Composable
 fun RegistrationSuccessScreen(
     navigateToHome: () -> Unit
 ) {
+
 
     Column(
         modifier = Modifier
@@ -36,6 +38,7 @@ fun RegistrationSuccessScreen(
                 style = workoutTrackerTypography.titleTextStyle,
                 modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
             )
+            SuccessfulRegistrationAnimation()
         }
         PrimaryButton(
             onClick = { navigateToHome() },

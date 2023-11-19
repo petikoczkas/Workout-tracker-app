@@ -27,6 +27,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.wear.compose.material.ContentAlpha
 import hu.bme.aut.workout_tracker.ui.navigation.BottomBarScreen
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
@@ -98,8 +99,9 @@ fun RowScope.AddItem(
             } == true,
             colors = NavigationBarItemDefaults.colors(
                 indicatorColor = MaterialTheme.colorScheme.background,
-                selectedIconColor = MaterialTheme.colorScheme.onBackground,
-                selectedTextColor = MaterialTheme.colorScheme.onBackground,
+                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(ContentAlpha.disabled),
+                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(ContentAlpha.disabled)
+
             ),
             onClick = {
                 navController.navigate(screen.route) {

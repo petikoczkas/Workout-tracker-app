@@ -65,13 +65,13 @@ data class WorkoutTrackerTypography(
     val editWorkoutTextStyle: TextStyle = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
-        fontSize = 18.sp,
+        fontSize = 24.sp,
         textAlign = TextAlign.Center,
     ),
     val editWorkoutPlaceholderTextStyle: TextStyle = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
-        fontSize = 18.sp,
+        fontSize = 24.sp,
         textAlign = TextAlign.Center,
     ),
     val normal12sp: TextStyle = TextStyle(

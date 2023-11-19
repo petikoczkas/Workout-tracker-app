@@ -27,7 +27,7 @@ import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
-import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
+import hu.bme.aut.workout_tracker.ui.view.textfield.EditWorkoutTextField
 
 @Composable
 fun EditWorkoutScreen(
@@ -65,13 +65,10 @@ fun EditWorkoutScreen(
                         style = workoutTrackerTypography.titleTextStyle,
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
-                    WorkoutTrackerTextField(
+                    EditWorkoutTextField(
                         text = (uiState as EditWorkoutLoaded).name,
                         onTextChange = viewModel::onNameChange,
-                        placeholder = stringResource(R.string.workout_name),
-                        textStyle = workoutTrackerTypography.editWorkoutTextStyle,
-                        placeholderTextStyle = workoutTrackerTypography.editWorkoutPlaceholderTextStyle,
-                        modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapNormal)
+                        placeholder = stringResource(R.string.workout_name)
                     )
                     if (workoutExercises == null) {
                         WorkoutTrackerProgressIndicator()

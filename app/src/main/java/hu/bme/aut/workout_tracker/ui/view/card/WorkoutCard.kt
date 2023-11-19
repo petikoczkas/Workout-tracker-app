@@ -76,6 +76,7 @@ fun WorkoutCard(
                 Text(
                     text = name,
                     style = workoutTrackerTypography.medium20sp,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = workoutTrackerDimens.gapSmall)
                 )
                 Text(

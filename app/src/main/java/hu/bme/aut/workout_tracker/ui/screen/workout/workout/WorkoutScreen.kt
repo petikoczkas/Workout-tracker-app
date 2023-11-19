@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +38,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -140,7 +140,9 @@ fun WorkoutScreen(
                         ) {
                             repeat((loadedUiState as Loaded).pageCount) {
                                 val color =
-                                    if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
+                                    if (pagerState.currentPage == it)
+                                        MaterialTheme.colorScheme.onSecondaryContainer else
+                                        MaterialTheme.colorScheme.onSurfaceVariant.copy(ContentAlpha.disabled)
                                 Box(
                                     modifier = Modifier
                                         .padding(workoutTrackerDimens.gapTiny)

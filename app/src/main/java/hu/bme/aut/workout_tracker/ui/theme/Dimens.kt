@@ -21,6 +21,7 @@ data class WorkoutTrackerDimens(
     val settingsImageSize: Dp = 260.dp,
     val settingsImageContentSize: Dp = 200.dp,
     val dividerThickness: Dp = 1.dp,
+    val lottieAnimationSize: Dp = 450.dp,
 
     val minButtonHeight: Dp = 46.dp,
     val primaryButtonCornerSize: Dp = 16.dp,

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsScreen
@@ -17,6 +18,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseScree
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
+import hu.bme.aut.workout_tracker.ui.view.dialog.EndWorkoutDialog
 
 @Composable
 fun MainNavGraph(
@@ -85,12 +87,20 @@ fun MainNavGraph(
                     workoutId = id,
                     navigateBack = {
                         navController.popBackStack()
+                        navController.navigate(Dialog.EndWorkoutDialog.route)
                     },
                     navigateToAddExercise = {
                         navController.navigate("${Content.AddExercise.route}/$it")
                     }
                 )
             }
+        }
+        dialog(route = Dialog.EndWorkoutDialog.route) {
+            EndWorkoutDialog(
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(
             route = "${Content.EditWorkout.route}/{id}",
@@ -147,4 +157,8 @@ sealed class Content(val route: String) {
     data object Workout : Content(route = "WORKOUT")
     data object EditWorkout : Content(route = "EDIT_WORKOUT")
     data object AddExercise : Content(route = "ADD_EXERCISE")
+}
+
+sealed class Dialog(val route: String) {
+    data object EndWorkoutDialog : Dialog(route = "END_WORKOUT_DIALOG")
 }

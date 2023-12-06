@@ -243,11 +243,11 @@ object FirebaseStorageService {
         firebaseFirestore: FirebaseFirestore,
         workoutId: String
     ): Workout {
-        var wokrout = Workout()
+        var workout = Workout()
         firebaseFirestore.collection(WORKOUT_COLLECTION).get().await().map { document ->
-            if (document.id == workoutId) wokrout = document.toObject(Workout::class.java)
+            if (document.id == workoutId) workout = document.toObject(Workout::class.java)
         }
-        return wokrout
+        return workout
     }
 
     suspend fun createExercise(

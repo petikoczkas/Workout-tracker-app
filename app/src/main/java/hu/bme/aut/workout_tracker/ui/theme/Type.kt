@@ -13,7 +13,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.workout_tracker.R
 
-// Set of Material typography styles to start with
 val Roboto = FontFamily(
     Font(R.font.roboto_regular, FontWeight.Normal),
     Font(R.font.roboto_bold, FontWeight.Bold),

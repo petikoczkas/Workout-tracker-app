@@ -92,7 +92,6 @@ fun WorkoutScreen(
                             is Loaded -> {
                                 (loadedUiState as Loaded).pageCount
                             }
-
                             else -> 0
                         }
                     }

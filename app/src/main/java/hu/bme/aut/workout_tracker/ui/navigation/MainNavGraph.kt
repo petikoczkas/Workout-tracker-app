@@ -89,8 +89,8 @@ fun MainNavGraph(
                         navController.popBackStack()
                         navController.navigate(Dialog.EndWorkoutDialog.route)
                     },
-                    navigateToAddExercise = {
-                        navController.navigate("${Content.AddExercise.route}/$it")
+                    navigateToAddExercise = { i ->
+                        navController.navigate("${Content.AddExercise.route}/$i")
                     }
                 )
             }

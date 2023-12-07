@@ -120,7 +120,9 @@ fun UserCard(
                             Image(
                                 painter = rememberAsyncImagePainter(model = photo),
                                 contentDescription = null,
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(workoutTrackerDimens.userCardImageSize)
                             )
                         }
                     }

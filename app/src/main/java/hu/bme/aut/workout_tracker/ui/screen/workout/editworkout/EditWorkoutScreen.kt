@@ -109,6 +109,7 @@ fun EditWorkoutScreen(
                 PrimaryButton(
                     onClick = { viewModel.saveButtonOnClick(workoutId) },
                     text = stringResource(R.string.save),
+                    enabled = (uiState as EditWorkoutLoaded).name.isNotBlank(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = workoutTrackerDimens.gapNormal)

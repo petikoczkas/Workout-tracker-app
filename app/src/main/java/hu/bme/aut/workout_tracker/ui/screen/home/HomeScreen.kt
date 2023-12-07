@@ -66,7 +66,7 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Hi ${viewModel.getUserLastName()}!",
+                    text = "Hi ${viewModel.getUserFirstName()}!",
                     style = workoutTrackerTypography.titleTextStyle,
                     modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                 )

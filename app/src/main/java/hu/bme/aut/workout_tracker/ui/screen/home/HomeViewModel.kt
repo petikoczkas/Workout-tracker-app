@@ -35,8 +35,8 @@ class HomeViewModel @Inject constructor(
     private val _exercises = MutableLiveData<List<Exercise>>()
     val exercises: LiveData<List<Exercise>> = _exercises
 
-    fun getUserLastName(): String {
-        return currentUser.name.substringAfter(" ")
+    fun getUserFirstName(): String {
+        return currentUser.name.substringBefore(" ")
     }
 
     fun getFavoriteWorkouts() {

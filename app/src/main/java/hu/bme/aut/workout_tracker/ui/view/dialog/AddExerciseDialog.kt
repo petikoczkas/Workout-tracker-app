@@ -50,7 +50,7 @@ fun AddExerciseDialog(
                     PrimaryButton(
                         onClick = {
                             onDismissRequest(false)
-                            onSaveButtonClick()
+                            if (newExercise.isNotBlank()) onSaveButtonClick()
                         },
                         text = stringResource(R.string.save),
                         modifier = Modifier

@@ -84,6 +84,7 @@ fun StandingsScreen(
                                 itemsIndexed(bestUserList.take(50)) { i, u ->
                                     UserCard(
                                         place = i + 1,
+                                        isCurrentUser = viewModel.isCurrentUser(u),
                                         name = u.name,
                                         photo = u.photo,
                                         weight = u.oneRepMaxCharts[(uiState as StandingLoaded).selectedItem.id]!!.max(),

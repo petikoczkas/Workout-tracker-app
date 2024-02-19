@@ -44,10 +44,15 @@ class ChartsViewModel @Inject constructor(
         _uiState.update { (_uiState.value as ChartsLoaded).copy(selectedChart = name) }
     }
 
+    fun onShowDialogChange(b: Boolean) {
+        _uiState.update { (_uiState.value as ChartsLoaded).copy(showDialog = b) }
+    }
+
     fun getExercises() {
         _uiState.value = ChartsLoaded(
             selectedExercise = Exercise(id = ""),
-            selectedChart = Constants.chartsList[0]
+            selectedChart = Constants.chartsList[0],
+            showDialog = false
         )
         viewModelScope.launch {
             currentUser = workoutTrackerPresenter.getCurrentUser()

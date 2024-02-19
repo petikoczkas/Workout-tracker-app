@@ -12,17 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.lottie.SuccessfulRegistrationAnimation
 
 @Composable
 fun RegistrationSuccessScreen(
     navigateToHome: () -> Unit
 ) {
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = workoutTrackerDimens.gapNormal),
+            .padding(horizontal = workoutTrackerDimens.gapLarge),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
@@ -32,11 +35,10 @@ fun RegistrationSuccessScreen(
         ) {
             Text(
                 text = stringResource(R.string.successful_registration),
-                modifier = Modifier.padding(
-                    top = workoutTrackerDimens.gapVeryLarge,
-                    bottom = workoutTrackerDimens.gapLarge
-                )
+                style = workoutTrackerTypography.titleTextStyle,
+                modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
             )
+            SuccessfulRegistrationAnimation()
         }
         PrimaryButton(
             onClick = { navigateToHome() },

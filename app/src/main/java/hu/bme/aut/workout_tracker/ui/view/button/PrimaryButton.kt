@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 
 @Composable
 fun PrimaryButton(
@@ -18,18 +19,12 @@ fun PrimaryButton(
     Button(
         onClick = onClick,
         modifier = modifier.height(workoutTrackerDimens.minButtonHeight),
-        /*colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colorScheme.background,
-            disabledBackgroundColor = MaterialTheme.colorScheme.primaryVariant,
-            disabledContentColor = MaterialTheme.colorScheme.onPrimary
-
-        ),*/
         enabled = enabled,
         shape = RoundedCornerShape(workoutTrackerDimens.primaryButtonCornerSize),
     ) {
         Text(
             text = text,
-            //style = MaterialTheme.beThereTypography.primaryButtonTextStyle
+            style = workoutTrackerTypography.medium16sp
         )
     }
 }

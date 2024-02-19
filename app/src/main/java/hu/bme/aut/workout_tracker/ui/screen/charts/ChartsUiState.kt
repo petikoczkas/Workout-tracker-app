@@ -7,5 +7,6 @@ sealed class ChartsUiState {
     data class ChartsLoaded(
         val selectedExercise: Exercise,
         val selectedChart: String,
+        val showDialog: Boolean
     ) : ChartsUiState()
 }

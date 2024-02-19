@@ -27,6 +27,8 @@ class SettingsViewModel @Inject constructor(
 
     var currentUser = User()
 
+    private val _savingState = MutableStateFlow(false)
+    val savingState = _savingState.asStateFlow()
 
     private val _updateUserFailedEvent =
         MutableStateFlow(UpdateUserFailure(isUpdateUserFailed = false, exception = null))
@@ -52,6 +54,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun saveButtonOnClick() {
+        _savingState.value = true
         viewModelScope.launch {
             try {
                 currentUser.name = (_uiState.value as SettingsLoaded).name
@@ -64,14 +67,17 @@ class SettingsViewModel @Inject constructor(
                             viewModelScope.launch {
                                 workoutTrackerPresenter.updateUser(currentUser)
                             }
+                            _savingState.value = true
                             _uiState.value = SettingsSaved
                         }
                     )
                 } else {
                     workoutTrackerPresenter.updateUser(currentUser)
+                    _savingState.value = true
                     _uiState.value = SettingsSaved
                 }
             } catch (e: Exception) {
+                _savingState.value = false
                 _updateUserFailedEvent.value =
                     UpdateUserFailure(isUpdateUserFailed = true, exception = e)
             }

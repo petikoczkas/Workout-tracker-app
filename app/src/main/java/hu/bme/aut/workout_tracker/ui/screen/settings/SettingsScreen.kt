@@ -4,20 +4,22 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,8 +36,11 @@ import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsIni
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoaded
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsSaved
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.dialog.LoadingDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
+import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
 
 @Composable
 fun SettingsScreen(
@@ -45,6 +50,7 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val updateUserFailedEvent by viewModel.updateUserFailedEvent.collectAsState()
+    val showSavingDialog by viewModel.savingState.collectAsState()
 
     when (uiState) {
         SettingsInit -> {
@@ -66,9 +72,26 @@ fun SettingsScreen(
             }
 
             Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End
+            ) {
+                IconButton(
+                    onClick = {
+                        viewModel.signOut()
+                        signOut()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        contentDescription = null
+                    )
+                }
+            }
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -77,40 +100,27 @@ fun SettingsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        IconButton(
-                            onClick = {
-                                viewModel.signOut()
-                                signOut()
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_logout),
-                                contentDescription = null
-                            )
-                        }
-                    }
                     Text(
                         text = stringResource(R.string.settings),
+                        style = workoutTrackerTypography.titleTextStyle,
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
-                    Card(
+                    Box(
                         modifier = Modifier
                             .size(workoutTrackerDimens.settingsImageSize)
                             .padding(workoutTrackerDimens.gapNormal)
                             .clip(CircleShape)
-                            .clickable { launcher.launch("image/*") }
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable { launcher.launch("image/*") },
+                        contentAlignment = Alignment.Center
                     ) {
                         if (viewModel.currentUser.photo.isEmpty() && (uiState as SettingsLoaded).imageUri == Uri.EMPTY) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_person),
                                 contentDescription = null,
+                                tint = MaterialTheme.colorScheme.background,
                                 modifier = Modifier
                                     .size(workoutTrackerDimens.settingsImageContentSize)
-                                    .align(Alignment.CenterHorizontally)
                             )
                         } else {
                             Image(
@@ -119,18 +129,14 @@ fun SettingsScreen(
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .size(workoutTrackerDimens.settingsImageSize)
-                                    .align(Alignment.CenterHorizontally)
                             )
                         }
                     }
-                    TextField(
-                        value = (uiState as SettingsLoaded).name,
-                        onValueChange = viewModel::onNameChange,
-                        label = { Text(text = stringResource(R.string.name)) },
-                        modifier = Modifier
-                            .padding(
-                                vertical = workoutTrackerDimens.gapLarge,
-                            )
+                    WorkoutTrackerTextField(
+                        text = (uiState as SettingsLoaded).name,
+                        onTextChange = viewModel::onNameChange,
+                        placeholder = stringResource(R.string.name),
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
                 }
                 PrimaryButton(
@@ -146,6 +152,9 @@ fun SettingsScreen(
                         description = updateUserFailedEvent.exception?.message.toString(),
                         onDismiss = { viewModel.handledUpdateUserFailedEvent() }
                     )
+                }
+                if (showSavingDialog) {
+                    LoadingDialog()
                 }
             }
         }

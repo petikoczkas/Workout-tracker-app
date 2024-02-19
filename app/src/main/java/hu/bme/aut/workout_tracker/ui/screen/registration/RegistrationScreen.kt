@@ -7,21 +7,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationLoaded
 import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationSuccess
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
+import hu.bme.aut.workout_tracker.ui.view.checker.PasswordChecker
+import hu.bme.aut.workout_tracker.ui.view.dialog.LoadingDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
+import hu.bme.aut.workout_tracker.ui.view.textfield.EmailTextField
+import hu.bme.aut.workout_tracker.ui.view.textfield.PasswordTextField
+import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
 
 @Composable
 fun RegistrationScreen(
@@ -30,13 +37,14 @@ fun RegistrationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val registrationFailedEvent by viewModel.registrationFailedEvent.collectAsState()
+    val showSavingDialog by viewModel.savingState.collectAsState()
 
     when (uiState) {
         is RegistrationLoaded -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal)
+                    .padding(horizontal = workoutTrackerDimens.gapLarge)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -47,45 +55,64 @@ fun RegistrationScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.registration),
+                        style = workoutTrackerTypography.titleTextStyle,
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
-                    TextField(
-                        value = (uiState as RegistrationLoaded).email,
-                        onValueChange = viewModel::onEmailChange,
-                        label = { Text(text = stringResource(R.string.email)) },
+                    EmailTextField(
+                        email = (uiState as RegistrationLoaded).email,
+                        onEmailChange = viewModel::onEmailChange,
                         modifier = Modifier.padding(
                             bottom = workoutTrackerDimens.gapLarge
                         )
                     )
-                    TextField(
-                        value = (uiState as RegistrationLoaded).firstName,
-                        onValueChange = viewModel::onFirstNameChange,
-                        label = { Text(text = stringResource(R.string.first_name)) },
+                    WorkoutTrackerTextField(
+                        text = (uiState as RegistrationLoaded).firstName,
+                        onTextChange = viewModel::onFirstNameChange,
+                        placeholder = stringResource(R.string.first_name),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_person),
+                                contentDescription = null
+                            )
+                        },
                         modifier = Modifier.padding(
                             bottom = workoutTrackerDimens.gapLarge
                         )
                     )
-                    TextField(
-                        value = (uiState as RegistrationLoaded).lastName,
-                        onValueChange = viewModel::onLastNameChange,
-                        label = { Text(text = stringResource(R.string.last_name)) },
+                    WorkoutTrackerTextField(
+                        text = (uiState as RegistrationLoaded).lastName,
+                        onTextChange = viewModel::onLastNameChange,
+                        placeholder = stringResource(R.string.last_name),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_person),
+                                contentDescription = null
+                            )
+                        },
                         modifier = Modifier.padding(
                             bottom = workoutTrackerDimens.gapLarge
                         )
                     )
-                    TextField(
-                        value = (uiState as RegistrationLoaded).password,
-                        onValueChange = viewModel::onPasswordChange,
-                        label = { Text(text = stringResource(R.string.password)) },
+                    PasswordTextField(
+                        password = (uiState as RegistrationLoaded).password,
+                        onPasswordChange = viewModel::onPasswordChange,
                         modifier = Modifier.padding(
-                            bottom = workoutTrackerDimens.gapLarge
+                            bottom = workoutTrackerDimens.gapMedium
                         )
                     )
-                    TextField(
-                        value = (uiState as RegistrationLoaded).passwordAgain,
-                        onValueChange = viewModel::onPasswordAgainChange,
-                        label = { Text(text = stringResource(R.string.password_again)) },
+                    PasswordChecker(
+                        password = (uiState as RegistrationLoaded).password,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(start = workoutTrackerDimens.gapLarge)
+                    )
+                    PasswordTextField(
+                        password = (uiState as RegistrationLoaded).passwordAgain,
+                        onPasswordChange = viewModel::onPasswordAgainChange,
+                        isPasswordAgain = true,
+                        firstPassword = (uiState as RegistrationLoaded).password,
                         modifier = Modifier.padding(
+                            top = workoutTrackerDimens.gapMedium,
                             bottom = workoutTrackerDimens.gapLarge
                         )
                     )
@@ -104,6 +131,9 @@ fun RegistrationScreen(
                         description = stringResource(R.string.registration_error_message),
                         onDismiss = { viewModel.handledRegistrationFailedEvent() }
                     )
+                }
+                if (showSavingDialog) {
+                    LoadingDialog()
                 }
             }
         }

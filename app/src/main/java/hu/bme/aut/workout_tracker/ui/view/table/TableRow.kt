@@ -6,16 +6,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.wear.compose.material.ContentAlpha
@@ -34,18 +29,16 @@ fun TableRow(
     keyboardActions: KeyboardActions,
     imeAction: ImeAction,
     isLast: Boolean,
-    keyboardActionsLast: KeyboardActions,
     modifier: Modifier = Modifier
 ) {
     val alpha = if (enabled) 1f else ContentAlpha.disabled
-    var isFocused by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = workoutTrackerDimens.gapSmall)
             .background(
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(workoutTrackerDimens.tableRowCornerSize)
             ),
         verticalAlignment = Alignment.CenterVertically
@@ -72,13 +65,8 @@ fun TableRow(
             weight = 2f,
             enabled = enabled,
             cleared = cleared,
-            modifier = if (isLast) Modifier.onFocusChanged {
-                if (it.isFocused) {
-                    isFocused = true
-                }
-            } else Modifier,
-            keyboardActions = if (isFocused) keyboardActionsLast else keyboardActions,
-            imeAction = if (isFocused) ImeAction.Done else imeAction
+            keyboardActions = keyboardActions,
+            imeAction = if (isLast) ImeAction.Done else imeAction
         )
     }
 }

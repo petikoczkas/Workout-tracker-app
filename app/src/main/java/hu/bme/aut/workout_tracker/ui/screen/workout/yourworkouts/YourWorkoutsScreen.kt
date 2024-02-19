@@ -20,6 +20,7 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsLoaded
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.card.WorkoutCard
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
@@ -43,7 +44,7 @@ fun YourWorkoutsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -53,13 +54,15 @@ fun YourWorkoutsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text(stringResource(R.string.your_workouts))
+                    Text(
+                        text = stringResource(R.string.your_workouts),
+                        style = workoutTrackerTypography.titleTextStyle,
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
                     if (workouts == null) {
                         WorkoutTrackerProgressIndicator()
                     } else {
-                        LazyColumn(
-                            modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
-                        ) {
+                        LazyColumn {
                             if (workouts!!.isEmpty()) {
                                 item {
                                     Text(text = stringResource(R.string.you_have_no_workouts))

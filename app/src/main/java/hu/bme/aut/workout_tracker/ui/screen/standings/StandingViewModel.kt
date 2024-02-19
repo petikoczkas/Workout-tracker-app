@@ -72,5 +72,9 @@ class StandingViewModel @Inject constructor(
         return list.toList().sortedBy { it.oneRepMaxCharts[exerciseId]!!.max() }.reversed()
 
     }
+
+    fun isCurrentUser(u: User): Boolean {
+        return u == currentUser
+    }
 }
 

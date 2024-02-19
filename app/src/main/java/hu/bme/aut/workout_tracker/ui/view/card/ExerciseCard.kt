@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 
 @Composable
 fun ExerciseCard(
@@ -48,7 +49,10 @@ fun ExerciseCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = text)
+            Text(
+                text = text,
+                style = workoutTrackerTypography.medium16sp
+            )
             if (withIcon) {
                 IconButton(onClick = onRemoveClick) {
                     Icon(painterResource(id = R.drawable.ic_remove), contentDescription = null)

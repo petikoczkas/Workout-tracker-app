@@ -9,12 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.wear.compose.material.Text
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 
 @Composable
 fun AddButton(
@@ -36,7 +35,7 @@ fun AddButton(
             text = text,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = TextStyle(fontWeight = FontWeight.Medium),
+            style = workoutTrackerTypography.medium16sp,
             modifier = Modifier
                 .weight(1f)
                 .offset(x = workoutTrackerDimens.addButtonOffset)

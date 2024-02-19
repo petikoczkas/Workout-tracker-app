@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,11 +21,13 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiSta
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutLoaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutSaved
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
+import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
 import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
+import hu.bme.aut.workout_tracker.ui.view.textfield.EditWorkoutTextField
 
 @Composable
 fun EditWorkoutScreen(
@@ -49,7 +50,7 @@ fun EditWorkoutScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = workoutTrackerDimens.gapNormal),
+                    .padding(horizontal = workoutTrackerDimens.gapLarge),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -59,11 +60,15 @@ fun EditWorkoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
-                    Text(stringResource(R.string.edit_workout))
-                    TextField(
-                        value = (uiState as EditWorkoutLoaded).name,
-                        onValueChange = viewModel::onNameChange,
-                        label = { Text(text = stringResource(R.string.name)) }
+                    Text(
+                        text = stringResource(R.string.edit_workout),
+                        style = workoutTrackerTypography.titleTextStyle,
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
+                    EditWorkoutTextField(
+                        text = (uiState as EditWorkoutLoaded).name,
+                        onTextChange = viewModel::onNameChange,
+                        placeholder = stringResource(R.string.workout_name)
                     )
                     if (workoutExercises == null) {
                         WorkoutTrackerProgressIndicator()
@@ -104,6 +109,7 @@ fun EditWorkoutScreen(
                 PrimaryButton(
                     onClick = { viewModel.saveButtonOnClick(workoutId) },
                     text = stringResource(R.string.save),
+                    enabled = (uiState as EditWorkoutLoaded).name.isNotBlank(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = workoutTrackerDimens.gapNormal)

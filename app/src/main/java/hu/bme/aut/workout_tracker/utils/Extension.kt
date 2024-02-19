@@ -17,6 +17,7 @@ fun String.passwordMatches(repeated: String): Boolean =
     this == repeated
 
 fun String.removeEmptyLines(): String {
+    if (this.isEmpty()) return this
     var tmp = this
     while (tmp[0].isWhitespace()) {
         tmp = tmp.drop(1)

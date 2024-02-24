@@ -26,6 +26,7 @@ public class ApiController {
     // AUTH
     @PostMapping("/register")
     public String addNewUser(@RequestBody User user) {
+        user.setRoles(ApiConstants.userRole);
         return authenticationService.addUser(user);
     }
 

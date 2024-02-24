@@ -18,8 +18,7 @@ import java.util.function.Function;
 @Component
 public class AuthTokenService {
 
-    @Value("${SECRET_KEY}")
-    private static String SECRET_KEY;
+    private static final String SECRET_KEY = "F0E1D2C3B4A5968778695A48365D9C2B1A0FEE1D2C3B4A5968778695A48365D9C2B1A";
 
     public String extractUserEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -31,7 +30,8 @@ public class AuthTokenService {
     }
 
     public String generateToken(String email) {
-        return generateToken(new HashMap<>(), email);
+        Map<String, Object> claims = new HashMap<>();
+        return generateToken(claims, email);
     }
 
     public String generateToken(Map<String, Object> extractClaims, String email) {

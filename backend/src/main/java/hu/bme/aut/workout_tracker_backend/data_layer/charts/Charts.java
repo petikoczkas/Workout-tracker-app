@@ -20,6 +20,7 @@ public class Charts {
     private Long id;
     private String userId;
     private Long exerciseId;
+    @Enumerated(EnumType.STRING)
     private ChartType type;
     @ElementCollection
     private List<String> data = new ArrayList<>();

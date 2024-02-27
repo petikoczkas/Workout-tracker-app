@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
-    @Query("SELECT w FROM Workout w WHERE w.userId = :id")
-    Optional<List<Workout>> findByUserId(String id);
+    @Query("SELECT w FROM Workout w WHERE w.userId = :email")
+    Optional<List<Workout>> findByUserEmail(String email);
 }

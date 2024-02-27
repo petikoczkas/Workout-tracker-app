@@ -20,6 +20,7 @@ public class Workout {
     private Long id;
     private String name;
     private String userId;
+    private Boolean isFavorite;
     @ElementCollection
     private List<Long> exercises = new ArrayList<>();
 }

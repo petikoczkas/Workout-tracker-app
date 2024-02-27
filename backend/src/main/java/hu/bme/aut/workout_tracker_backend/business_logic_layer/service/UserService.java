@@ -1,10 +1,10 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.SavedExerciseDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDataDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.WorkoutDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.*;
+import hu.bme.aut.workout_tracker_backend.data_layer.charts.ChartType;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;
+import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.UserRepository;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.exercises.SavedExercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.exercises.SavedExerciseRepository;
@@ -15,6 +15,7 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class UserService {
     private final WorkoutRepository workoutRepository;
     private final ExerciseRepository exerciseRepository;
     private final SavedExerciseRepository savedExerciseRepository;
+    private final ChartsService chartsService;
 
     public UserDataDTO getUserData(String email){
         val userWrapped = userRepository.findByEmail(email);
@@ -72,4 +74,40 @@ public class UserService {
     }
 
 
+    public UserSettingsDTO getUserSettingsData(String email) {
+        val userWrapped = userRepository.findByEmail(email);
+        if (userWrapped.isEmpty()) {
+            throw new IllegalStateException("No such user");
+        }
+        var user = userWrapped.get();
+        var data = new UserSettingsDTO();
+        data.setEmail(user.getEmail());
+        data.setFirstName(user.getFirstName());
+        data.setLastName(user.getLastName());
+        data.setPhoto(user.getPhoto());
+        return data;
+    }
+
+    public List<UserStandingsDTO> getUserStandingsData() {
+        val users = userRepository.findAll();
+        val data = new ArrayList<UserStandingsDTO>();
+        for (User u : users) {
+            var userStandings = new UserStandingsDTO();
+            userStandings.setEmail(u.getEmail());
+            userStandings.setFirstName(u.getFirstName());
+            userStandings.setLastName(u.getLastName());
+            userStandings.setPhoto(u.getPhoto());
+
+            val chartList = new ArrayList<ChartsDTO>();
+            val charts = chartsService.getUserCharts(u.getEmail());
+            for (ChartsDTO c : charts) {
+                if (c.getType() == ChartType.OneRepMax) {
+                    chartList.add(c);
+                }
+            }
+            userStandings.setOneRepMaxCharts(chartList);
+            data.add(userStandings);
+        }
+        return data;
+    }
 }

@@ -2,7 +2,10 @@ package hu.bme.aut.workout_tracker_backend.business_logic_layer.api;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthRequest;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthTokenService;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartsDTO;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDataDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserSettingsDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserStandingsDTO;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.service.*;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
@@ -15,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -29,6 +34,7 @@ public class ApiController {
     private final WorkoutService workoutService;
     private final ExerciseService exerciseService;
     private final SavedExerciseService savedExerciseService;
+    private final ChartsService chartsService;
 
     // AUTH
     @PostMapping("/register")
@@ -72,5 +78,21 @@ public class ApiController {
         savedExerciseService.createSavedExercise(savedExercise);
     }
 
+    @GetMapping("/user/settings")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public UserSettingsDTO settings(@RequestParam String email) {
+        return userService.getUserSettingsData(email);
+    }
 
+    @GetMapping("/user/standings")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<UserStandingsDTO> standings() {
+        return userService.getUserStandingsData();
+    }
+
+    @GetMapping("/user/charts")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<ChartsDTO> charts(@RequestParam String email) {
+        return chartsService.getUserCharts(email);
+    }
 }

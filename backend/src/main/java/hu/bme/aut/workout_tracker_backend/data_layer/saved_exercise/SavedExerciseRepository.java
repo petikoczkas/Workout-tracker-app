@@ -1,4 +1,4 @@
-package hu.bme.aut.workout_tracker_backend.data_layer.user.exercises;
+package hu.bme.aut.workout_tracker_backend.data_layer.saved_exercise;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

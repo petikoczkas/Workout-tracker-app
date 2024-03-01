@@ -12,4 +12,7 @@ public interface WorkoutRepository extends CrudRepository<Workout, Long> {
 
     @Query("SELECT w FROM Workout w WHERE w.userId = :email")
     Optional<List<Workout>> findByUserEmail(String email);
+
+    @Query("SELECT w FROM Workout w WHERE w.userId = :email and w.isFavorite = true")
+    Optional<List<Workout>> findByUserEmailAndIsFavorite(String email);
 }

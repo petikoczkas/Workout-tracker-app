@@ -2,15 +2,13 @@ package hu.bme.aut.workout_tracker_backend.business_logic_layer.api;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthRequest;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthTokenService;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartsDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDataDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserSettingsDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserStandingsDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.SavedExerciseDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.WorkoutDTO;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.service.*;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
-import hu.bme.aut.workout_tracker_backend.data_layer.user.exercises.SavedExercise;
-import hu.bme.aut.workout_tracker_backend.data_layer.workout.Workout;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +32,7 @@ public class ApiController {
     private final WorkoutService workoutService;
     private final ExerciseService exerciseService;
     private final SavedExerciseService savedExerciseService;
-    private final ChartsService chartsService;
+    private final ChartService chartService;
 
     // AUTH
     @PostMapping("/register")
@@ -53,17 +51,36 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/user/getUserData")
+    //USER
+    @GetMapping("/user/getCurrentUser")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public UserDataDTO getUserData(@RequestParam String email) {
-        return userService.getUserData(email);
+    public UserDTO getCurrentUser(@RequestParam String email) {
+        return userService.getUser(email);
     }
 
-    //with id you can use it to edit it
-    @PostMapping("/user/createWorkout")
+    @PostMapping("/user/updateUser")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public void createWorkout(@RequestBody Workout workout) {
-        workoutService.createWorkout(workout);
+    public void updateUser(@RequestBody UserDTO user) {
+        userService.updateUser(user);
+    }
+
+    @GetMapping("/user/getUsers")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<UserDTO> getUsers() {
+        return userService.getUsers();
+    }
+
+    //EXERCISE
+    @GetMapping("/user/getExercises")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<Exercise> getExercises() {
+        return exerciseService.getExercises();
+    }
+
+    @GetMapping("/user/getStandingsExercises")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public List<Exercise> getStandingsExercises() {
+        return exerciseService.getStandingsExercises();
     }
 
     @PostMapping("/user/createExercise")
@@ -72,27 +89,54 @@ public class ApiController {
         exerciseService.createExercise(exercise);
     }
 
-    @PostMapping("/user/createSavedExercise")
+    //WORKOUT
+    @GetMapping("/user/getUserWorkouts")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public void createSavedExercise(@RequestBody SavedExercise savedExercise) {
-        savedExerciseService.createSavedExercise(savedExercise);
+    public List<WorkoutDTO> getUserWorkouts(@RequestParam String email) {
+        return workoutService.getUserWorkouts(email);
     }
 
-    @GetMapping("/user/settings")
+    @GetMapping("/user/getUserFavoriteWorkouts")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public UserSettingsDTO settings(@RequestParam String email) {
-        return userService.getUserSettingsData(email);
+    public List<WorkoutDTO> getUserFavoriteWorkouts(@RequestParam String email) {
+        return workoutService.getUserFavoriteWorkouts(email);
     }
 
-    @GetMapping("/user/standings")
+    @GetMapping("/user/getWorkout")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public List<UserStandingsDTO> standings() {
-        return userService.getUserStandingsData();
+    public WorkoutDTO getWorkout(@RequestParam Long id) {
+        return workoutService.getWorkout(id);
     }
 
-    @GetMapping("/user/charts")
+    @PostMapping("/user/updateWorkout")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public List<ChartsDTO> charts(@RequestParam String email) {
-        return chartsService.getUserCharts(email);
+    public void updateWorkout(@RequestBody WorkoutDTO workout) {
+        workoutService.updateWorkout(workout);
+    }
+
+    //SAVED EXERCISE
+    @GetMapping("/user/getUserSavedExercises")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public List<SavedExerciseDTO> getUserSavedExercises(@RequestParam String email) {
+        return savedExerciseService.getUserSavedExercises(email);
+    }
+
+    @PostMapping("/user/updateSavedExercise")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public void updateSavedExercise(@RequestBody SavedExerciseDTO savedExercise) {
+        savedExerciseService.updateSavedExercise(savedExercise);
+    }
+
+    //CHART
+    @GetMapping("/user/getUserCharts")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public List<ChartDTO> getUserCharts(@RequestParam String email) {
+        return chartService.getUserCharts(email);
+    }
+
+    @PostMapping("/user/updateChart")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public void updateChart(@RequestBody ChartDTO chart) {
+        chartService.updateChart(chart);
     }
 }

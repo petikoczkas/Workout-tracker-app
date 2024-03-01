@@ -1,4 +1,4 @@
-package hu.bme.aut.workout_tracker_backend.data_layer.charts;
+package hu.bme.aut.workout_tracker_backend.data_layer.chart;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Charts {
+public class Chart {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native")

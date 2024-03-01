@@ -1,4 +1,4 @@
-package hu.bme.aut.workout_tracker_backend.data_layer.charts;
+package hu.bme.aut.workout_tracker_backend.data_layer.chart;
 
 public enum ChartType {
     Volume,

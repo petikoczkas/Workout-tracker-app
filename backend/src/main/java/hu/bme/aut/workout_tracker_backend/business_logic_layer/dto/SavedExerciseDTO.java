@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SavedExerciseDTO {
     Long id;
+    String userId;
     Exercise exercise;
     List<String> data = new ArrayList<>();
 }

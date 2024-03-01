@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class WorkoutDTO {
     Long id;
+    String userId;
     String name;
     Boolean isFavorite;
     List<Exercise> exercises = new ArrayList<>();

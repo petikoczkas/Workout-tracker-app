@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.workout_tracker.R
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded

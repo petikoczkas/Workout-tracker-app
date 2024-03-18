@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.signin
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,7 +69,6 @@ class SignInViewModel @Inject constructor(
                     }
                 )
             } catch (e: Exception) {
-                Log.println(Log.ERROR, "exception", e.message.toString())
                 _savingState.value = false
                 _signInFailedEvent.value = SignInFailure(isLoginFailed = true)
             }

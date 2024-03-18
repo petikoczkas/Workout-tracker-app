@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.editworkout.EditWorkoutUiState.EditWorkoutLoaded
@@ -60,7 +60,7 @@ class EditWorkoutViewModel @Inject constructor(
     fun getWorkout(workoutId: String) {
         clearAddedExercises()
         viewModelScope.launch {
-            currentUser = workoutTrackerPresenter.getCurrentUser()
+            //currentUser = workoutTrackerPresenter.getCurrentUser()
             workout = workoutTrackerPresenter.getWorkout(workoutId)
             _uiState.value = EditWorkoutLoaded(name = workout.name)
             withContext(Dispatchers.IO) {

@@ -1,4 +1,4 @@
-package hu.bme.aut.workout_tracker.data.model2
+package hu.bme.aut.workout_tracker.data.model
 
 
 import com.squareup.moshi.Json

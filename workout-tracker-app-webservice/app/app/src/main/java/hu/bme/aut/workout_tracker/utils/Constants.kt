@@ -1,6 +1,6 @@
 package hu.bme.aut.workout_tracker.utils
 
-import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
 
 object Constants {
     const val USER_COLLECTION = "user"
@@ -25,4 +25,8 @@ object Constants {
         "1RM Chart",
     )
     val addedExercises = mutableListOf<Exercise>()
+
+    var currentUserEmail = ""
+
+    var token = ""
 }

@@ -1,9 +1,15 @@
 package hu.bme.aut.workout_tracker.data.model
 
-import java.util.UUID
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class Exercise(
-    val id: String = UUID.randomUUID().toString(),
-    val category: String = "",
-    val name: String = ""
+    @Json(name = "id")
+    val id: Int,
+    @Json(name = "category")
+    val category: String,
+    @Json(name = "name")
+    val name: String
 )

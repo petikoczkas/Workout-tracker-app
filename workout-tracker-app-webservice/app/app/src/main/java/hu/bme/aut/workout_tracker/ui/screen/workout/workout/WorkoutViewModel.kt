@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.Loaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutInit
@@ -70,7 +70,7 @@ class WorkoutViewModel @Inject constructor(
         viewModelScope.launch {
             _workout = workoutTrackerPresenter.getWorkout(workoutId)
             _loadedUiState.update { (_loadedUiState.value as Loaded).copy(pageCount = _workout.exercises.size + 1) }
-            currentUser = workoutTrackerPresenter.getCurrentUser()
+            //currentUser = workoutTrackerPresenter.getCurrentUser()
             setDefaultValues()
             withContext(Dispatchers.IO) {
                 workoutTrackerPresenter.getWorkoutExercises(_workout).collect {

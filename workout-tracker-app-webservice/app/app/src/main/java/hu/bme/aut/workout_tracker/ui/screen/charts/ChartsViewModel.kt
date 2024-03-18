@@ -8,8 +8,8 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
@@ -55,7 +55,7 @@ class ChartsViewModel @Inject constructor(
             showDialog = false
         )
         viewModelScope.launch {
-            currentUser = workoutTrackerPresenter.getCurrentUser()
+            //currentUser = workoutTrackerPresenter.getCurrentUser()
             withContext(Dispatchers.IO) {
                 workoutTrackerPresenter.getExercises().collect {
                     _exercises.postValue(it)

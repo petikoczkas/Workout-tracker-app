@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingInit
 import hu.bme.aut.workout_tracker.ui.screen.standings.StandingUiState.StandingLoaded
@@ -43,7 +43,7 @@ class StandingViewModel @Inject constructor(
         _uiState.value = StandingLoaded(selectedItem = Exercise(id = ""))
         getUsers()
         viewModelScope.launch {
-            currentUser = workoutTrackerPresenter.getCurrentUser()
+            //currentUser = workoutTrackerPresenter.getCurrentUser()
             withContext(Dispatchers.IO) {
                 workoutTrackerPresenter.getStandingsExercises().collect {
                     _exercises.postValue(it)

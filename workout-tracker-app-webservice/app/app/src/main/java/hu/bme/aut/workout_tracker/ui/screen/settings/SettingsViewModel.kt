@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model_D.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsInit
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoaded
@@ -37,7 +37,7 @@ class SettingsViewModel @Inject constructor(
     fun getCurrentUser() {
         _uiState.value = SettingsLoaded(name = "", imageUri = Uri.EMPTY)
         viewModelScope.launch {
-            currentUser = workoutTrackerPresenter.getCurrentUser()
+            //currentUser = workoutTrackerPresenter.getCurrentUser()
             _uiState.value = SettingsLoaded(
                 name = currentUser.name,
                 imageUri = Uri.EMPTY

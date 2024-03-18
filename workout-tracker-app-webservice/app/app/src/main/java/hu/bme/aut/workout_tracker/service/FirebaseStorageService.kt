@@ -5,9 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import hu.bme.aut.workout_tracker.utils.Constants.EXERCISE_COLLECTION
 import hu.bme.aut.workout_tracker.utils.Constants.NAME_PROPERTY
 import hu.bme.aut.workout_tracker.utils.Constants.USER_COLLECTION

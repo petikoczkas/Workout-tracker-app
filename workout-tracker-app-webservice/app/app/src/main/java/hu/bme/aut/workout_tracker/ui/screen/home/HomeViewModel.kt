@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeLoaded
@@ -27,7 +26,7 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeInit)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    private var currentUser = User()
+    private var currentUser = hu.bme.aut.workout_tracker.data.model.User()
 
     private val _workouts = MutableLiveData<List<Workout>>()
     val workouts: LiveData<List<Workout>> = _workouts
@@ -36,7 +35,8 @@ class HomeViewModel @Inject constructor(
     val exercises: LiveData<List<Exercise>> = _exercises
 
     fun getUserFirstName(): String {
-        return currentUser.name.substringBefore(" ")
+        //return currentUser.name.substringBefore(" ")
+        return currentUser.firstName
     }
 
     fun getFavoriteWorkouts() {
@@ -44,11 +44,11 @@ class HomeViewModel @Inject constructor(
         getStandingsExercises()
         viewModelScope.launch {
             currentUser = workoutTrackerPresenter.getCurrentUser()
-            withContext(Dispatchers.IO) {
+            /*withContext(Dispatchers.IO) {
                 workoutTrackerPresenter.getUserFavoriteWorkouts(currentUser).collect {
                     _workouts.postValue(it)
                 }
-            }
+            }*/
         }
     }
 
@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(
 
     fun getMaxList(exercises: List<Exercise>): List<List<String>> {
         val maxList = mutableListOf<List<String>>()
-        for (e in exercises) {
+        /*for (e in exercises) {
             val tmp = mutableListOf<String>()
             tmp.add(e.name.substringAfter(" "))
             if (currentUser.oneRepMaxCharts.containsKey(e.id)) {
@@ -73,7 +73,7 @@ class HomeViewModel @Inject constructor(
                 tmp.add("-")
             }
             maxList.add(tmp.toList())
-        }
+        }*/
         return maxList.toList()
     }
 }

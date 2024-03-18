@@ -1,13 +1,19 @@
 package hu.bme.aut.workout_tracker.data.model
 
+
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class User(
-    val id: String = "",
-    var name: String = "",
-    var photo: String = "",
-    val workouts: MutableList<String> = mutableListOf(),
-    val favoriteWorkouts: MutableList<String> = mutableListOf(),
-    val exercises: HashMap<String, MutableList<String>> = HashMap(),
-    val volumeCharts: HashMap<String, MutableList<Int>> = HashMap(),
-    val averageOneRepMaxCharts: HashMap<String, MutableList<Double>> = HashMap(),
-    val oneRepMaxCharts: HashMap<String, MutableList<Double>> = HashMap()
-)
+    @Json(name = "email")
+    val email: String,
+    @Json(name = "firstName")
+    val firstName: String,
+    @Json(name = "lastName")
+    val lastName: String,
+    @Json(name = "photo")
+    val photo: String
+) {
+    constructor() : this("", "", "", "")
+}

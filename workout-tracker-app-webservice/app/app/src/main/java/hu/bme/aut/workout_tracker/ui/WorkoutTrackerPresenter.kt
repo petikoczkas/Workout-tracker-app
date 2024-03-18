@@ -2,9 +2,9 @@ package hu.bme.aut.workout_tracker.ui
 
 import android.net.Uri
 import hu.bme.aut.workout_tracker.data.WorkoutTrackerInteractor
-import hu.bme.aut.workout_tracker.data.model.Exercise
-import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model_D.Workout
 import javax.inject.Inject
 
 class WorkoutTrackerPresenter @Inject constructor(
@@ -55,7 +55,9 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     fun getUsers() = workoutTrackerInteractor.getUsers()
 
-    suspend fun getCurrentUser() = workoutTrackerInteractor.getCurrentUser()
+    suspend fun getCurrentUser(): hu.bme.aut.workout_tracker.data.model.User {
+        return workoutTrackerInteractor.getCurrentUser()
+    }
 
     suspend fun updateUser(user: User) {
         workoutTrackerInteractor.updateUser(user = user)

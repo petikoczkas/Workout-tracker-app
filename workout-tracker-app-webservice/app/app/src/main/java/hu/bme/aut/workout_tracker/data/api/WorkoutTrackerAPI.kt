@@ -1,7 +1,11 @@
 package hu.bme.aut.workout_tracker.data.api
 
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.SavedExercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.UserAuth
+import hu.bme.aut.workout_tracker.data.model.Workout
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,4 +27,83 @@ interface WorkoutTrackerAPI {
         @Header("Authorization") bearerToken: String,
         @Query("email") email: String
     ): User
+
+    @GET("user/getUsers")
+    suspend fun getUsers(
+        @Header("Authorization") bearerToken: String,
+    ): List<User>
+
+    @POST("user/updateUser")
+    suspend fun updateUser(
+        @Header("Authorization") bearerToken: String,
+        @Body user: User
+    )
+
+    //EXERCISE
+    @GET("user/getExercises")
+    suspend fun getExercises(
+        @Header("Authorization") bearerToken: String,
+    ): List<Exercise>
+
+    @GET("user/getStandingsExercises")
+    suspend fun getStandingsExercises(
+        @Header("Authorization") bearerToken: String,
+    ): List<Exercise>
+
+    @POST("user/createExercise")
+    suspend fun createExercise(
+        @Header("Authorization") bearerToken: String,
+        @Body exercise: Exercise
+    )
+
+    //WORKOUT
+    @GET("user/getUserWorkouts")
+    suspend fun getUserWorkouts(
+        @Header("Authorization") bearerToken: String,
+        @Query("email") email: String
+    ): List<Workout>
+
+    @GET("user/getUserFavoriteWorkouts")
+    suspend fun getUserFavoriteWorkouts(
+        @Header("Authorization") bearerToken: String,
+        @Query("email") email: String
+    ): List<Workout>
+
+    @GET("user/getWorkout")
+    suspend fun getWorkout(
+        @Header("Authorization") bearerToken: String,
+        @Query("id") workoutId: String
+    ): Workout
+
+    @POST("user/updateWorkout")
+    suspend fun updateWorkout(
+        @Header("Authorization") bearerToken: String,
+        @Body workout: Workout
+    )
+
+    //SAVED EXERCISE
+    @GET("user/getUserSavedExercises")
+    suspend fun getUserSavedExercises(
+        @Header("Authorization") bearerToken: String,
+        @Query("email") email: String
+    ): List<SavedExercise>
+
+    @POST("user/updateSavedExercise")
+    suspend fun updateSavedExercise(
+        @Header("Authorization") bearerToken: String,
+        @Body savedExercise: SavedExercise
+    )
+
+    //CHART
+    @GET("user/getUserCharts")
+    suspend fun getUserCharts(
+        @Header("Authorization") bearerToken: String,
+        @Query("email") email: String
+    ): List<Chart>
+
+    @POST("user/updateChart")
+    suspend fun updateChart(
+        @Header("Authorization") bearerToken: String,
+        @Body chart: Chart
+    )
 }

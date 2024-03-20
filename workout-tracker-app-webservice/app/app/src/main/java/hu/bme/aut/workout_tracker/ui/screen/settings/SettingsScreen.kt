@@ -1,8 +1,11 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +46,7 @@ import hu.bme.aut.workout_tracker.ui.view.dialog.LoadingDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun SettingsScreen(
     navigateBack: () -> Unit,
@@ -51,6 +56,7 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val updateUserFailedEvent by viewModel.updateUserFailedEvent.collectAsState()
     val showSavingDialog by viewModel.savingState.collectAsState()
+    val context = LocalContext.current
 
     when (uiState) {
         SettingsInit -> {
@@ -140,7 +146,7 @@ fun SettingsScreen(
                     )
                 }
                 PrimaryButton(
-                    onClick = { viewModel.saveButtonOnClick() },
+                    onClick = { viewModel.saveButtonOnClick(context.contentResolver) },
                     text = stringResource(R.string.save),
                     modifier = Modifier
                         .fillMaxWidth()

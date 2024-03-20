@@ -1,6 +1,11 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
+import android.content.ContentResolver
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,7 +58,8 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { (_uiState.value as SettingsLoaded).copy(imageUri = image) }
     }
 
-    fun saveButtonOnClick() {
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun saveButtonOnClick(contentResolver: ContentResolver) {
         _savingState.value = true
         viewModelScope.launch {
             try {
@@ -61,7 +67,10 @@ class SettingsViewModel @Inject constructor(
                 if ((_uiState.value as SettingsLoaded).imageUri != Uri.EMPTY) {
                     workoutTrackerPresenter.uploadProfilePicture(
                         userId = currentUser.id,
-                        imageUri = (_uiState.value as SettingsLoaded).imageUri,
+                        imageBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
+                            contentResolver,
+                            (_uiState.value as SettingsLoaded).imageUri
+                        )),
                         onSuccess = {
                             currentUser.photo = it
                             viewModelScope.launch {

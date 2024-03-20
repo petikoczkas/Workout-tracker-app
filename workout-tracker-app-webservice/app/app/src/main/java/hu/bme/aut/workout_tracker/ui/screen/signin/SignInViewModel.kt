@@ -3,6 +3,7 @@ package hu.bme.aut.workout_tracker.ui.screen.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
@@ -57,8 +58,7 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 workoutTrackerPresenter.signIn(
-                    email = email,
-                    password = password,
+                    userAuthLogin = UserAuthLogin(email = email, password = password),
                     onSuccess = {
                         _uiState.value = SignInSuccess
                         _savingState.value = true

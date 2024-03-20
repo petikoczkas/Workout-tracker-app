@@ -1,7 +1,9 @@
 package hu.bme.aut.workout_tracker.ui
 
+import android.graphics.Bitmap
 import android.net.Uri
 import hu.bme.aut.workout_tracker.data.WorkoutTrackerInteractor
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model_D.Exercise
 import hu.bme.aut.workout_tracker.data.model_D.User
 import hu.bme.aut.workout_tracker.data.model_D.Workout
@@ -32,14 +34,12 @@ class WorkoutTrackerPresenter @Inject constructor(
     }
 
     suspend fun signIn(
-        email: String,
-        password: String,
+        userAuthLogin: UserAuthLogin,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
         workoutTrackerInteractor.signIn(
-            email = email,
-            password = password,
+            userAuthLogin = userAuthLogin,
             onSuccess = {
                 onSuccess()
             },
@@ -63,10 +63,10 @@ class WorkoutTrackerPresenter @Inject constructor(
         workoutTrackerInteractor.updateUser(user = user)
     }
 
-    suspend fun uploadProfilePicture(userId: String, imageUri: Uri, onSuccess: (String) -> Unit) {
+    suspend fun uploadProfilePicture(userId: String, imageBitmap: Bitmap, onSuccess: (String) -> Unit) {
         workoutTrackerInteractor.uploadProfilePicture(
             userId = userId,
-            imageUri = imageUri,
+            imageBitmap = imageBitmap,
             onSuccess = onSuccess
         )
     }

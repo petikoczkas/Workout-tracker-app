@@ -1,20 +1,23 @@
 package hu.bme.aut.workout_tracker.data
 
-import android.net.Uri
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
-import com.google.firebase.firestore.Query
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hu.bme.aut.workout_tracker.data.api.WorkoutTrackerAPI
-import hu.bme.aut.workout_tracker.data.model.UserAuth
+import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import hu.bme.aut.workout_tracker.service.FirebaseStorageService
-import hu.bme.aut.workout_tracker.utils.Constants.NAME_PROPERTY
 import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import hu.bme.aut.workout_tracker.utils.Constants.token
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
+
 
 class WorkoutTrackerInteractor @Inject constructor() {
 
@@ -38,6 +41,14 @@ class WorkoutTrackerInteractor @Inject constructor() {
             .build()
 
         workoutTrackerAPI = retrofit.create(WorkoutTrackerAPI::class.java)
+    }
+
+    suspend fun registrate(
+        userAuthRegister: UserAuthRegister,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        workoutTrackerAPI.registrate(userAuthRegister)
     }
 
     /*suspend fun registrate(
@@ -76,16 +87,15 @@ class WorkoutTrackerInteractor @Inject constructor() {
     }*/
 
     suspend fun signIn(
-        email: String,
-        password: String,
+        userAuthLogin: UserAuthLogin,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
         try {
-            val response = workoutTrackerAPI.login(UserAuth(email, password))
+            val response = workoutTrackerAPI.signIn(userAuthLogin)
             if (response.isNotEmpty()) {
-                token = response
-                currentUserEmail = email.lowercase()
+                token = "Bearer $response"
+                currentUserEmail = userAuthLogin.email.lowercase()
                 onSuccess()
             } else {
                 onFailure()
@@ -105,44 +115,35 @@ class WorkoutTrackerInteractor @Inject constructor() {
         return currentUserEmail.isNotEmpty()
     }
 
-    fun getUsers() = FirebaseStorageService.getUsers(
-        queryUsersByName = queryUsers.orderBy(NAME_PROPERTY, Query.Direction.ASCENDING),
-    )
+    suspend fun getUsers() = workoutTrackerAPI.getUsers(bearerToken = token)
+
 
     suspend fun getCurrentUser(): hu.bme.aut.workout_tracker.data.model.User {
         Log.println(Log.INFO, "currentUserEmail", currentUserEmail)
         Log.println(Log.INFO, "token2", token)
         return workoutTrackerAPI.getCurrentUser(
-            bearerToken = "Bearer $token",
+            bearerToken = token,
             email = currentUserEmail
         )
     }
 
-    /*suspend fun getCurrentUser(): User {
-        return FirebaseStorageService.getCurrentUser(
-            queryUsers = queryUsers,
-            userId = currentUser?.uid.toString()
-        )
-    }*/
-
     suspend fun updateUser(user: User) {
-        FirebaseStorageService.updateUser(
-            firebaseFirestore = firebaseFirestore,
-            user = user,
+        workoutTrackerAPI.updateUser(
+            bearerToken = token,
+            user = user
         )
     }
 
     suspend fun uploadProfilePicture(
-        userId: String,
-        imageUri: Uri,
+        user: User,
+        imageBitmap: Bitmap,
         onSuccess: (String) -> Unit,
     ) {
-        FirebaseStorageService.uploadProfilePicture(
-            firebaseStorage = firebaseStorage,
-            userId = userId,
-            imageUri = imageUri,
-            onSuccess = onSuccess
-        )
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        user.photo = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        updateUser(user = user)
     }
 
     fun getExercises() = FirebaseStorageService.getExercises(

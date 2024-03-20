@@ -4,8 +4,9 @@ import hu.bme.aut.workout_tracker.data.model.Chart
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.SavedExercise
 import hu.bme.aut.workout_tracker.data.model.User
-import hu.bme.aut.workout_tracker.data.model.UserAuth
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model.Workout
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -16,10 +17,10 @@ interface WorkoutTrackerAPI {
 
     //AUTH
     @POST("register")
-    suspend fun registration(@Body user: User)
+    suspend fun registrate(@Body userAuthRegister: UserAuthRegister)
 
     @POST("login")
-    suspend fun login(@Body userAuth: UserAuth): String
+    suspend fun signIn(@Body userAuthLogin: UserAuthLogin): String
 
     //USER
     @GET("user/getCurrentUser")

@@ -9,9 +9,9 @@ data class User(
     @Json(name = "email")
     val email: String,
     @Json(name = "firstName")
-    val firstName: String,
+    var firstName: String,
     @Json(name = "lastName")
-    val lastName: String,
+    var lastName: String,
     @Json(name = "photo")
     var photo: String
 ) {

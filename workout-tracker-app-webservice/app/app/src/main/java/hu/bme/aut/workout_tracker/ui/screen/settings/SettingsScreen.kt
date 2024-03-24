@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -138,10 +137,17 @@ fun SettingsScreen(
                             )
                         }
                     }
+                    //TODO Paddings
                     WorkoutTrackerTextField(
-                        text = (uiState as SettingsLoaded).name,
-                        onTextChange = viewModel::onNameChange,
-                        placeholder = stringResource(R.string.name),
+                        text = (uiState as SettingsLoaded).firstName,
+                        onTextChange = viewModel::onFirstNameChange,
+                        placeholder = "First Name",
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                    )
+                    WorkoutTrackerTextField(
+                        text = (uiState as SettingsLoaded).lastName,
+                        onTextChange = viewModel::onLastNameChange,
+                        placeholder = "Last Name",
                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                     )
                 }

@@ -6,7 +6,8 @@ import android.net.Uri
 sealed class SettingsUiState {
     data object SettingsInit : SettingsUiState()
     data class SettingsLoaded(
-        val name: String,
+        val firstName: String,
+        val lastName: String,
         val imageUri: Uri
     ) : SettingsUiState()
 

@@ -1,7 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -9,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsInit
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoaded
@@ -40,18 +39,23 @@ class SettingsViewModel @Inject constructor(
     val updateUserFailedEvent = _updateUserFailedEvent.asStateFlow()
 
     fun getCurrentUser() {
-        _uiState.value = SettingsLoaded(name = "", imageUri = Uri.EMPTY)
+        _uiState.value = SettingsLoaded(firstName = "", lastName = "", imageUri = Uri.EMPTY)
         viewModelScope.launch {
-            //currentUser = workoutTrackerPresenter.getCurrentUser()
+            currentUser = workoutTrackerPresenter.getCurrentUser()
             _uiState.value = SettingsLoaded(
-                name = currentUser.name,
+                firstName = currentUser.firstName,
+                lastName = currentUser.lastName,
                 imageUri = Uri.EMPTY
             )
         }
     }
 
-    fun onNameChange(name: String) {
-        _uiState.update { (_uiState.value as SettingsLoaded).copy(name = name) }
+    fun onFirstNameChange(name: String) {
+        _uiState.update { (_uiState.value as SettingsLoaded).copy(firstName = name) }
+    }
+
+    fun onLastNameChange(name: String) {
+        _uiState.update { (_uiState.value as SettingsLoaded).copy(lastName = name) }
     }
 
     fun onImageChange(image: Uri) {
@@ -63,14 +67,17 @@ class SettingsViewModel @Inject constructor(
         _savingState.value = true
         viewModelScope.launch {
             try {
-                currentUser.name = (_uiState.value as SettingsLoaded).name
+                currentUser.firstName = (_uiState.value as SettingsLoaded).firstName
+                currentUser.lastName = (_uiState.value as SettingsLoaded).lastName
                 if ((_uiState.value as SettingsLoaded).imageUri != Uri.EMPTY) {
                     workoutTrackerPresenter.uploadProfilePicture(
-                        userId = currentUser.id,
-                        imageBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
-                            contentResolver,
-                            (_uiState.value as SettingsLoaded).imageUri
-                        )),
+                        user = currentUser,
+                        imageBitmap = ImageDecoder.decodeBitmap(
+                            ImageDecoder.createSource(
+                                contentResolver,
+                                (_uiState.value as SettingsLoaded).imageUri
+                            )
+                        ),
                         onSuccess = {
                             currentUser.photo = it
                             viewModelScope.launch {

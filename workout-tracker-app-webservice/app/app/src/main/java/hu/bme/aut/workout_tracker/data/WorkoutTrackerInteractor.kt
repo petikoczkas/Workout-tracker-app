@@ -6,10 +6,13 @@ import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hu.bme.aut.workout_tracker.data.api.WorkoutTrackerAPI
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.SavedExercise
 import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
-import hu.bme.aut.workout_tracker.service.FirebaseStorageService
 import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import hu.bme.aut.workout_tracker.utils.Constants.token
 import retrofit2.Retrofit
@@ -22,12 +25,6 @@ import javax.inject.Inject
 class WorkoutTrackerInteractor @Inject constructor() {
 
     private val workoutTrackerAPI: WorkoutTrackerAPI
-
-    /*private val firebaseAuth = FirebaseAuth.getInstance()
-    private val firebaseFirestore = FirebaseFirestore.getInstance()
-    private val firebaseStorage = FirebaseStorage.getInstance().reference.child(PICTURE_FOLDER)
-    private var currentUser = firebaseAuth.currentUser
-    private val queryUsers = firebaseFirestore.collection(USER_COLLECTION)*/
 
     init {
         val moshi = Moshi.Builder()
@@ -89,7 +86,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
     suspend fun signIn(
         userAuthLogin: UserAuthLogin,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (Exception) -> Unit
     ) {
         try {
             val response = workoutTrackerAPI.signIn(userAuthLogin)
@@ -98,11 +95,11 @@ class WorkoutTrackerInteractor @Inject constructor() {
                 currentUserEmail = userAuthLogin.email.lowercase()
                 onSuccess()
             } else {
-                onFailure()
+                onFailure(Exception(/*TODO*/))
             }
         } catch (e: Exception) {
             Log.println(Log.ERROR, "exception", e.message.toString())
-            onFailure()
+            onFailure(e)
         }
     }
 
@@ -115,10 +112,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         return currentUserEmail.isNotEmpty()
     }
 
-    suspend fun getUsers() = workoutTrackerAPI.getUsers(bearerToken = token)
-
-
-    suspend fun getCurrentUser(): hu.bme.aut.workout_tracker.data.model.User {
+    suspend fun getCurrentUser(): User {
         Log.println(Log.INFO, "currentUserEmail", currentUserEmail)
         Log.println(Log.INFO, "token2", token)
         return workoutTrackerAPI.getCurrentUser(
@@ -126,6 +120,9 @@ class WorkoutTrackerInteractor @Inject constructor() {
             email = currentUserEmail
         )
     }
+
+
+    suspend fun getUsers() = workoutTrackerAPI.getUsers(bearerToken = token)
 
     suspend fun updateUser(user: User) {
         workoutTrackerAPI.updateUser(
@@ -146,49 +143,68 @@ class WorkoutTrackerInteractor @Inject constructor() {
         updateUser(user = user)
     }
 
-    fun getExercises() = FirebaseStorageService.getExercises(
-        firebaseFirestore = firebaseFirestore
-    )
+    suspend fun getExercises() = workoutTrackerAPI.getExercises(bearerToken = token)
 
-    fun getStandingsExercises() = FirebaseStorageService.getStandingsExercises(
-        firebaseFirestore = firebaseFirestore
-    )
-
-    fun getUserWorkouts(user: User) =
-        FirebaseStorageService.getUserWorkouts(
-            firebaseFirestore = firebaseFirestore,
-            user = user
-        )
-
-    fun getUserFavoriteWorkouts(user: User) =
-        FirebaseStorageService.getUserFavoriteWorkouts(
-            firebaseFirestore = firebaseFirestore,
-            user = user
-        )
-
-    fun getWorkoutExercises(workout: Workout) =
-        FirebaseStorageService.getWorkoutExercises(
-            firebaseFirestore = firebaseFirestore,
-            workout = workout
-        )
-
-    suspend fun getWorkout(workoutId: String) =
-        FirebaseStorageService.getWorkout(
-            firebaseFirestore = firebaseFirestore,
-            workoutId = workoutId
-        )
+    suspend fun getStandingsExercises() =
+        workoutTrackerAPI.getStandingsExercises(bearerToken = token)
 
     suspend fun createExercise(exercise: Exercise) {
-        FirebaseStorageService.createExercise(
-            firebaseFirestore = firebaseFirestore,
+        workoutTrackerAPI.createExercise(
+            bearerToken = token,
             exercise = exercise
         )
     }
 
+    suspend fun getUserWorkouts(email: String) =
+        workoutTrackerAPI.getUserWorkouts(
+            bearerToken = token,
+            email = email
+        )
+
+    suspend fun getUserFavoriteWorkouts(email: String) =
+        workoutTrackerAPI.getUserFavoriteWorkouts(
+            bearerToken = token,
+            email = email
+        )
+
+    suspend fun getWorkout(workoutId: String) =
+        workoutTrackerAPI.getWorkout(
+            bearerToken = token,
+            workoutId = workoutId
+        )
+
     suspend fun updateWorkout(workout: Workout) {
-        FirebaseStorageService.updateWorkout(
-            firebaseFirestore = firebaseFirestore,
+        workoutTrackerAPI.updateWorkout(
+            bearerToken = token,
             workout = workout
+        )
+    }
+
+    suspend fun getUserSavedExercises(email: String) {
+        workoutTrackerAPI.getUserSavedExercises(
+            bearerToken = token,
+            email = email
+        )
+    }
+
+    suspend fun updateSavedExercise(savedExercise: SavedExercise) {
+        workoutTrackerAPI.updateSavedExercise(
+            bearerToken = token,
+            savedExercise = savedExercise
+        )
+    }
+
+    suspend fun getUserCharts(email: String) {
+        workoutTrackerAPI.getUserCharts(
+            bearerToken = token,
+            email = email
+        )
+    }
+
+    suspend fun updateChart(chart: Chart) {
+        workoutTrackerAPI.updateChart(
+            bearerToken = token,
+            chart = chart
         )
     }
 }

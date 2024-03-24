@@ -1,12 +1,14 @@
 package hu.bme.aut.workout_tracker.ui
 
 import android.graphics.Bitmap
-import android.net.Uri
 import hu.bme.aut.workout_tracker.data.WorkoutTrackerInteractor
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.SavedExercise
+import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
-import hu.bme.aut.workout_tracker.data.model_D.User
-import hu.bme.aut.workout_tracker.data.model_D.Workout
+import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import javax.inject.Inject
 
 class WorkoutTrackerPresenter @Inject constructor(
@@ -14,16 +16,12 @@ class WorkoutTrackerPresenter @Inject constructor(
 ) {
 
     suspend fun registrate(
-        email: String,
-        password: String,
-        user: User,
+        userAuthRegister: UserAuthRegister,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
         workoutTrackerInteractor.registrate(
-            email = email,
-            password = password,
-            user = user,
+            userAuthRegister = userAuthRegister,
             onSuccess = {
                 onSuccess()
             },
@@ -36,7 +34,7 @@ class WorkoutTrackerPresenter @Inject constructor(
     suspend fun signIn(
         userAuthLogin: UserAuthLogin,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (Exception) -> Unit
     ) {
         workoutTrackerInteractor.signIn(
             userAuthLogin = userAuthLogin,
@@ -44,7 +42,7 @@ class WorkoutTrackerPresenter @Inject constructor(
                 onSuccess()
             },
             onFailure = {
-                onFailure()
+                onFailure(it)
             }
         )
     }
@@ -53,45 +51,52 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     fun isLoggedIn() = workoutTrackerInteractor.isLoggedIn()
 
-    fun getUsers() = workoutTrackerInteractor.getUsers()
+    suspend fun getCurrentUser() = workoutTrackerInteractor.getCurrentUser()
 
-    suspend fun getCurrentUser(): hu.bme.aut.workout_tracker.data.model.User {
-        return workoutTrackerInteractor.getCurrentUser()
-    }
+    suspend fun getUsers() = workoutTrackerInteractor.getUsers()
 
     suspend fun updateUser(user: User) {
         workoutTrackerInteractor.updateUser(user = user)
     }
 
-    suspend fun uploadProfilePicture(userId: String, imageBitmap: Bitmap, onSuccess: (String) -> Unit) {
+    suspend fun uploadProfilePicture(user: User, imageBitmap: Bitmap, onSuccess: (String) -> Unit) {
         workoutTrackerInteractor.uploadProfilePicture(
-            userId = userId,
+            user = user,
             imageBitmap = imageBitmap,
             onSuccess = onSuccess
         )
     }
 
-    fun getExercises() = workoutTrackerInteractor.getExercises()
+    suspend fun getExercises() = workoutTrackerInteractor.getExercises()
 
-    fun getStandingsExercises() = workoutTrackerInteractor.getStandingsExercises()
-
-
-    fun getUserWorkouts(user: User) = workoutTrackerInteractor.getUserWorkouts(user = user)
-
-    fun getUserFavoriteWorkouts(user: User) =
-        workoutTrackerInteractor.getUserFavoriteWorkouts(user = user)
-
-    fun getWorkoutExercises(workout: Workout) =
-        workoutTrackerInteractor.getWorkoutExercises(workout = workout)
-
-    suspend fun getWorkout(workoutId: String) =
-        workoutTrackerInteractor.getWorkout(workoutId = workoutId)
+    suspend fun getStandingsExercises() = workoutTrackerInteractor.getStandingsExercises()
 
     suspend fun createExercise(exercise: Exercise) {
         workoutTrackerInteractor.createExercise(exercise = exercise)
     }
 
+    suspend fun getUserWorkouts(email: String) =
+        workoutTrackerInteractor.getUserWorkouts(email = email)
+
+    suspend fun getUserFavoriteWorkouts(email: String) =
+        workoutTrackerInteractor.getUserFavoriteWorkouts(email = email)
+
+    suspend fun getWorkout(workoutId: String) =
+        workoutTrackerInteractor.getWorkout(workoutId = workoutId)
+
     suspend fun updateWorkout(workout: Workout) {
         workoutTrackerInteractor.updateWorkout(workout = workout)
     }
+
+    suspend fun getUserSavedExercises(email: String) =
+        workoutTrackerInteractor.getUserSavedExercises(email = email)
+
+    suspend fun updateSavedExercise(savedExercise: SavedExercise) =
+        workoutTrackerInteractor.updateSavedExercise(savedExercise = savedExercise)
+
+    suspend fun getUserCharts(email: String) =
+        workoutTrackerInteractor.getUserCharts(email = email)
+
+    suspend fun updateChart(chart: Chart) =
+        workoutTrackerInteractor.updateChart(chart = chart)
 }

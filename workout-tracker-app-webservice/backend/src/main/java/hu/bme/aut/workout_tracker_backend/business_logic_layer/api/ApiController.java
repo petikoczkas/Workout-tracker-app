@@ -1,6 +1,7 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.api;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthRequest;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthResponse;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.AuthTokenService;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartDTO;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.SavedExerciseDTO;
@@ -42,10 +43,10 @@ public class ApiController {
     }
 
     @PostMapping("/login")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public AuthResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return authTokenService.generateToken(authRequest.getEmail());
+            return new AuthResponse(authTokenService.generateToken(authRequest.getEmail()));
         } else {
             throw new UsernameNotFoundException(ApiConstants.invalidCredentialsMessage);
         }

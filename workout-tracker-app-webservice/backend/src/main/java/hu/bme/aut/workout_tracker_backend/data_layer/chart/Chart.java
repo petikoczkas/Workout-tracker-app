@@ -23,5 +23,5 @@ public class Chart {
     @Enumerated(EnumType.STRING)
     private ChartType type;
     @ElementCollection
-    private List<String> data = new ArrayList<>();
+    private List<Double> data = new ArrayList<>();
 }

@@ -15,5 +15,5 @@ public class ChartDTO {
     String userId;
     Exercise exercise;
     ChartType type;
-    List<String> data = new ArrayList<>();
+    List<Double> data = new ArrayList<>();
 }

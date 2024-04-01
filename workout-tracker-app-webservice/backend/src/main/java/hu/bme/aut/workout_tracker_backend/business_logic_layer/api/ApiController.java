@@ -135,6 +135,12 @@ public class ApiController {
         return chartService.getUserCharts(email);
     }
 
+    @GetMapping("/user/getCharts")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public List<ChartDTO> getCharts() {
+        return chartService.getCharts();
+    }
+
     @PostMapping("/user/updateChart")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public void updateChart(@RequestBody ChartDTO chart) {

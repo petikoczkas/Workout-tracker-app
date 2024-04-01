@@ -1,9 +1,12 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartDTO;
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDTO;
 import hu.bme.aut.workout_tracker_backend.data_layer.chart.Chart;
 import hu.bme.aut.workout_tracker_backend.data_layer.chart.ChartRepository;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;
+import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
+import hu.bme.aut.workout_tracker_backend.data_layer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ public class ChartService {
 
     private final ChartRepository chartRepository;
     private final ExerciseRepository exerciseRepository;
+    private final UserRepository userRepository;
 
     public void updateChart(ChartDTO c) {
         var chart = new Chart();
@@ -45,6 +49,15 @@ public class ChartService {
                 exerciseWrapped.ifPresent(chart::setExercise);
                 list.add(chart);
             }
+        }
+        return list;
+    }
+
+    public List<ChartDTO> getCharts() {
+        val users = userRepository.findAll();
+        val list = new ArrayList<ChartDTO>();
+        for (User u : users) {
+            list.addAll(getUserCharts(u.getEmail()));
         }
         return list;
     }

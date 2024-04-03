@@ -115,6 +115,12 @@ public class ApiController {
         workoutService.updateWorkout(workout);
     }
 
+    @DeleteMapping("/user/deleteWorkout")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public void deleteWorkout(@RequestParam Long id) {
+        workoutService.deleteWorkout(id);
+    }
+
     //SAVED EXERCISE
     @GetMapping("/user/getUserSavedExercises")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")

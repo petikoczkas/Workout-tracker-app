@@ -35,7 +35,7 @@ public class AuthenticationService implements UserDetailsService {
             throw new IllegalStateException(ApiConstants.userAlreadyExistsMessage);
         }
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setPhoto("");
+        user.setPhoto(new byte[0]);
         repository.save(user);
         return ApiConstants.userAddedMessage;
     }

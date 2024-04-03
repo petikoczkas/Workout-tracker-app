@@ -77,4 +77,8 @@ public class WorkoutService {
         }
         return list;
     }
+
+    public void deleteWorkout(Long id) {
+        workoutRepository.deleteById(id);
+    }
 }

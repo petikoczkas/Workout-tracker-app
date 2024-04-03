@@ -41,7 +41,7 @@ fun HomeScreen(
     viewModel.getFavoriteWorkouts()
     when (uiState) {
         HomeInit -> {
-            viewModel.getFavoriteWorkouts()
+            viewModel.init()
         }
 
         HomeLoaded -> {
@@ -66,13 +66,13 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Hi ${viewModel.getUserFirstName()}!",
+                    text = stringResource(R.string.greeting, viewModel.getUserFirstName()),
                     style = workoutTrackerTypography.titleTextStyle,
                     modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
                 )
                 if (exercises != null) {
                     Text(
-                        text = "Your Estimated One Rep Maxes",
+                        text = stringResource(R.string.your_estimated_one_rep_maxes),
                         style = workoutTrackerTypography.medium18sp,
                     )
                     OneRepMaxCard(
@@ -92,7 +92,7 @@ fun HomeScreen(
                     }
                 } else {
                     Text(
-                        text = "Your Favorite Workouts",
+                        text = stringResource(R.string.your_favorite_workouts),
                         style = workoutTrackerTypography.medium18sp,
                         modifier = Modifier.padding(bottom = workoutTrackerDimens.gapSmall)
 
@@ -121,7 +121,7 @@ fun HomeScreen(
                                 FavWorkoutCard(
                                     name = w.name,
                                     exerciseNum = w.exercises.size,
-                                    onClick = { navigateToWorkout(w.id) },
+                                    onClick = { navigateToWorkout(w.id.toString()) },
                                     modifier = Modifier
                                         .padding(
                                             top = workoutTrackerDimens.gapSmall,

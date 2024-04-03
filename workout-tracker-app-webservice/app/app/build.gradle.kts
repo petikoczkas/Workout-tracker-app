@@ -81,12 +81,16 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
 
     implementation("com.airbnb.android:lottie-compose:6.2.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

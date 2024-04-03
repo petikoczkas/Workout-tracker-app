@@ -27,8 +27,8 @@ import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrack
 
 @Composable
 fun YourWorkoutsScreen(
-    navigateToWorkout: (String) -> Unit,
-    navigateToEditWorkout: (String) -> Unit,
+    navigateToWorkout: (Int) -> Unit,
+    navigateToEditWorkout: (Int) -> Unit,
     navigateToCreateWorkout: () -> Unit,
     viewModel: YourWorkoutsViewModel = hiltViewModel()
 ) {
@@ -65,7 +65,10 @@ fun YourWorkoutsScreen(
                         LazyColumn {
                             if (workouts!!.isEmpty()) {
                                 item {
-                                    Text(text = stringResource(R.string.you_have_no_workouts))
+                                    Text(
+                                        text = stringResource(R.string.you_have_no_workouts),
+                                        style = workoutTrackerTypography.medium18sp,
+                                    )
                                 }
                             } else {
                                 items(workouts!!) { w ->
@@ -74,8 +77,8 @@ fun YourWorkoutsScreen(
                                         exerciseNum = w.exercises.size,
                                         onClick = { navigateToWorkout(w.id) },
                                         onEditClick = { navigateToEditWorkout(w.id) },
-                                        isFav = viewModel.isFavorite(w.id),
-                                        onFavClick = { viewModel.isFavoriteOnClick(w.id) },
+                                        isFav = w.isFavorite,
+                                        onFavClick = { viewModel.isFavoriteOnClick(w) },
                                         modifier = Modifier.padding(vertical = workoutTrackerDimens.gapSmall)
                                     )
                                 }

@@ -1,19 +1,21 @@
 package hu.bme.aut.workout_tracker.ui.screen.workout.workout
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
-import hu.bme.aut.workout_tracker.data.model_D.User
-import hu.bme.aut.workout_tracker.data.model_D.Workout
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.ChartType
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.SavedExercise
+import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.Loaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutLoaded
 import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
+import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,11 +42,15 @@ class WorkoutViewModel @Inject constructor(
 
     private var currentUser = User()
 
-    private val _workoutExercises = MutableLiveData<List<Exercise>>()
-    val workoutExercises: LiveData<List<Exercise>> = _workoutExercises
+    private var userSavedExercises = listOf<SavedExercise>()
+
+    private var userCharts = listOf<Chart>()
 
     private val _exercises = mutableStateListOf<Exercise>()
     val exercises: List<Exercise> = _exercises
+
+    private var savedUserSavedExercises = mutableListOf<SavedExercise>()
+    private var savedCharts = mutableListOf<Chart>()
 
     private val _saveFailedEvent =
         MutableStateFlow(SaveFailed(isSaveFailed = false, exception = null))
@@ -66,18 +72,15 @@ class WorkoutViewModel @Inject constructor(
         _uiState.update { (_uiState.value as WorkoutLoaded).copy(repsList = list.toList()) }
     }
 
-    fun getWorkout(workoutId: String) {
+    fun getWorkout(workoutId: Int) {
         viewModelScope.launch {
             _workout = workoutTrackerPresenter.getWorkout(workoutId)
             _loadedUiState.update { (_loadedUiState.value as Loaded).copy(pageCount = _workout.exercises.size + 1) }
-            //currentUser = workoutTrackerPresenter.getCurrentUser()
+            currentUser = workoutTrackerPresenter.getCurrentUser()
+            userSavedExercises = workoutTrackerPresenter.getUserSavedExercises(currentUserEmail)
+            userCharts = workoutTrackerPresenter.getUserCharts(currentUserEmail)
             setDefaultValues()
-            withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getWorkoutExercises(_workout).collect {
-                    _workoutExercises.postValue(it)
-                    setAddedExercises(it)
-                }
-            }
+            setAddedExercises(_workout.exercises)
         }
     }
 
@@ -85,9 +88,11 @@ class WorkoutViewModel @Inject constructor(
         clearAddedExercises()
         for (w in _workout.exercises) {
             for (e in exercises) {
-                if (w == e.id)
-                    if (!addedExercises.contains(e))
+                if (w.id == e.id) {
+                    if (!addedExercises.contains(e)) {
                         addedExercises.add(e)
+                    }
+                }
             }
         }
     }
@@ -109,11 +114,11 @@ class WorkoutViewModel @Inject constructor(
         val weightList = mutableListOf<List<String>>()
         val repsList = mutableListOf<List<String>>()
         val enabledList = mutableListOf<Boolean>()
-        for (eId in _workout.exercises) {
+        for (exercise in _workout.exercises) {
             var setList = listOf<String>()
-            for (userExercise in currentUser.exercises) {
-                if (userExercise.key == eId) {
-                    setList = userExercise.value
+            for (savedExercise in userSavedExercises) {
+                if (savedExercise.exercise == exercise) {
+                    setList = savedExercise.data
                 }
             }
             if (setList.isEmpty()) {
@@ -141,7 +146,7 @@ class WorkoutViewModel @Inject constructor(
 
     fun getExerciseName(page: Int): String {
         for (e in _exercises) {
-            if (e.id == _workout.exercises[page]) return e.name
+            if (e == _workout.exercises[page]) return e.name
         }
         return ""
     }
@@ -190,20 +195,19 @@ class WorkoutViewModel @Inject constructor(
             if (pageString == "addExercise") changeLoadedUiState(Loaded(pageCount = addedExercises.size + 1))
             var newExercise = Exercise()
             for (e in addedExercises) {
-                if (!_workout.exercises.contains(e.id)) {
+                if (!_workout.exercises.any { it == e }) {
                     newExercise = e
                     break
                 }
             }
-            if (page == _workout.exercises.size) _workout.exercises.add(page, newExercise.id)
-            else _workout.exercises[page] = newExercise.id
+            if (page == _workout.exercises.size) _workout.exercises.add(page, newExercise)
+            else _workout.exercises[page] = newExercise
             val list = _exercises
             for (i in list.indices) {
-                if (list[i].id == _workout.exercises[page]) {
+                if (list[i] == _workout.exercises[page]) {
                     list[i] = newExercise
                 }
             }
-            _workoutExercises.value = list
             if (pageString != "addExercise") setAddedExercises(list)
 
             val weightList = (_uiState.value as WorkoutLoaded).weightList.toMutableList()
@@ -213,8 +217,8 @@ class WorkoutViewModel @Inject constructor(
             val isEnabledList = (_uiState.value as WorkoutLoaded).isEnabledList.toMutableList()
 
             val setList: List<String>
-            if (currentUser.exercises.contains(newExercise.id)) {
-                setList = currentUser.exercises[newExercise.id]!!
+            if (userSavedExercises.any { it.exercise == newExercise }) {
+                setList = userSavedExercises.find { it.exercise == newExercise }!!.data
                 for (s in setList) {
                     val tmp = s.split(" ")
                     weightPageList.add(tmp[0])
@@ -241,7 +245,7 @@ class WorkoutViewModel @Inject constructor(
                     isEnabledList = isEnabledList
                 )
             }
-            return !currentUser.exercises.contains(newExercise.id)
+            return !userSavedExercises.any { it.exercise == newExercise }
         }
         return false
     }
@@ -259,10 +263,10 @@ class WorkoutViewModel @Inject constructor(
 
         disableCurrentPage(page)
         val pageList = mutableListOf<String>()
-        var volume = 0
+        var volume = 0.0
         var maxOneRepMax = 0.0
         var averageOneRepMax = 0.0
-        val exerciseId = _workout.exercises[page]
+        val exercise = _workout.exercises[page]
         for (i in weightPageList.indices) {
             pageList.add("${weightPageList[i]} ${repsPageList[i]}")
             volume += weightPageList[i].toInt() * repsPageList[i].toInt()
@@ -275,40 +279,81 @@ class WorkoutViewModel @Inject constructor(
         averageOneRepMax =
             averageOneRepMax.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
         maxOneRepMax = maxOneRepMax.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
-        var volumeList = currentUser.volumeCharts[exerciseId]
+        var volumeList = userCharts.find { it.type == ChartType.Volume && it.exercise == exercise }
         if (volumeList == null) {
-            volumeList = mutableListOf(volume)
+            volumeList = Chart(
+                id = -1,
+                userId = currentUserEmail,
+                exercise = exercise,
+                type = ChartType.Volume,
+                data = mutableListOf(volume)
+            )
         } else {
-            volumeList.add(volume)
+            volumeList.data.add(volume)
         }
-        var averageOneRepMaxList = currentUser.averageOneRepMaxCharts[exerciseId]
+        var averageOneRepMaxList =
+            userCharts.find { it.type == ChartType.AverageOneRepMax && it.exercise == exercise }
         if (averageOneRepMaxList == null) {
-            averageOneRepMaxList = mutableListOf(averageOneRepMax)
+            averageOneRepMaxList = Chart(
+                id = -1,
+                userId = currentUserEmail,
+                exercise = exercise,
+                type = ChartType.AverageOneRepMax,
+                data = mutableListOf(averageOneRepMax)
+            )
         } else {
-            averageOneRepMaxList.add(averageOneRepMax)
+            averageOneRepMaxList.data.add(averageOneRepMax)
         }
-        var oneRepMaxList = currentUser.oneRepMaxCharts[exerciseId]
+        var oneRepMaxList =
+            userCharts.find { it.type == ChartType.OneRepMax && it.exercise == exercise }
         if (oneRepMaxList == null) {
-            oneRepMaxList = mutableListOf(maxOneRepMax)
+            oneRepMaxList = Chart(
+                id = -1,
+                userId = currentUserEmail,
+                exercise = exercise,
+                type = ChartType.OneRepMax,
+                data = mutableListOf(maxOneRepMax)
+            )
         } else {
-            oneRepMaxList.add(maxOneRepMax)
+            oneRepMaxList.data.add(maxOneRepMax)
         }
 
-        currentUser.exercises[exerciseId] = pageList
-        currentUser.volumeCharts[exerciseId] = volumeList
-        currentUser.averageOneRepMaxCharts[exerciseId] = averageOneRepMaxList
-        currentUser.oneRepMaxCharts[exerciseId] = oneRepMaxList
+        if (userSavedExercises.any { it.exercise == exercise }) {
+            val e = userSavedExercises.find { it.exercise == exercise }
+            e!!.data = pageList
+            savedUserSavedExercises.add(e)
+        } else {
+            savedUserSavedExercises.add(
+                SavedExercise(
+                    id = -1,
+                    userId = currentUserEmail,
+                    exercise = exercise,
+                    data = pageList
+                )
+            )
+        }
+
+        savedCharts.add(volumeList)
+        savedCharts.add(averageOneRepMaxList)
+        savedCharts.add(oneRepMaxList)
     }
 
     fun endWorkoutOnClick() {
         viewModelScope.launch {
-            try {
-                workoutTrackerPresenter.updateUser(user = currentUser)
-            } catch (e: Exception) {
-                _saveFailedEvent.value = SaveFailed(
-                    isSaveFailed = true,
-                    exception = e
-                )
+            withContext(Dispatchers.IO) {
+                try {
+                    for (chart in savedCharts) {
+                        workoutTrackerPresenter.updateChart(chart)
+                    }
+                    for (exercise in savedUserSavedExercises) {
+                        workoutTrackerPresenter.updateSavedExercise(exercise)
+                    }
+                } catch (e: Exception) {
+                    _saveFailedEvent.value = SaveFailed(
+                        isSaveFailed = true,
+                        exception = e
+                    )
+                }
             }
         }
     }

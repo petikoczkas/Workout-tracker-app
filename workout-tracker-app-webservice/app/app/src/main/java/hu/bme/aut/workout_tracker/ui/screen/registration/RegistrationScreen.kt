@@ -1,5 +1,6 @@
 package hu.bme.aut.workout_tracker.ui.screen.registration
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,7 +31,10 @@ import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.textfield.EmailTextField
 import hu.bme.aut.workout_tracker.ui.view.textfield.PasswordTextField
 import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
+import hu.bme.aut.workout_tracker.utils.dataStore
+import java.io.IOException
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun RegistrationScreen(
     navigateToRegistrationSuccess: () -> Unit,
@@ -38,6 +43,7 @@ fun RegistrationScreen(
     val uiState by viewModel.uiState.collectAsState()
     val registrationFailedEvent by viewModel.registrationFailedEvent.collectAsState()
     val showSavingDialog by viewModel.savingState.collectAsState()
+    val context = LocalContext.current
 
     when (uiState) {
         is RegistrationLoaded -> {
@@ -118,7 +124,7 @@ fun RegistrationScreen(
                     )
                 }
                 PrimaryButton(
-                    onClick = { viewModel.buttonOnClick() },
+                    onClick = { viewModel.buttonOnClick(context.dataStore) },
                     enabled = viewModel.isButtonEnabled(),
                     text = stringResource(R.string.registrate),
                     modifier = Modifier
@@ -128,7 +134,9 @@ fun RegistrationScreen(
                 if (registrationFailedEvent.isRegistrationFailed) {
                     WorkoutTrackerAlertDialog(
                         title = stringResource(R.string.registration_failed),
-                        description = stringResource(R.string.registration_error_message),
+                        description =
+                        if (registrationFailedEvent.exception is IOException) stringResource(R.string.server_connection_error_message)
+                        else stringResource(R.string.registration_error_message),
                         onDismiss = { viewModel.handledRegistrationFailedEvent() }
                     )
                 }
@@ -139,6 +147,8 @@ fun RegistrationScreen(
         }
 
         RegistrationSuccess -> {
+            viewModel.savedUserEmail(context.dataStore)
+            viewModel.savedToken(context.dataStore)
             navigateToRegistrationSuccess()
         }
     }

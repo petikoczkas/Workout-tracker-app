@@ -13,7 +13,9 @@ data class Workout(
     @Json(name = "name")
     val name: String,
     @Json(name = "isFavorite")
-    val isFavorite: Boolean,
+    var isFavorite: Boolean,
     @Json(name = "exercises")
-    val exercises: ArrayList<Exercise>
-)
+    val exercises: MutableList<Exercise>
+) {
+    constructor() : this(-1, "", "", false, mutableListOf<Exercise>())
+}

@@ -8,19 +8,20 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
-import hu.bme.aut.workout_tracker.data.model_D.User
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.ChartType
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
 import hu.bme.aut.workout_tracker.utils.Constants
-import kotlinx.coroutines.Dispatchers
+import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +33,8 @@ class ChartsViewModel @Inject constructor(
     val uiState: StateFlow<ChartsUiState> = _uiState.asStateFlow()
 
     private var currentUser = User()
+
+    private var userCharts = listOf<Chart>()
 
     private val _exercises = MutableLiveData<List<Exercise>>()
     val exercises: LiveData<List<Exercise>> = _exercises
@@ -50,26 +53,23 @@ class ChartsViewModel @Inject constructor(
 
     fun getExercises() {
         _uiState.value = ChartsLoaded(
-            selectedExercise = Exercise(id = ""),
+            selectedExercise = Exercise(),
             selectedChart = Constants.chartsList[0],
             showDialog = false
         )
         viewModelScope.launch {
-            //currentUser = workoutTrackerPresenter.getCurrentUser()
-            withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getExercises().collect {
-                    _exercises.postValue(it)
-                }
-            }
+            currentUser = workoutTrackerPresenter.getCurrentUser()
+            userCharts = workoutTrackerPresenter.getUserCharts(currentUserEmail)
+            _exercises.value = workoutTrackerPresenter.getExercises()
         }
     }
 
     fun getUserExercises(exercises: List<Exercise>): List<Exercise> {
-        return exercises.filter { currentUser.volumeCharts.containsKey(it.id) }
-            .filter { currentUser.volumeCharts[it.id]!!.size > 0 }
+        return exercises.filter { e -> userCharts.any { it.exercise == e } }
+            .filter { e -> userCharts.find { it.exercise == e }!!.data.size > 0 }
     }
 
-    fun getSelectedChart(id: String, chartName: String): ChartEntryModel {
+    fun getSelectedChart(id: Int, chartName: String): ChartEntryModel {
         when (chartName) {
             Constants.chartsList[0] -> {
                 return getVolumeChartData(id)
@@ -86,11 +86,11 @@ class ChartsViewModel @Inject constructor(
         return entryModelOf(0)
     }
 
-    private fun getVolumeChartData(id: String): ChartEntryModel {
-        var list = listOf(0)
-        if (currentUser.volumeCharts.containsKey(id)) {
-            if (currentUser.volumeCharts[id] != null)
-                list = currentUser.volumeCharts[id]!!.toList()
+    private fun getVolumeChartData(id: Int): ChartEntryModel {
+        var list = listOf(0.0)
+        val volumeCharts = userCharts.filter { it.type == ChartType.Volume }
+        if (volumeCharts.any { it.exercise.id == id }) {
+            list = volumeCharts.find { it.exercise.id == id }!!.data
         }
         val pointsData = mutableListOf<FloatEntry>()
         for (i in list.indices) {
@@ -99,11 +99,11 @@ class ChartsViewModel @Inject constructor(
         return entryModelOf(pointsData.toList())
     }
 
-    private fun getAverageOneRepMaxChartData(id: String): ChartEntryModel {
+    private fun getAverageOneRepMaxChartData(id: Int): ChartEntryModel {
         var list = listOf(0.0)
-        if (currentUser.averageOneRepMaxCharts.containsKey(id)) {
-            if (currentUser.averageOneRepMaxCharts[id] != null)
-                list = currentUser.averageOneRepMaxCharts[id]!!.toList()
+        val averageOneRepMaxCharts = userCharts.filter { it.type == ChartType.AverageOneRepMax }
+        if (averageOneRepMaxCharts.any { it.exercise.id == id }) {
+            list = averageOneRepMaxCharts.find { it.exercise.id == id }!!.data
         }
         val pointsData = mutableListOf<FloatEntry>()
         for (i in list.indices) {
@@ -112,11 +112,11 @@ class ChartsViewModel @Inject constructor(
         return entryModelOf(pointsData.toList())
     }
 
-    private fun getOneRepMaxChartData(id: String): ChartEntryModel {
+    private fun getOneRepMaxChartData(id: Int): ChartEntryModel {
         var list = listOf(0.0)
-        if (currentUser.oneRepMaxCharts.containsKey(id)) {
-            if (currentUser.oneRepMaxCharts[id] != null)
-                list = currentUser.oneRepMaxCharts[id]!!.toList()
+        val oneRepMaxCharts = userCharts.filter { it.type == ChartType.OneRepMax }
+        if (oneRepMaxCharts.any { it.exercise.id == id }) {
+            list = oneRepMaxCharts.find { it.exercise.id == id }!!.data
         }
         val pointsData = mutableListOf<FloatEntry>()
         for (i in list.indices) {

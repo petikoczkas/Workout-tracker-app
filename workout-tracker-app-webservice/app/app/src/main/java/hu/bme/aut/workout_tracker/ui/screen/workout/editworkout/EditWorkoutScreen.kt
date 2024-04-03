@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,19 +24,17 @@ import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.button.AddButton
 import hu.bme.aut.workout_tracker.ui.view.button.PrimaryButton
 import hu.bme.aut.workout_tracker.ui.view.card.ExerciseCard
-import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.textfield.EditWorkoutTextField
 
 @Composable
 fun EditWorkoutScreen(
-    workoutId: String,
-    navigateToAddExercise: (String) -> Unit,
+    workoutId: Int,
+    navigateToAddExercise: (Int) -> Unit,
     navigateBack: () -> Unit,
     viewModel: EditWorkoutViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val workoutExercises by viewModel.workoutExercises.observeAsState()
     val updateWorkoutFailedEvent by viewModel.updateWorkoutFailedEvent.collectAsState()
 
     when (uiState) {
@@ -70,39 +67,35 @@ fun EditWorkoutScreen(
                         onTextChange = viewModel::onNameChange,
                         placeholder = stringResource(R.string.workout_name)
                     )
-                    if (workoutExercises == null) {
-                        WorkoutTrackerProgressIndicator()
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (viewModel.exercises.isEmpty()) {
-                                item {
-                                    Text(text = stringResource(R.string.no_exercises))
-                                }
-                            } else {
-                                items(viewModel.exercises) { e ->
-                                    ExerciseCard(
-                                        text = e.name,
-                                        withIcon = true,
-                                        onRemoveClick = { viewModel.removeButtonOnClick(e) },
-                                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapSmall)
-                                    )
-                                }
-                            }
+                    LazyColumn(
+                        modifier = Modifier.padding(top = workoutTrackerDimens.gapNormal),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (viewModel.exercises.isEmpty()) {
                             item {
-                                AddButton(
-                                    onClick = { navigateToAddExercise(workoutId) },
-                                    text = stringResource(R.string.add_exercise),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            top = workoutTrackerDimens.gapNormal,
-                                            bottom = workoutTrackerDimens.gapSmall
-                                        )
+                                Text(text = stringResource(R.string.no_exercises))
+                            }
+                        } else {
+                            items(viewModel.exercises) { e ->
+                                ExerciseCard(
+                                    text = e.name,
+                                    withIcon = true,
+                                    onRemoveClick = { viewModel.removeButtonOnClick(e) },
+                                    modifier = Modifier.padding(vertical = workoutTrackerDimens.gapSmall)
                                 )
                             }
+                        }
+                        item {
+                            AddButton(
+                                onClick = { navigateToAddExercise(workoutId) },
+                                text = stringResource(R.string.add_exercise),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = workoutTrackerDimens.gapNormal,
+                                        bottom = workoutTrackerDimens.gapSmall
+                                    )
+                            )
                         }
                     }
                 }

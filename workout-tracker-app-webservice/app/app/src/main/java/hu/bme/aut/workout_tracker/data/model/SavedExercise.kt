@@ -13,5 +13,5 @@ data class SavedExercise(
     @Json(name = "exercise")
     val exercise: Exercise,
     @Json(name = "data")
-    val data: ArrayList<String>
+    var data: MutableList<String>
 )

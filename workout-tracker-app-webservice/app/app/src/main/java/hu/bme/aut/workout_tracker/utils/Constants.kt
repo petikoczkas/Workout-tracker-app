@@ -1,13 +1,17 @@
 package hu.bme.aut.workout_tracker.utils
 
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import hu.bme.aut.workout_tracker.data.model.Exercise
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "savedData")
 
 object Constants {
-    const val USER_COLLECTION = "user"
-    const val EXERCISE_COLLECTION = "exercise"
-    const val WORKOUT_COLLECTION = "workout"
-    const val PICTURE_FOLDER = "profilePicture"
-    const val NAME_PROPERTY = "name"
+    val TOKEN = stringPreferencesKey("token")
+    val USER_EMAIL = stringPreferencesKey("userEmail")
 
     val BODY_PARTS = listOf(
         "Chest",

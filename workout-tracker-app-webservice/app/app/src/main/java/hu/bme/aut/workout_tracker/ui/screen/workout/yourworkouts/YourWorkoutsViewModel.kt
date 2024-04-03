@@ -5,17 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model_D.User
-import hu.bme.aut.workout_tracker.data.model_D.Workout
+import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsLoaded
-import kotlinx.coroutines.Dispatchers
+import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,27 +33,15 @@ class YourWorkoutsViewModel @Inject constructor(
     fun getWorkouts() {
         _uiState.value = YourWorkoutsLoaded
         viewModelScope.launch {
-            //currentUser = workoutTrackerPresenter.getCurrentUser()
-            withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getUserWorkouts(currentUser).collect {
-                    _workouts.postValue(it)
-                }
-            }
+            currentUser = workoutTrackerPresenter.getCurrentUser()
+            _workouts.value = workoutTrackerPresenter.getUserWorkouts(currentUserEmail)
         }
     }
 
-    fun isFavorite(id: String): Boolean {
-        for (w in currentUser.favoriteWorkouts) {
-            if (id == w) return true
-        }
-        return false
-    }
-
-    fun isFavoriteOnClick(id: String) {
-        if (isFavorite(id)) currentUser.favoriteWorkouts.remove(id)
-        else currentUser.favoriteWorkouts.add(id)
+    fun isFavoriteOnClick(workout: Workout) {
+        workout.isFavorite = !workout.isFavorite
         viewModelScope.launch {
-            workoutTrackerPresenter.updateUser(currentUser)
+            workoutTrackerPresenter.updateWorkout(workout)
         }
     }
 }

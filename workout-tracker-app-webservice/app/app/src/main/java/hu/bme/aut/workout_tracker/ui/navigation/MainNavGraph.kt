@@ -1,5 +1,7 @@
 package hu.bme.aut.workout_tracker.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 import hu.bme.aut.workout_tracker.ui.view.dialog.EndWorkoutDialog
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun MainNavGraph(
     mainNavController: NavHostController,
@@ -51,7 +54,7 @@ fun MainNavGraph(
                     navController.navigate("${Content.EditWorkout.route}/$it")
                 },
                 navigateToCreateWorkout = {
-                    navController.navigate("${Content.EditWorkout.route}/create")
+                    navController.navigate("${Content.EditWorkout.route}/${-1}")
                 }
             )
         }
@@ -80,9 +83,9 @@ fun MainNavGraph(
         }
         composable(
             route = "${Content.Workout.route}/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) {
-            it.arguments?.getString("id")?.let { id ->
+            it.arguments?.getInt("id")?.let { id ->
                 WorkoutScreen(
                     workoutId = id,
                     navigateBack = {
@@ -104,9 +107,9 @@ fun MainNavGraph(
         }
         composable(
             route = "${Content.EditWorkout.route}/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) {
-            it.arguments?.getString("id")?.let { id ->
+            it.arguments?.getInt("id")?.let { id ->
                 EditWorkoutScreen(
                     workoutId = id,
                     navigateToAddExercise = { it1 ->
@@ -120,9 +123,9 @@ fun MainNavGraph(
         }
         composable(
             route = "${Content.AddExercise.route}/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) {
-            it.arguments?.getString("id")?.let { id ->
+            it.arguments?.getInt("id")?.let { id ->
                 AddExerciseScreen(
                     workoutId = id,
                     navigateBack = {

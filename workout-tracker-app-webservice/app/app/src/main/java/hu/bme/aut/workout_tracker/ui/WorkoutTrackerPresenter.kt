@@ -15,31 +15,31 @@ class WorkoutTrackerPresenter @Inject constructor(
     private val workoutTrackerInteractor: WorkoutTrackerInteractor
 ) {
 
-    suspend fun registrate(
+    fun registrate(
         userAuthRegister: UserAuthRegister,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
     ) {
         workoutTrackerInteractor.registrate(
             userAuthRegister = userAuthRegister,
             onSuccess = {
-                onSuccess()
+                onSuccess(it)
             },
             onFailure = {
-                onFailure()
+                onFailure(it)
             }
         )
     }
 
-    suspend fun signIn(
+    fun signIn(
         userAuthLogin: UserAuthLogin,
-        onSuccess: () -> Unit,
+        onSuccess: (String) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         workoutTrackerInteractor.signIn(
             userAuthLogin = userAuthLogin,
             onSuccess = {
-                onSuccess()
+                onSuccess(it)
             },
             onFailure = {
                 onFailure(it)
@@ -49,17 +49,15 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     fun signOut() = workoutTrackerInteractor.signOut()
 
-    fun isLoggedIn() = workoutTrackerInteractor.isLoggedIn()
-
     suspend fun getCurrentUser() = workoutTrackerInteractor.getCurrentUser()
 
     suspend fun getUsers() = workoutTrackerInteractor.getUsers()
 
-    suspend fun updateUser(user: User) {
-        workoutTrackerInteractor.updateUser(user = user)
+    suspend fun updateUser(user: User, onSuccess: () -> Unit) {
+        workoutTrackerInteractor.updateUser(user = user, onSuccess = onSuccess)
     }
 
-    suspend fun uploadProfilePicture(user: User, imageBitmap: Bitmap, onSuccess: (String) -> Unit) {
+    suspend fun uploadProfilePicture(user: User, imageBitmap: Bitmap, onSuccess: () -> Unit) {
         workoutTrackerInteractor.uploadProfilePicture(
             user = user,
             imageBitmap = imageBitmap,
@@ -81,12 +79,15 @@ class WorkoutTrackerPresenter @Inject constructor(
     suspend fun getUserFavoriteWorkouts(email: String) =
         workoutTrackerInteractor.getUserFavoriteWorkouts(email = email)
 
-    suspend fun getWorkout(workoutId: String) =
+    suspend fun getWorkout(workoutId: Int) =
         workoutTrackerInteractor.getWorkout(workoutId = workoutId)
 
     suspend fun updateWorkout(workout: Workout) {
         workoutTrackerInteractor.updateWorkout(workout = workout)
     }
+
+    suspend fun deleteWorkout(workoutId: Int) =
+        workoutTrackerInteractor.deleteWorkout(workoutId = workoutId)
 
     suspend fun getUserSavedExercises(email: String) =
         workoutTrackerInteractor.getUserSavedExercises(email = email)
@@ -96,6 +97,9 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     suspend fun getUserCharts(email: String) =
         workoutTrackerInteractor.getUserCharts(email = email)
+
+    suspend fun getCharts() =
+        workoutTrackerInteractor.getCharts()
 
     suspend fun updateChart(chart: Chart) =
         workoutTrackerInteractor.updateChart(chart = chart)

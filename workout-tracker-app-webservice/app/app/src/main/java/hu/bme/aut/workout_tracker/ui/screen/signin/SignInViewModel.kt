@@ -1,5 +1,8 @@
 package hu.bme.aut.workout_tracker.ui.screen.signin
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,11 +11,16 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
+import hu.bme.aut.workout_tracker.utils.Constants.TOKEN
+import hu.bme.aut.workout_tracker.utils.Constants.USER_EMAIL
+import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.Constants.token
 import hu.bme.aut.workout_tracker.utils.isValidEmail
 import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,11 +37,15 @@ class SignInViewModel @Inject constructor(
     val savingState = _savingState.asStateFlow()
 
     private val _signInFailedEvent =
-        MutableStateFlow(SignInFailure(isLoginFailed = false))
+        MutableStateFlow(SignInFailure(isLoginFailed = false, exception = null))
     val signInFailedEvent = _signInFailedEvent.asStateFlow()
 
     fun onEmailChange(emailAddress: String) {
-        _uiState.update { (_uiState.value as SignInLoaded).copy(email = emailAddress.removeEmptyLines()) }
+        _uiState.update {
+            (_uiState.value as SignInLoaded).copy(
+                email = emailAddress.removeEmptyLines().lowercase()
+            )
+        }
     }
 
     fun onPasswordChange(password: String) {
@@ -41,38 +53,62 @@ class SignInViewModel @Inject constructor(
     }
 
     fun isButtonEnabled(): Boolean {
-        if (!(_uiState.value as SignInLoaded).email.isValidEmail() or (_uiState.value as SignInLoaded).password.isBlank()) return false
-        return true
+        return !(!(_uiState.value as SignInLoaded).email.isValidEmail() or (_uiState.value as SignInLoaded).password.isBlank())
+    }
+
+    fun savedUserEmail(dataStore: DataStore<Preferences>) {
+        viewModelScope.launch {
+            dataStore.data
+                .map { preferences ->
+                    preferences[USER_EMAIL] ?: ""
+                }.collect {
+                    currentUserEmail = it
+                }
+        }
+    }
+
+    fun savedToken(dataStore: DataStore<Preferences>) {
+        viewModelScope.launch {
+            dataStore.data
+                .map { preferences ->
+                    preferences[TOKEN] ?: ""
+                }.collect {
+                    if (token.isEmpty()) {
+                        token = it
+                    }
+                }
+        }
     }
 
     fun isLoggedIn(): Boolean {
-        if (workoutTrackerPresenter.isLoggedIn()) return true
-        _uiState.value = SignInLoaded("", "")
-        return false
+        return token.isNotEmpty() && currentUserEmail.isNotEmpty()
     }
 
-    fun buttonOnClick() {
+    fun changeUiStateToSignInLoaded() {
+        _uiState.value = SignInLoaded("", "")
+    }
+
+    fun buttonOnClick(dataStore: DataStore<Preferences>) {
         val email = (_uiState.value as SignInLoaded).email
         val password = (_uiState.value as SignInLoaded).password
         _savingState.value = true
-        viewModelScope.launch {
-            try {
-                workoutTrackerPresenter.signIn(
-                    userAuthLogin = UserAuthLogin(email = email, password = password),
-                    onSuccess = {
-                        _uiState.value = SignInSuccess
-                        _savingState.value = true
-                    },
-                    onFailure = {
-                        _signInFailedEvent.value =
-                            SignInFailure(isLoginFailed = true)
+        workoutTrackerPresenter.signIn(
+            userAuthLogin = UserAuthLogin(email = email, password = password),
+            onSuccess = { token ->
+                viewModelScope.launch {
+                    dataStore.edit {
+                        it[TOKEN] = "Bearer $token"
+                        it[USER_EMAIL] = email
                     }
-                )
-            } catch (e: Exception) {
+                }
+                _uiState.value = SignInSuccess
+            },
+            onFailure = {
+                _signInFailedEvent.value =
+                    SignInFailure(isLoginFailed = true, exception = it)
                 _savingState.value = false
-                _signInFailedEvent.value = SignInFailure(isLoginFailed = true)
             }
-        }
+        )
     }
 
     fun handledSignInFailedEvent() {
@@ -81,6 +117,7 @@ class SignInViewModel @Inject constructor(
     }
 
     data class SignInFailure(
-        val isLoginFailed: Boolean
+        val isLoginFailed: Boolean,
+        val exception: Exception?
     )
 }

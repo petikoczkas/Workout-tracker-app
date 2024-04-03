@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.workout_tracker.R
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
-import hu.bme.aut.workout_tracker.data.model_D.Workout
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
@@ -16,13 +16,11 @@ import hu.bme.aut.workout_tracker.utils.Constants.BODY_PARTS
 import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
 import hu.bme.aut.workout_tracker.utils.capitalizeWords
 import hu.bme.aut.workout_tracker.utils.removeEmptyLines
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,19 +57,17 @@ class AddExerciseViewModel @Inject constructor(
         _uiState.update { (_uiState.value as AddExerciseLoaded).copy(newExercise = exercise) }
     }
 
-    fun getExercises(workoutId: String) {
+    fun getExercises(workoutId: Int) {
         _uiState.value = AddExerciseLoaded(
             selectedItem = BODY_PARTS[0],
             showDialog = false,
             newExercise = ""
         )
         viewModelScope.launch {
-            workout = workoutTrackerPresenter.getWorkout(workoutId)
-            withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getExercises().collect {
-                    _exercises.postValue(it)
-                }
+            if (workoutId != -1) {
+                workout = workoutTrackerPresenter.getWorkout(workoutId)
             }
+            _exercises.value = workoutTrackerPresenter.getExercises()
         }
     }
 
@@ -95,10 +91,12 @@ class AddExerciseViewModel @Inject constructor(
                 try {
                     workoutTrackerPresenter.createExercise(
                         Exercise(
+                            id = -1,
                             category = category,
                             name = name
                         )
                     )
+                    _exercises.value = workoutTrackerPresenter.getExercises()
                 } catch (e: Exception) {
                     _createExerciseFailedEvent.value = CreateExerciseFailure(
                         isCreateExerciseFailed = true,

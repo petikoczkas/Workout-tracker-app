@@ -13,7 +13,13 @@ data class Chart(
     @Json(name = "exercise")
     val exercise: Exercise,
     @Json(name = "type")
-    val type: String,
+    val type: ChartType,
     @Json(name = "data")
-    val data: ArrayList<String>
+    val data: MutableList<Double>
 )
+
+enum class ChartType {
+    Volume,
+    AverageOneRepMax,
+    OneRepMax
+}

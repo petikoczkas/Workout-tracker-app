@@ -32,7 +32,7 @@ import hu.bme.aut.workout_tracker.utils.Constants
 
 @Composable
 fun AddExerciseScreen(
-    workoutId: String,
+    workoutId: Int,
     navigateBack: () -> Unit,
     viewModel: AddExerciseViewModel = hiltViewModel()
 ) {

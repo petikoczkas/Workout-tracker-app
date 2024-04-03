@@ -5,17 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.workout_tracker.data.model_D.Exercise
-import hu.bme.aut.workout_tracker.data.model_D.Workout
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.ChartType
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.User
+import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeInit
 import hu.bme.aut.workout_tracker.ui.screen.home.HomeUiState.HomeLoaded
-import kotlinx.coroutines.Dispatchers
+import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +28,9 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeInit)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    private var currentUser = hu.bme.aut.workout_tracker.data.model.User()
+    private var currentUser = User()
+
+    private var userCharts = listOf<Chart>()
 
     private val _workouts = MutableLiveData<List<Workout>>()
     val workouts: LiveData<List<Workout>> = _workouts
@@ -35,45 +39,38 @@ class HomeViewModel @Inject constructor(
     val exercises: LiveData<List<Exercise>> = _exercises
 
     fun getUserFirstName(): String {
-        //return currentUser.name.substringBefore(" ")
         return currentUser.firstName
     }
 
-    fun getFavoriteWorkouts() {
+    fun init() {
         _uiState.value = HomeLoaded
-        getStandingsExercises()
+        getFavoriteWorkouts()
         viewModelScope.launch {
             currentUser = workoutTrackerPresenter.getCurrentUser()
-            /*withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getUserFavoriteWorkouts(currentUser).collect {
-                    _workouts.postValue(it)
-                }
-            }*/
+            userCharts = workoutTrackerPresenter.getUserCharts(currentUserEmail)
+            _exercises.value = workoutTrackerPresenter.getStandingsExercises()
         }
     }
 
-    private fun getStandingsExercises() {
+    fun getFavoriteWorkouts() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                workoutTrackerPresenter.getStandingsExercises().collect {
-                    _exercises.postValue(it)
-                }
-            }
+            _workouts.value = workoutTrackerPresenter.getUserFavoriteWorkouts(currentUserEmail)
         }
     }
 
     fun getMaxList(exercises: List<Exercise>): List<List<String>> {
         val maxList = mutableListOf<List<String>>()
-        /*for (e in exercises) {
+        for (e in exercises) {
             val tmp = mutableListOf<String>()
             tmp.add(e.name.substringAfter(" "))
-            if (currentUser.oneRepMaxCharts.containsKey(e.id)) {
-                tmp.add(currentUser.oneRepMaxCharts[e.id]?.max()?.toInt().toString())
+            val chart = userCharts.find { it.type == ChartType.OneRepMax && it.exercise == e }
+            if (chart != null) {
+                tmp.add(chart.data.max().toInt().toString())
             } else {
                 tmp.add("-")
             }
             maxList.add(tmp.toList())
-        }*/
+        }
         return maxList.toList()
     }
 }

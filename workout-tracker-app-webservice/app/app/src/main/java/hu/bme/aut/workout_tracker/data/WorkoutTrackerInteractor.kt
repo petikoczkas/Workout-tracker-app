@@ -2,7 +2,6 @@ package hu.bme.aut.workout_tracker.data
 
 import android.graphics.Bitmap
 import android.util.Base64
-import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hu.bme.aut.workout_tracker.data.api.WorkoutTrackerAPI
@@ -13,12 +12,19 @@ import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
+import hu.bme.aut.workout_tracker.data.util.ResultConverterFactory
 import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import hu.bme.aut.workout_tracker.utils.Constants.token
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.ByteArrayOutputStream
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -31,75 +37,73 @@ class WorkoutTrackerInteractor @Inject constructor() {
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
+        val intercepter = HttpLoggingInterceptor().apply {
+            this.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val client = OkHttpClient.Builder().apply {
+            this.addInterceptor(intercepter)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+        }.build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.0.106:8080/")
             .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(ResultConverterFactory.create(moshi))
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(client)
             .build()
 
         workoutTrackerAPI = retrofit.create(WorkoutTrackerAPI::class.java)
     }
 
-    suspend fun registrate(
+    fun registrate(
         userAuthRegister: UserAuthRegister,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
-    ) {
-        workoutTrackerAPI.registrate(userAuthRegister)
-    }
-
-    /*suspend fun registrate(
-        email: String,
-        password: String,
-        user: User,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
-    ) {
-        var userWithID = user
-
-        FirebaseAuthService.registrate(
-            firebaseAuth = firebaseAuth,
-            email = email,
-            password = password,
-            onSuccess = {
-                onSuccess()
-                currentUser = firebaseAuth.currentUser
-                userWithID = user.copy(id = currentUser?.uid.toString())
-            },
-            onFailure = {
-                onFailure()
-            }
-        )
-        delay(5)
-        FirebaseStorageService.createUser(
-            firebaseFirestore = firebaseFirestore,
-            user = userWithID,
-            onSuccess = {
-                onSuccess()
-            },
-            onFailure = {
-                onFailure()
-            }
-        )
-    }*/
-
-    suspend fun signIn(
-        userAuthLogin: UserAuthLogin,
-        onSuccess: () -> Unit,
+        onSuccess: (String) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        try {
-            val response = workoutTrackerAPI.signIn(userAuthLogin)
-            if (response.isNotEmpty()) {
-                token = "Bearer $response"
-                currentUserEmail = userAuthLogin.email.lowercase()
-                onSuccess()
-            } else {
-                onFailure(Exception(/*TODO*/))
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                workoutTrackerAPI.registrate(userAuthRegister)
+                    .onSuccess {
+                        signIn(
+                            UserAuthLogin(userAuthRegister.email, userAuthRegister.password),
+                            onSuccess,
+                            onFailure
+                        )
+                    }
+                    .onFailure {
+                        onFailure(Exception(it.message))
+
+                    }
+            } catch (e: Exception) {
+                onFailure(e)
             }
-        } catch (e: Exception) {
-            Log.println(Log.ERROR, "exception", e.message.toString())
-            onFailure(e)
+        }
+    }
+
+    fun signIn(
+        userAuthLogin: UserAuthLogin,
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                workoutTrackerAPI.signIn(userAuthLogin)
+                    .onSuccess {
+                        token = "Bearer ${it.token}"
+                        currentUserEmail = userAuthLogin.email.lowercase()
+                        onSuccess(it.token)
+                    }
+                    .onFailure {
+                        onFailure(Exception(it.message))
+
+                    }
+            } catch (e: Exception) {
+                onFailure(e)
+            }
         }
     }
 
@@ -108,13 +112,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         currentUserEmail = ""
     }
 
-    fun isLoggedIn(): Boolean {
-        return currentUserEmail.isNotEmpty()
-    }
-
     suspend fun getCurrentUser(): User {
-        Log.println(Log.INFO, "currentUserEmail", currentUserEmail)
-        Log.println(Log.INFO, "token2", token)
         return workoutTrackerAPI.getCurrentUser(
             bearerToken = token,
             email = currentUserEmail
@@ -124,29 +122,36 @@ class WorkoutTrackerInteractor @Inject constructor() {
 
     suspend fun getUsers() = workoutTrackerAPI.getUsers(bearerToken = token)
 
-    suspend fun updateUser(user: User) {
+    suspend fun updateUser(
+        user: User,
+        onSuccess: () -> Unit
+    ) {
         workoutTrackerAPI.updateUser(
             bearerToken = token,
             user = user
-        )
+        ).onSuccess {
+            onSuccess()
+        }.onFailure {
+
+        }
     }
 
     suspend fun uploadProfilePicture(
         user: User,
         imageBitmap: Bitmap,
-        onSuccess: (String) -> Unit,
+        onSuccess: () -> Unit,
     ) {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
         user.photo = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        updateUser(user = user)
+        updateUser(user = user, onSuccess = onSuccess)
     }
 
     suspend fun getExercises() = workoutTrackerAPI.getExercises(bearerToken = token)
 
     suspend fun getStandingsExercises() =
-        workoutTrackerAPI.getStandingsExercises(bearerToken = token)
+        workoutTrackerAPI.getStandingsExercises(bearerToken = token).sortedBy { it.name }
 
     suspend fun createExercise(exercise: Exercise) {
         workoutTrackerAPI.createExercise(
@@ -167,7 +172,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
             email = email
         )
 
-    suspend fun getWorkout(workoutId: String) =
+    suspend fun getWorkout(workoutId: Int) =
         workoutTrackerAPI.getWorkout(
             bearerToken = token,
             workoutId = workoutId
@@ -180,12 +185,17 @@ class WorkoutTrackerInteractor @Inject constructor() {
         )
     }
 
-    suspend fun getUserSavedExercises(email: String) {
+    suspend fun deleteWorkout(workoutId: Int) =
+        workoutTrackerAPI.deleteWorkout(
+            bearerToken = token,
+            workoutId = workoutId
+        )
+
+    suspend fun getUserSavedExercises(email: String) =
         workoutTrackerAPI.getUserSavedExercises(
             bearerToken = token,
             email = email
         )
-    }
 
     suspend fun updateSavedExercise(savedExercise: SavedExercise) {
         workoutTrackerAPI.updateSavedExercise(
@@ -194,12 +204,16 @@ class WorkoutTrackerInteractor @Inject constructor() {
         )
     }
 
-    suspend fun getUserCharts(email: String) {
+    suspend fun getUserCharts(email: String) =
         workoutTrackerAPI.getUserCharts(
             bearerToken = token,
             email = email
         )
-    }
+
+    suspend fun getCharts() =
+        workoutTrackerAPI.getCharts(
+            bearerToken = token
+        )
 
     suspend fun updateChart(chart: Chart) {
         workoutTrackerAPI.updateChart(

@@ -1,10 +1,12 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +15,8 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsInit
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoaded
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsSaved
+import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.dataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,9 +66,15 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { (_uiState.value as SettingsLoaded).copy(imageUri = image) }
     }
 
+    fun isSaveButtonEnabled(): Boolean {
+        return (_uiState.value as SettingsLoaded).firstName.isNotEmpty() && (_uiState.value as SettingsLoaded).lastName.isNotEmpty()
+    }
+
     @RequiresApi(Build.VERSION_CODES.P)
     fun saveButtonOnClick(contentResolver: ContentResolver) {
         _savingState.value = true
+        var isPictureUploaded = false
+        var isProfileUpdated = false
         viewModelScope.launch {
             try {
                 currentUser.firstName = (_uiState.value as SettingsLoaded).firstName
@@ -79,19 +89,22 @@ class SettingsViewModel @Inject constructor(
                             )
                         ),
                         onSuccess = {
-                            currentUser.photo = it
-                            viewModelScope.launch {
-                                workoutTrackerPresenter.updateUser(currentUser)
+                            isPictureUploaded = true
+                            if (isProfileUpdated) {
+                                _uiState.value = SettingsSaved
                             }
-                            _savingState.value = true
-                            _uiState.value = SettingsSaved
                         }
                     )
-                } else {
-                    workoutTrackerPresenter.updateUser(currentUser)
-                    _savingState.value = true
-                    _uiState.value = SettingsSaved
                 }
+                workoutTrackerPresenter.updateUser(
+                    user = currentUser,
+                    onSuccess = {
+                        isProfileUpdated = true
+                        if (isPictureUploaded) {
+                            _uiState.value = SettingsSaved
+                        }
+                    }
+                )
             } catch (e: Exception) {
                 _savingState.value = false
                 _updateUserFailedEvent.value =
@@ -100,7 +113,13 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun signOut() {
+    fun signOut(context: Context) {
+        viewModelScope.launch {
+            context.dataStore.edit {
+                it[Constants.TOKEN] = ""
+                it[Constants.USER_EMAIL] = ""
+            }
+        }
         workoutTrackerPresenter.signOut()
     }
 

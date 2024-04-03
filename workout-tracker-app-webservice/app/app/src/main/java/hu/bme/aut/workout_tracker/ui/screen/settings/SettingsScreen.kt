@@ -82,7 +82,7 @@ fun SettingsScreen(
             ) {
                 IconButton(
                     onClick = {
-                        viewModel.signOut()
+                        viewModel.signOut(context)
                         signOut()
                     }
                 ) {
@@ -137,23 +137,23 @@ fun SettingsScreen(
                             )
                         }
                     }
-                    //TODO Paddings
                     WorkoutTrackerTextField(
                         text = (uiState as SettingsLoaded).firstName,
                         onTextChange = viewModel::onFirstNameChange,
                         placeholder = "First Name",
-                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                        modifier = Modifier.padding(top = workoutTrackerDimens.gapVeryLarge)
                     )
                     WorkoutTrackerTextField(
                         text = (uiState as SettingsLoaded).lastName,
                         onTextChange = viewModel::onLastNameChange,
                         placeholder = "Last Name",
-                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapVeryLarge)
+                        modifier = Modifier.padding(vertical = workoutTrackerDimens.gapNormal)
                     )
                 }
                 PrimaryButton(
                     onClick = { viewModel.saveButtonOnClick(context.contentResolver) },
                     text = stringResource(R.string.save),
+                    enabled = viewModel.isSaveButtonEnabled(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = workoutTrackerDimens.gapNormal)

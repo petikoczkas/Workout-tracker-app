@@ -35,7 +35,7 @@ fun StandingsScreen(
 
     when (uiState) {
         StandingInit -> {
-            viewModel.getStandingExercises()
+            viewModel.init()
         }
 
         is StandingLoaded -> {
@@ -64,15 +64,15 @@ fun StandingsScreen(
                         items = exercises!!.map { it.name },
                         modifier = Modifier.padding(bottom = workoutTrackerDimens.gapLarge)
                     )
-                    if ((uiState as StandingLoaded).selectedItem.id.isNotEmpty()) {
+                    if ((uiState as StandingLoaded).selectedItem.id != -1) {
                         LazyColumn(
                             modifier = Modifier.padding(bottom = workoutTrackerDimens.bottomNavigationBarHeight),
                         ) {
-                            val bestUserList = viewModel.getBestUsers(
-                                users!!,
-                                (uiState as StandingLoaded).selectedItem.id
+                            val bestUserMap = viewModel.getBestUsers(
+                                users = users!!,
+                                exerciseId = (uiState as StandingLoaded).selectedItem.id
                             )
-                            if (bestUserList.isEmpty()) {
+                            if (bestUserMap.isEmpty()) {
                                 item {
                                     Text(
                                         text = stringResource(R.string.standings_error_message),
@@ -81,13 +81,13 @@ fun StandingsScreen(
                                     )
                                 }
                             } else {
-                                itemsIndexed(bestUserList.take(50)) { i, u ->
+                                itemsIndexed(bestUserMap.toList()) { i, data ->
                                     UserCard(
                                         place = i + 1,
-                                        isCurrentUser = viewModel.isCurrentUser(u),
-                                        name = u.name,
-                                        photo = u.photo,
-                                        weight = u.oneRepMaxCharts[(uiState as StandingLoaded).selectedItem.id]!!.max(),
+                                        isCurrentUser = viewModel.isCurrentUser(data.first),
+                                        name = "${data.first.firstName} ${data.first.lastName}",
+                                        photo = data.first.photo,
+                                        weight = data.second,
                                         modifier = Modifier
                                             .padding(
                                                 top = workoutTrackerDimens.gapSmall,

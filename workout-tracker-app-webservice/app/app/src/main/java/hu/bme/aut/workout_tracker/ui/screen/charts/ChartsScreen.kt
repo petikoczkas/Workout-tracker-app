@@ -89,7 +89,7 @@ fun ChartsScreen(
                             .padding(bottom = workoutTrackerDimens.bottomNavigationBarHeight),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        if ((uiState as ChartsLoaded).selectedExercise.id.isNotEmpty()) {
+                        if ((uiState as ChartsLoaded).selectedExercise.id != -1) {
                             val data = viewModel.getSelectedChart(
                                 id = (uiState as ChartsLoaded).selectedExercise.id,
                                 chartName = (uiState as ChartsLoaded).selectedChart

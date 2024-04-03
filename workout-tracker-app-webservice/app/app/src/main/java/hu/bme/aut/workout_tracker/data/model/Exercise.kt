@@ -12,4 +12,6 @@ data class Exercise(
     val category: String,
     @Json(name = "name")
     val name: String
-)
+) {
+    constructor() : this(-1, "", "")
+}

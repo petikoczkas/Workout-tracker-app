@@ -1,6 +1,5 @@
 package hu.bme.aut.workout_tracker.ui
 
-import android.graphics.Bitmap
 import hu.bme.aut.workout_tracker.data.WorkoutTrackerInteractor
 import hu.bme.aut.workout_tracker.data.model.Chart
 import hu.bme.aut.workout_tracker.data.model.Exercise
@@ -55,14 +54,6 @@ class WorkoutTrackerPresenter @Inject constructor(
 
     suspend fun updateUser(user: User, onSuccess: () -> Unit) {
         workoutTrackerInteractor.updateUser(user = user, onSuccess = onSuccess)
-    }
-
-    suspend fun uploadProfilePicture(user: User, imageBitmap: Bitmap, onSuccess: () -> Unit) {
-        workoutTrackerInteractor.uploadProfilePicture(
-            user = user,
-            imageBitmap = imageBitmap,
-            onSuccess = onSuccess
-        )
     }
 
     suspend fun getExercises() = workoutTrackerInteractor.getExercises()

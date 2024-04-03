@@ -1,7 +1,5 @@
 package hu.bme.aut.workout_tracker.data
 
-import android.graphics.Bitmap
-import android.util.Base64
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hu.bme.aut.workout_tracker.data.api.WorkoutTrackerAPI
@@ -12,6 +10,7 @@ import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
+import hu.bme.aut.workout_tracker.data.util.ByteArrayAdapter
 import hu.bme.aut.workout_tracker.data.util.ResultConverterFactory
 import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
 import hu.bme.aut.workout_tracker.utils.Constants.token
@@ -23,7 +22,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.io.ByteArrayOutputStream
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -34,6 +32,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
 
     init {
         val moshi = Moshi.Builder()
+            .add(ByteArrayAdapter())
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
@@ -134,18 +133,6 @@ class WorkoutTrackerInteractor @Inject constructor() {
         }.onFailure {
 
         }
-    }
-
-    suspend fun uploadProfilePicture(
-        user: User,
-        imageBitmap: Bitmap,
-        onSuccess: () -> Unit,
-    ) {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream)
-        val byteArray = byteArrayOutputStream.toByteArray()
-        user.photo = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        updateUser(user = user, onSuccess = onSuccess)
     }
 
     suspend fun getExercises() = workoutTrackerAPI.getExercises(bearerToken = token)

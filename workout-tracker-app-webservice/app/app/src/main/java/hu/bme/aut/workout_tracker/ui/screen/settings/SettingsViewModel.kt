@@ -1,11 +1,9 @@
 package hu.bme.aut.workout_tracker.ui.screen.settings
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,41 +68,28 @@ class SettingsViewModel @Inject constructor(
         return (_uiState.value as SettingsLoaded).firstName.isNotEmpty() && (_uiState.value as SettingsLoaded).lastName.isNotEmpty()
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
+    @SuppressLint("Recycle")
     fun saveButtonOnClick(contentResolver: ContentResolver) {
         _savingState.value = true
-        var isPictureUploaded = false
-        var isProfileUpdated = false
+
+        currentUser.firstName = (_uiState.value as SettingsLoaded).firstName
+        currentUser.lastName = (_uiState.value as SettingsLoaded).lastName
+        if ((_uiState.value as SettingsLoaded).imageUri != Uri.EMPTY) {
+            val imageInputStream =
+                contentResolver.openInputStream((_uiState.value as SettingsLoaded).imageUri)
+            val byteArray = imageInputStream?.readBytes() ?: byteArrayOf()
+            currentUser.photo = byteArray
+        }
+
         viewModelScope.launch {
             try {
-                currentUser.firstName = (_uiState.value as SettingsLoaded).firstName
-                currentUser.lastName = (_uiState.value as SettingsLoaded).lastName
-                if ((_uiState.value as SettingsLoaded).imageUri != Uri.EMPTY) {
-                    workoutTrackerPresenter.uploadProfilePicture(
-                        user = currentUser,
-                        imageBitmap = ImageDecoder.decodeBitmap(
-                            ImageDecoder.createSource(
-                                contentResolver,
-                                (_uiState.value as SettingsLoaded).imageUri
-                            )
-                        ),
-                        onSuccess = {
-                            isPictureUploaded = true
-                            if (isProfileUpdated) {
-                                _uiState.value = SettingsSaved
-                            }
-                        }
-                    )
-                }
                 workoutTrackerPresenter.updateUser(
                     user = currentUser,
                     onSuccess = {
-                        isProfileUpdated = true
-                        if (isPictureUploaded) {
-                            _uiState.value = SettingsSaved
-                        }
+                        _uiState.value = SettingsSaved
                     }
                 )
+
             } catch (e: Exception) {
                 _savingState.value = false
                 _updateUserFailedEvent.value =

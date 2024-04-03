@@ -1,8 +1,6 @@
 package hu.bme.aut.workout_tracker_backend.data_layer.user;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +20,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String roles;
-    private String photo;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] photo;
 }

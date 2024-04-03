@@ -9,8 +9,5 @@ public class UserDTO {
     String email;
     String firstName;
     String lastName;
-    String photo;
-    /*List<WorkoutDTO> workouts = new ArrayList<>();
-    List<SavedExerciseDTO> savedExercises = new ArrayList<>();
-    List<ChartDTO> charts = new ArrayList<>();*/
+    byte[] photo;
 }

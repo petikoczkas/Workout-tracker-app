@@ -36,7 +36,7 @@ fun UserCard(
     place: Int,
     isCurrentUser: Boolean,
     name: String,
-    photo: String,
+    photo: ByteArray,
     weight: Double,
     modifier: Modifier = Modifier
 ) {

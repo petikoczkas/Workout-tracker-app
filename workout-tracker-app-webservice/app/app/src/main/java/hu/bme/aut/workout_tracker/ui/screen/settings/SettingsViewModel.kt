@@ -15,6 +15,7 @@ import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoa
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsSaved
 import hu.bme.aut.workout_tracker.utils.Constants
 import hu.bme.aut.workout_tracker.utils.dataStore
+import hu.bme.aut.workout_tracker.utils.getByteArray
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,11 +75,13 @@ class SettingsViewModel @Inject constructor(
 
         currentUser.firstName = (_uiState.value as SettingsLoaded).firstName
         currentUser.lastName = (_uiState.value as SettingsLoaded).lastName
-        if ((_uiState.value as SettingsLoaded).imageUri != Uri.EMPTY) {
+        val imageUri = (_uiState.value as SettingsLoaded).imageUri
+        if (imageUri != Uri.EMPTY) {
             val imageInputStream =
-                contentResolver.openInputStream((_uiState.value as SettingsLoaded).imageUri)
-            val byteArray = imageInputStream?.readBytes() ?: byteArrayOf()
-            currentUser.photo = byteArray
+                contentResolver.openInputStream(imageUri)
+            currentUser.photo =
+                imageInputStream.getByteArray(width = 150, height = 200, quality = 75)
+            imageInputStream?.close()
         }
 
         viewModelScope.launch {

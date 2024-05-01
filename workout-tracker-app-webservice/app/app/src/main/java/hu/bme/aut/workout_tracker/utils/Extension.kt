@@ -1,7 +1,13 @@
 package hu.bme.aut.workout_tracker.utils
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.util.Locale
 import java.util.regex.Pattern
+
 
 private const val EMAIL_PATTERN =
     "^[_A-Za-z\\d-+]+(\\.[_A-Za-z\\d-]+)*@[A-Za-z\\d-]+(\\.[A-Za-z\\d]+)*(\\.[A-Za-z]{2,})$"
@@ -38,3 +44,19 @@ fun String.capitalizeWords(): String =
             }
         }
     }
+
+fun InputStream?.getByteArray(width: Int, height: Int, quality: Int): ByteArray {
+
+    var bitmap = BitmapFactory.decodeStream(this)
+
+    bitmap = Bitmap.createScaledBitmap(bitmap, height, width, true)
+    val matrix = Matrix()
+    matrix.postRotate(90F)
+    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
+    val outputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+    val byteArray = outputStream.toByteArray()
+    outputStream.close()
+    return byteArray
+}

@@ -11,6 +11,7 @@ import hu.bme.aut.workout_tracker_backend.business_logic_layer.service.*;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +35,9 @@ public class ApiController {
     private final ExerciseService exerciseService;
     private final SavedExerciseService savedExerciseService;
     private final ChartService chartService;
+
+    @GetMapping("/isAvailable")
+    public void isAvailable(){}
 
     // AUTH
     @PostMapping("/register")

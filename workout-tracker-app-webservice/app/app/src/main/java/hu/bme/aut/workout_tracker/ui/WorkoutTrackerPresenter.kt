@@ -14,6 +14,11 @@ class WorkoutTrackerPresenter @Inject constructor(
     private val workoutTrackerInteractor: WorkoutTrackerInteractor
 ) {
 
+    fun isAvailable(
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) = workoutTrackerInteractor.isAvailable(onSuccess = onSuccess, onFailure = onFailure)
+
     fun registrate(
         userAuthRegister: UserAuthRegister,
         onSuccess: (String) -> Unit,

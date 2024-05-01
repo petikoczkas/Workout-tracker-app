@@ -59,8 +59,9 @@
     <string name="one_rep_max_chart_formula">max(weight * (1 + reps / 30))</string>
     <string name="no_internet">No Internet Connection!</string>
     <string name="workout_name">Workout Name</string>
-    <string name="server_connection_error_message">Connection to server failed</string>
+    <string name="server_connection_error_message">Connection to server failed!</string>
     <string name="your_favorite_workouts">Your Favorite Workouts</string>
     <string name="your_estimated_one_rep_maxes">Your Estimated One Rep Maxes</string>
     <string name="greeting">Hi %1$s!</string>
+    <string name="server_connection_error_description">The server is not reachable at the moment. Please try again later.</string>
 </resources>

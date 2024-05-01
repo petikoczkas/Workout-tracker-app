@@ -58,6 +58,19 @@ class WorkoutTrackerInteractor @Inject constructor() {
         workoutTrackerAPI = retrofit.create(WorkoutTrackerAPI::class.java)
     }
 
+    fun isAvailable(
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                workoutTrackerAPI.isAvailable().onSuccess { onSuccess() }.onFailure { onFailure() }
+            } catch (e: Exception) {
+                onFailure()
+            }
+        }
+    }
+
     fun registrate(
         userAuthRegister: UserAuthRegister,
         onSuccess: (String) -> Unit,
@@ -112,100 +125,157 @@ class WorkoutTrackerInteractor @Inject constructor() {
     }
 
     suspend fun getCurrentUser(): User {
-        return workoutTrackerAPI.getCurrentUser(
-            bearerToken = token,
-            email = currentUserEmail
-        )
+        return try {
+            workoutTrackerAPI.getCurrentUser(
+                bearerToken = token,
+                email = currentUserEmail
+            )
+        } catch (_: Exception) {
+            User()
+        }
     }
 
 
-    suspend fun getUsers() = workoutTrackerAPI.getUsers(bearerToken = token)
+    suspend fun getUsers() = try {
+        workoutTrackerAPI.getUsers(bearerToken = token)
+    } catch (_: Exception) {
+        emptyList()
+    }
 
     suspend fun updateUser(
         user: User,
         onSuccess: () -> Unit
     ) {
-        workoutTrackerAPI.updateUser(
-            bearerToken = token,
-            user = user
-        ).onSuccess {
-            onSuccess()
-        }.onFailure {
+        try {
+            workoutTrackerAPI.updateUser(
+                bearerToken = token,
+                user = user
+            ).onSuccess {
+                onSuccess()
+            }
+        } catch (_: Exception) {
 
         }
     }
 
-    suspend fun getExercises() = workoutTrackerAPI.getExercises(bearerToken = token)
+    suspend fun getExercises() = try {
+        workoutTrackerAPI.getExercises(bearerToken = token)
+    } catch (_: Exception) {
+        emptyList()
+    }
 
     suspend fun getStandingsExercises() =
-        workoutTrackerAPI.getStandingsExercises(bearerToken = token).sortedBy { it.name }
+        try {
+            workoutTrackerAPI.getStandingsExercises(bearerToken = token).sortedBy { it.name }
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun createExercise(exercise: Exercise) {
-        workoutTrackerAPI.createExercise(
-            bearerToken = token,
-            exercise = exercise
-        )
+        try {
+            workoutTrackerAPI.createExercise(
+                bearerToken = token,
+                exercise = exercise
+            )
+        } catch (_: Exception) {
+        }
     }
 
     suspend fun getUserWorkouts(email: String) =
-        workoutTrackerAPI.getUserWorkouts(
-            bearerToken = token,
-            email = email
-        )
+        try {
+            workoutTrackerAPI.getUserWorkouts(
+                bearerToken = token,
+                email = email
+            )
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun getUserFavoriteWorkouts(email: String) =
-        workoutTrackerAPI.getUserFavoriteWorkouts(
-            bearerToken = token,
-            email = email
-        )
+        try {
+            workoutTrackerAPI.getUserFavoriteWorkouts(
+                bearerToken = token,
+                email = email
+            )
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun getWorkout(workoutId: Int) =
-        workoutTrackerAPI.getWorkout(
-            bearerToken = token,
-            workoutId = workoutId
-        )
+        try {
+            workoutTrackerAPI.getWorkout(
+                bearerToken = token,
+                workoutId = workoutId
+            )
+        } catch (_: Exception) {
+            Workout()
+        }
 
     suspend fun updateWorkout(workout: Workout) {
-        workoutTrackerAPI.updateWorkout(
-            bearerToken = token,
-            workout = workout
-        )
+        try {
+            workoutTrackerAPI.updateWorkout(
+                bearerToken = token,
+                workout = workout
+            )
+        } catch (_: Exception) {
+        }
     }
 
     suspend fun deleteWorkout(workoutId: Int) =
-        workoutTrackerAPI.deleteWorkout(
-            bearerToken = token,
-            workoutId = workoutId
-        )
+        try {
+            workoutTrackerAPI.deleteWorkout(
+                bearerToken = token,
+                workoutId = workoutId
+            )
+        } catch (_: Exception) {
+        }
 
     suspend fun getUserSavedExercises(email: String) =
-        workoutTrackerAPI.getUserSavedExercises(
-            bearerToken = token,
-            email = email
-        )
+        try {
+            workoutTrackerAPI.getUserSavedExercises(
+                bearerToken = token,
+                email = email
+            )
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun updateSavedExercise(savedExercise: SavedExercise) {
-        workoutTrackerAPI.updateSavedExercise(
-            bearerToken = token,
-            savedExercise = savedExercise
-        )
+        try {
+            workoutTrackerAPI.updateSavedExercise(
+                bearerToken = token,
+                savedExercise = savedExercise
+            )
+        } catch (_: Exception) {
+        }
     }
 
     suspend fun getUserCharts(email: String) =
-        workoutTrackerAPI.getUserCharts(
-            bearerToken = token,
-            email = email
-        )
+        try {
+            workoutTrackerAPI.getUserCharts(
+                bearerToken = token,
+                email = email
+            )
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun getCharts() =
-        workoutTrackerAPI.getCharts(
-            bearerToken = token
-        )
+        try {
+            workoutTrackerAPI.getCharts(
+                bearerToken = token
+            )
+        } catch (_: Exception) {
+            emptyList()
+        }
 
     suspend fun updateChart(chart: Chart) {
-        workoutTrackerAPI.updateChart(
-            bearerToken = token,
-            chart = chart
-        )
+        try {
+            workoutTrackerAPI.updateChart(
+                bearerToken = token,
+                chart = chart
+            )
+        } catch (_: Exception) {
+        }
     }
 }

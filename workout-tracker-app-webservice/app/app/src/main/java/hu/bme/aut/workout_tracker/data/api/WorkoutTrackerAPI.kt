@@ -17,6 +17,9 @@ import retrofit2.http.Query
 
 interface WorkoutTrackerAPI {
 
+    @GET("isAvailable")
+    suspend fun isAvailable(): Result<Unit>
+
     //AUTH
     @POST("register")
     suspend fun registrate(@Body userAuthRegister: UserAuthRegister): Result<Unit>

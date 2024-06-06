@@ -48,7 +48,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         }.build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.106:8080/")
+            .baseUrl("http://192.168.0.130:8080/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(ResultConverterFactory.create(moshi))
             .addConverterFactory(MoshiConverterFactory.create(moshi))

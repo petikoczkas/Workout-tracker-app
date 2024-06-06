@@ -64,4 +64,6 @@
     <string name="your_estimated_one_rep_maxes">Your Estimated One Rep Maxes</string>
     <string name="greeting">Hi %1$s!</string>
     <string name="server_connection_error_description">The server is not reachable at the moment. Please try again later.</string>
+    <string name="permission_step_count_update_description">Allows the app to update step count in the widget.</string>
+    <string name="permission_step_count_update_label">Step Count Update Permission</string>
 </resources>

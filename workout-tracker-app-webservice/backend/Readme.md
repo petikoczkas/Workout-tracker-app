@@ -3,7 +3,7 @@
 [IntelliJIdea](https://www.jetbrains.com/idea/) +
 [JDK](https://bell-sw.com/pages/downloads/#jdk-17-lts)
 
-[MySQL](https://dev.mysql.com/downloads/installer/) + [Connector/J](https://dev.mysql.com/downloads/connector/j/) (Only if you want to look inside the database)
+[MySQL](https://dev.mysql.com/downloads/installer/) + [Connector/J](https://dev.mysql.com/downloads/connector/j/)
 
 [Postman](https://app.getpostman.com/join-team?invite_code=2ccff53d8713902cc1607fbb76340f36&target_code=9befbdfa5759f3eef3ad212ad3d995b1) (This link is an invitation to a workspace with existing requests.)
 

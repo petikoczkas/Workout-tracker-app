@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <permission
+        android:name="hu.bme.aut.workout_tracker.PERMISSION_STEP_COUNT_UPDATE"
+        android:description="@string/permission_step_count_update_description"
+        android:label="@string/permission_step_count_update_label"
+        android:protectionLevel="signature" />
+    <application
+        android:name=".WorkoutTrackerApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WorkoutTracker"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="33">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WorkoutTracker"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name=".ui.widget.StepCounterWidgetReceiver"
+            android:exported="true"
+            android:label="StepCounterWidgetReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/step_counter_widget_info" />
+        </receiver>
+        <service
+            android:name="hu.bme.aut.workout_tracker.service.StepCounterService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="health" />
+        <receiver
+            android:name=".service.StepCounterService$ResetReceiver"
+            android:exported="true" />
+    </application>
+</manifest>

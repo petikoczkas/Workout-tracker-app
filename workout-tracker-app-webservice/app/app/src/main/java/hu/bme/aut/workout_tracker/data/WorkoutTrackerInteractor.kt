@@ -2,6 +2,7 @@ package hu.bme.aut.workout_tracker.data
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import hu.bme.aut.workout_tracker.BuildConfig
 import hu.bme.aut.workout_tracker.data.api.WorkoutTrackerAPI
 import hu.bme.aut.workout_tracker.data.model.Chart
 import hu.bme.aut.workout_tracker.data.model.Exercise
@@ -48,7 +49,7 @@ class WorkoutTrackerInteractor @Inject constructor() {
         }.build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.0.130:8080/")
+            .baseUrl(BuildConfig.API_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(ResultConverterFactory.create(moshi))
             .addConverterFactory(MoshiConverterFactory.create(moshi))

@@ -22,6 +22,8 @@ android {
             useSupportLibrary = true
         }
         signingConfig = signingConfigs.getByName("debug")
+
+        buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.130:8080/\"")
     }
 
     buildTypes {
@@ -43,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"

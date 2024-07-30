@@ -39,7 +39,7 @@ public class AuthTokenService {
                 .setClaims(extractClaims)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365)) // one year
+                .setExpiration(new Date(System.currentTimeMillis() + AuthConstants.authTokenTTL))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

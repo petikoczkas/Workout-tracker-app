@@ -5,6 +5,7 @@ import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.Au
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -88,7 +88,7 @@ fun SettingsScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = null
+                        contentDescription = "Logout Icon"
                     )
                 }
             }

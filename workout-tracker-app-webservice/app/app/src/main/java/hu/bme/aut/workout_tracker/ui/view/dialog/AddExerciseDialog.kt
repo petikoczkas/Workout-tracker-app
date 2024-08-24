@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import hu.bme.aut.workout_tracker.R
@@ -31,7 +32,8 @@ fun AddExerciseDialog(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .testTag("AddExerciseDialog"),
                 shape = AlertDialogDefaults.shape,
                 color = AlertDialogDefaults.containerColor,
                 tonalElevation = workoutTrackerDimens.addExerciseDialogTonalElevation

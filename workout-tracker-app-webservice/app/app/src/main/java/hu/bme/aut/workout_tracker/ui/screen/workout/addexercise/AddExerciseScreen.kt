@@ -15,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.workout_tracker.R
@@ -70,7 +71,9 @@ fun AddExerciseScreen(
                         selectedItem = (uiState as AddExerciseLoaded).selectedItem,
                         onSelectedItemChange = viewModel::onSelectedItemChange,
                         items = Constants.BODY_PARTS,
-                        modifier = Modifier.padding(horizontal = workoutTrackerDimens.gapNormal)
+                        modifier = Modifier
+                            .padding(horizontal = workoutTrackerDimens.gapNormal)
+                            .testTag("WorkoutTrackerDropDownMenu")
                     )
                     if (exercises == null) {
                         WorkoutTrackerProgressIndicator()

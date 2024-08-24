@@ -21,5 +21,6 @@ fun WorkoutTrackerProgressIndicator(
             .fillMaxHeight()
             .wrapContentSize(align = Alignment.Center)
             .then(Modifier.size(size))
+            .testTag("WorkoutTrackerProgressIndicator")
     )
 }

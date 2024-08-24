@@ -46,8 +46,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ContentAlpha
 import hu.bme.aut.workout_tracker.R
-import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.*
-import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.*
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.AddExercise
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.Loaded
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutInit
+import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutLoaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.workoutcomplete.WorkoutCompleteScreen
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
@@ -306,7 +308,7 @@ fun WorkoutScreenContent(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_remove),
-                                contentDescription = null
+                                contentDescription = "Remove"
                             )
                         }
                         IconButton(
@@ -317,7 +319,7 @@ fun WorkoutScreenContent(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_add),
-                                contentDescription = null
+                                contentDescription = "Add"
                             )
                         }
                     }

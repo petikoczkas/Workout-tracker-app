@@ -1,9 +1,8 @@
 package hu.bme.aut.workout_tracker.ui.screen.charts
 
-import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -14,12 +13,6 @@ import hu.bme.aut.workout_tracker.data.model.ChartType
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import hu.bme.aut.workout_tracker.ui.view.chart.WorkoutTrackerChart
-import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrackerProgressIndicator
-import hu.bme.aut.workout_tracker.ui.view.dialog.ChartsInformationDialog
-import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerNestedDropDownMenu
-import hu.bme.aut.workout_tracker.ui.view.toggle.TriStateToggle
-import hu.bme.aut.workout_tracker.utils.Constants.chartsList
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
@@ -42,9 +35,6 @@ class ChartsScreenTest {
 
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
-
-    private val dummyExercise = Exercise()
-    private val dummyChart = Chart(id = 0, userId = "0", exercise = dummyExercise, type = ChartType.Volume, data = mutableListOf())
 
     @Before
     fun setup() {
@@ -84,30 +74,21 @@ class ChartsScreenTest {
 
         composeTestRule.onNodeWithText(context.getString(R.string.charts))
             .assertExists()
-        /*composeTestRule.onNodeWithTag("WorkoutTrackerNestedDropDownMenu")
+        composeTestRule.onNodeWithTag("WorkoutTrackerNestedDropDownMenu")
             .assertExists()
         composeTestRule.onNodeWithTag("TriStateToggle")
             .assertExists()
-        composeTestRule.onNodeWithTag("WorkoutTrackerChart")
-            .assertExists()*/
     }
 
-    /*@Test
+    @Test
     fun testChartsScreenDisplaysErrorState() {
-        viewModel.uiState.value = ChartsUiState.ChartsLoaded(
-            selectedExercise = dummyExercise,
-            selectedChart = dummyChart,
-            showDialog = false
-        )
-        viewModel.exercises = MutableLiveData(listOf(dummyExercise))
-
         composeTestRule.setContent {
             ChartsScreen(viewModel = viewModel)
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.charts))
+        viewModel.onShowDialogChange(true)
+        composeTestRule.onNodeWithText("Average One Rep Max Chart")
             .assertExists()
-        composeTestRule.onNodeWithText(context.getString(R.string.chart_error_message))
-            .assertExists()
-    }*/
+
+    }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.testTag
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.graphics.ColorUtils
@@ -176,5 +177,6 @@ fun SuccessfulRegistrationAnimation() {
                 top = workoutTrackerDimens.gapVeryLarge,
                 bottom = workoutTrackerDimens.gapLarge
             )
+            .testTag("SuccessfulRegistrationAnimation")
     )
 }

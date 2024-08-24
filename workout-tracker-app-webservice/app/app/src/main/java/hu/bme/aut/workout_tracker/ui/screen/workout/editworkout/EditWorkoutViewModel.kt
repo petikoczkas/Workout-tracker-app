@@ -90,7 +90,7 @@ class EditWorkoutViewModel @Inject constructor(
         val name = (_uiState.value as EditWorkoutLoaded).name
         viewModelScope.launch {
             try {
-                if (exercises.isEmpty()) {
+                if (_exercises.isEmpty()) {
                     workoutTrackerPresenter.deleteWorkout(
                         workoutId = workoutId
                     )

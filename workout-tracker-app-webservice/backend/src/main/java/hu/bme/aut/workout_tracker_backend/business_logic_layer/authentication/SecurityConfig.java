@@ -1,7 +1,6 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.service.AuthenticationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

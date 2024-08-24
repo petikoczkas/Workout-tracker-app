@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -77,7 +78,9 @@ fun ChartsScreen(
                         selectedItem = (uiState as ChartsLoaded).selectedExercise,
                         onSelectedItemChange = viewModel::onSelectedExerciseChange,
                         exercises = viewModel.getUserExercises(exercises!!),
-                        modifier = Modifier.padding(bottom = workoutTrackerDimens.gapLarge)
+                        modifier = Modifier
+                            .padding(bottom = workoutTrackerDimens.gapLarge)
+                            .testTag("WorkoutTrackerNestedDropDownMenu")
                     )
                     TriStateToggle(
                         selectedOption = (uiState as ChartsLoaded).selectedChart,

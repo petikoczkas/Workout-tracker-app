@@ -7,6 +7,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 
@@ -20,5 +21,6 @@ fun WorkoutTrackerProgressIndicator(
             .fillMaxHeight()
             .wrapContentSize(align = Alignment.Center)
             .then(Modifier.size(size))
+            .testTag("WorkoutTrackerProgressIndicator")
     )
 }

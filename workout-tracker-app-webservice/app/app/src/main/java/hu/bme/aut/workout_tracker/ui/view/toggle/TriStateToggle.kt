@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.utils.Constants.chartsList
@@ -37,6 +38,7 @@ fun TriStateToggle(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .testTag("TriStateToggle")
     ) {
         Row(
             modifier = Modifier

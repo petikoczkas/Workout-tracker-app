@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,7 +63,9 @@ fun StandingsScreen(
                             )
                         },
                         items = exercises!!.map { it.name },
-                        modifier = Modifier.padding(bottom = workoutTrackerDimens.gapLarge)
+                        modifier = Modifier
+                            .padding(bottom = workoutTrackerDimens.gapLarge)
+                            .testTag("WorkoutTrackerDropDownMenu")
                     )
                     if ((uiState as StandingLoaded).selectedItem.id != -1) {
                         LazyColumn(

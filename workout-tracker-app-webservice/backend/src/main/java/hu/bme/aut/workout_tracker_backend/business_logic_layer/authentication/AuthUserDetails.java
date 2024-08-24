@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class AuthUserDetails implements UserDetails {
     private final String email;
     private final String password;
-    private List<GrantedAuthority> authorities;
+    private final List<GrantedAuthority> authorities;
 
 
     public AuthUserDetails(User user) {

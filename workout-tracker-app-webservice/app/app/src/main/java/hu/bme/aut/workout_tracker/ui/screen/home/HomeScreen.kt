@@ -52,7 +52,7 @@ fun HomeScreen(
                 IconButton(onClick = navigateToSettings) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_settings),
-                        contentDescription = null
+                        contentDescription = "Settings Icon"
                     )
                 }
             }

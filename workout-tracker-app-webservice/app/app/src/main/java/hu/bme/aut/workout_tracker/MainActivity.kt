@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startCheckServerStatusTask() {
-        if (serverStatusTimer != null) {
+        if (serverStatusTimer == null) {
             serverStatusTimer = Timer()
             serverStatusTimer?.schedule(object : TimerTask() {
                 override fun run() {

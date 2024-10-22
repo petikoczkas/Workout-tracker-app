@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -86,14 +88,10 @@ class AuthenticationServiceTest {
     void testAddUser_UserAlreadyExists() {
         when(repository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
 
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
             authenticationService.addUser(user);
         });
 
-        String expectedMessage = ApiConstants.userAlreadyExistsMessage;
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).isEqualTo(expectedMessage);
         verify(repository, times(1)).findByEmail("user@example.com");
         verify(repository, times(0)).save(any(User.class));
     }

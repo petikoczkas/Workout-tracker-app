@@ -1,11 +1,14 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.api.ApiConstants;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDTO;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,8 @@ public class UserService {
 
     public UserDTO getUser(String email) {
         val userWrapped = userRepository.findByEmail(email);
-        if (userWrapped.isEmpty()) throw new IllegalStateException("No such user");
+        if (userWrapped.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ApiConstants.userNotFoundWithEmailMessage + email);
         val user = userWrapped.get();
         var userDTO = new UserDTO();
         userDTO.setEmail(user.getEmail());
@@ -30,7 +34,8 @@ public class UserService {
 
     public void updateUser(UserDTO userDTO) {
         val userWrapped = userRepository.findByEmail(userDTO.getEmail());
-        if (userWrapped.isEmpty()) throw new IllegalStateException("No such user");
+        if (userWrapped.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ApiConstants.userNotFoundWithEmailMessage + userDTO.getEmail());
         var user = userWrapped.get();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());

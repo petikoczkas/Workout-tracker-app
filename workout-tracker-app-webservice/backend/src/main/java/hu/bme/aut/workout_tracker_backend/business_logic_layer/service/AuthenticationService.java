@@ -5,12 +5,13 @@ import hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication.Au
 import hu.bme.aut.workout_tracker_backend.data_layer.user.User;
 import hu.bme.aut.workout_tracker_backend.data_layer.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class AuthenticationService implements UserDetailsService {
     public String addUser(User user) {
         Optional<User> userByEmail = repository.findByEmail(user.getEmail());
         if (userByEmail.isPresent()) {
-            throw new IllegalStateException(ApiConstants.userAlreadyExistsMessage);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ApiConstants.userAlreadyExistsMessage);
         }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setPhoto(new byte[0]);

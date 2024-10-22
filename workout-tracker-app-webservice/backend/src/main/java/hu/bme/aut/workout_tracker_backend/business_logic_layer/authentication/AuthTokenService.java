@@ -23,7 +23,7 @@ public class AuthTokenService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -33,7 +33,7 @@ public class AuthTokenService {
         return generateToken(claims, email);
     }
 
-    public String generateToken(Map<String, Object> extractClaims, String email) {
+    private String generateToken(Map<String, Object> extractClaims, String email) {
         return Jwts
                 .builder()
                 .setClaims(extractClaims)
@@ -53,7 +53,7 @@ public class AuthTokenService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Date extractExpiration(String token) {
+    private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 

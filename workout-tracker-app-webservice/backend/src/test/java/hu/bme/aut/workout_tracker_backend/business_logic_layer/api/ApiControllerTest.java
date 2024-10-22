@@ -137,6 +137,7 @@ class ApiControllerTest {
         when(userService.getUser(eq("user@example.com"))).thenReturn(userDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getCurrentUser")
+                        .header("Authorization", "Bearer mock-token")
                         .param("email", "user@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", is("user@example.com")));
@@ -146,6 +147,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testUpdateUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/updateUser")
+                        .header("Authorization", "Bearer mock-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"user@example.com\", \"firstName\":\"First\", \"lastName\":\"Last\"}"))
                 .andExpect(status().isOk());
@@ -156,7 +158,7 @@ class ApiControllerTest {
     void testGetUsers() throws Exception {
         when(userService.getUsers()).thenReturn(Collections.singletonList(userDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/getUsers"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getUsers").header("Authorization", "Bearer mock-token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].email", is("user@example.com")));
@@ -167,7 +169,7 @@ class ApiControllerTest {
     void testGetExercises() throws Exception {
         when(exerciseService.getExercises()).thenReturn(Collections.singletonList(exercise));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/getExercises"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getExercises").header("Authorization", "Bearer mock-token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Exercise 1")));
@@ -178,7 +180,7 @@ class ApiControllerTest {
     void testGetStandingsExercises() throws Exception {
         when(exerciseService.getStandingsExercises()).thenReturn(Collections.singletonList(exercise));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/getStandingsExercises"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getStandingsExercises").header("Authorization", "Bearer mock-token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Exercise 1")));
@@ -188,6 +190,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testCreateExercise() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/createExercise")
+                        .header("Authorization", "Bearer mock-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Exercise 1\"}"))
                 .andExpect(status().isOk());
@@ -199,6 +202,7 @@ class ApiControllerTest {
         when(workoutService.getUserWorkouts(eq("user@example.com"))).thenReturn(Collections.singletonList(workoutDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserWorkouts")
+                        .header("Authorization", "Bearer mock-token")
                         .param("email", "user@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -211,6 +215,7 @@ class ApiControllerTest {
         when(workoutService.getUserFavoriteWorkouts(eq("user@example.com"))).thenReturn(Collections.singletonList(workoutDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserFavoriteWorkouts")
+                        .header("Authorization", "Bearer mock-token")
                         .param("email", "user@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -223,6 +228,7 @@ class ApiControllerTest {
         when(workoutService.getWorkout(eq(1L))).thenReturn(workoutDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getWorkout")
+                        .header("Authorization", "Bearer mock-token")
                         .param("id", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Workout 1")));
@@ -232,6 +238,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testUpdateWorkout() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/updateWorkout")
+                        .header("Authorization", "Bearer mock-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"name\":\"Workout 1\"}"))
                 .andExpect(status().isOk());
@@ -241,6 +248,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testDeleteWorkout() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/user/deleteWorkout")
+                        .header("Authorization", "Bearer mock-token")
                         .param("id", "1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -252,6 +260,7 @@ class ApiControllerTest {
                 .thenReturn(Collections.singletonList(savedExerciseDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserSavedExercises")
+                        .header("Authorization", "Bearer mock-token")
                         .param("email", "user@example.com"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
@@ -263,6 +272,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testUpdateSavedExercise() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/updateSavedExercise")
+                        .header("Authorization", "Bearer mock-token")
                         .contentType("application/json")
                         .content("{\"id\":1,\"userId\":\"user@example.com\",\"data\":[\"exerciseData\"]}"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -275,6 +285,7 @@ class ApiControllerTest {
                 .thenReturn(Collections.singletonList(chartDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserCharts")
+                        .header("Authorization", "Bearer mock-token")
                         .param("email", "user@example.com"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
@@ -289,7 +300,7 @@ class ApiControllerTest {
         when(chartService.getCharts())
                 .thenReturn(Collections.singletonList(chartDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/getCharts"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getCharts").header("Authorization", "Bearer mock-token"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value("user@example.com"))
@@ -301,6 +312,7 @@ class ApiControllerTest {
     @WithMockUser(authorities = "ROLE_USER")
     void testUpdateChart() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/updateChart")
+                        .header("Authorization", "Bearer mock-token")
                         .contentType("application/json")
                         .content("{\"id\":1,\"userId\":\"user@example.com\",\"type\":\"Volume\",\"data\":[10.0]}"))
                 .andExpect(MockMvcResultMatchers.status().isOk());

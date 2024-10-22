@@ -1,12 +1,15 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.api.ApiConstants;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.SavedExerciseDTO;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;
 import hu.bme.aut.workout_tracker_backend.data_layer.saved_exercise.SavedExercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.saved_exercise.SavedExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,7 @@ public class SavedExerciseService {
     public List<SavedExerciseDTO> getUserSavedExercises(String email) {
         val savedExercises = savedExerciseRepository.findByUserEmail(email);
         if (savedExercises.isEmpty()) {
-            throw new IllegalStateException("No such User");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ApiConstants.userNotFoundWithEmailMessage + email);
         }
         var data = new ArrayList<SavedExerciseDTO>();
         for (SavedExercise e : savedExercises.get()) {

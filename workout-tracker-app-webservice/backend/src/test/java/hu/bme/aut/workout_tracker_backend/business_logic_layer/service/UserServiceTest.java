@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +62,7 @@ class UserServiceTest {
     void testGetUserThrowsExceptionWhenNotFound() {
         when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> userService.getUser("user@example.com"));
+        assertThrows(ResponseStatusException.class, () -> userService.getUser("user@example.com"));
     }
 
     @Test
@@ -79,7 +81,7 @@ class UserServiceTest {
     void testUpdateUserThrowsExceptionWhenNotFound() {
         when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> userService.updateUser(userDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.updateUser(userDTO));
     }
 
     @Test

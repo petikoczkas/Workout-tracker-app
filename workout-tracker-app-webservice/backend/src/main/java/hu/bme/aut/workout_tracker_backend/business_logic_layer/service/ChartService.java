@@ -1,7 +1,6 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.ChartDTO;
-import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.UserDTO;
 import hu.bme.aut.workout_tracker_backend.data_layer.chart.Chart;
 import hu.bme.aut.workout_tracker_backend.data_layer.chart.ChartRepository;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;

@@ -41,11 +41,11 @@ import java.util.TimerTask
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private var serverStatusTimer: Timer? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startCheckServerStatusTask()
         setContent {
             WorkoutTrackerTheme {
                 Surface(
@@ -74,14 +74,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     if (hasPermission) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            this.startService(Intent(this, StepCounterService::class.java))
-                        }
+                        this.startService(Intent(this, StepCounterService::class.java))
                     }
 
                     val connection by connectivityState()
                     val isConnected = connection === ConnectionState.Available
                     NoInternetDialog(isConnected = isConnected)
+
+                    if (isConnected) startCheckServerStatusTask() else stopCheckServerStatusTask()
 
                     val serverStatus by viewModel.isServerAvailable.collectAsState()
                     viewModel.updateServerAvailability()
@@ -93,13 +93,20 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startCheckServerStatusTask() {
-        val timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                CoroutineScope(Dispatchers.Main).launch {
-                    viewModel.updateServerAvailability()
+        if (serverStatusTimer != null) {
+            serverStatusTimer = Timer()
+            serverStatusTimer?.schedule(object : TimerTask() {
+                override fun run() {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        viewModel.updateServerAvailability()
+                    }
                 }
-            }
-        }, 0, 10 * 1000) // Run every 10 seconds
+            }, 0, 10 * 1000) // Run every 10 seconds
+        }
+    }
+
+    private fun stopCheckServerStatusTask() {
+        serverStatusTimer?.cancel()
+        serverStatusTimer = null
     }
 }

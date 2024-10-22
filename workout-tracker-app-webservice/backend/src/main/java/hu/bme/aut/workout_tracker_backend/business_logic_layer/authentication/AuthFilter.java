@@ -30,7 +30,8 @@ public class AuthFilter  extends OncePerRequestFilter {
         String userEmail;
 
         if(authHeader == null ||!authHeader.startsWith(AuthConstants.authTokenPrefix)){
-            if(request.getRequestURI().contains("login") || request.getRequestURI().contains("register")){
+            String uri = request.getRequestURI();
+            if(uri.contains("login") || uri.contains("register") || uri.contains("isAvailable")){
                 filterChain.doFilter(request, response);
                 return;
             }

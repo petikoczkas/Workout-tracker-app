@@ -1,7 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -22,7 +20,6 @@ import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutScreen
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsScreen
 import hu.bme.aut.workout_tracker.ui.view.dialog.EndWorkoutDialog
 
-@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun MainNavGraph(
     mainNavController: NavHostController,

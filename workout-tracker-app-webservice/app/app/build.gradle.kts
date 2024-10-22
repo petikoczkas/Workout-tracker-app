@@ -23,7 +23,7 @@ android {
         }
         signingConfig = signingConfigs.getByName("debug")
 
-        buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.130:8080/\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.129:8080/\"")
     }
 
     buildTypes {

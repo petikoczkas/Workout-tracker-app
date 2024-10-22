@@ -1,7 +1,5 @@
 package hu.bme.aut.workout_tracker.ui.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -10,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import hu.bme.aut.workout_tracker.ui.screen.main.MainScreen
 
-@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun RootNavigationGraph(navController: NavHostController) {
     NavHost(

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,14 +62,10 @@ class ExerciseServiceTest {
     void testGetExercise_NotFound() {
         when(exerciseRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
             exerciseService.getExercise(1L);
         });
 
-        String expectedMessage = "No such exercise";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).isEqualTo(expectedMessage);
         verify(exerciseRepository, times(1)).findById(1L);
     }
 

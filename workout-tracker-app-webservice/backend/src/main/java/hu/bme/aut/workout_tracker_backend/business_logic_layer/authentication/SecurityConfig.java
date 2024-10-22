@@ -1,6 +1,7 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.authentication;
 
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.service.AuthenticationService;
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((auth) -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/isAvailable", "/register", "/login").permitAll()
                         .requestMatchers("/user/**").authenticated()
                 )

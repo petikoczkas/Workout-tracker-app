@@ -1,12 +1,15 @@
 package hu.bme.aut.workout_tracker_backend.business_logic_layer.service;
 
+import hu.bme.aut.workout_tracker_backend.business_logic_layer.api.ApiConstants;
 import hu.bme.aut.workout_tracker_backend.business_logic_layer.dto.WorkoutDTO;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.workout.Workout;
 import hu.bme.aut.workout_tracker_backend.data_layer.workout.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,7 @@ public class WorkoutService {
     public WorkoutDTO getWorkout(Long id) {
         val workoutWrapped = workoutRepository.findById(id);
         if (workoutWrapped.isEmpty()) {
-            throw new IllegalStateException("No such workout");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ApiConstants.workoutNotFound);
         }
 
         val workout = workoutWrapped.get();

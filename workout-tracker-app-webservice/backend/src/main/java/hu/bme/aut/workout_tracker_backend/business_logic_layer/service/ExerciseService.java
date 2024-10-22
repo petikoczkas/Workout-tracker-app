@@ -5,7 +5,9 @@ import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class ExerciseService {
     public Exercise getExercise(Long id) {
         val exercise = exerciseRepository.findById(id);
         if (exercise.isEmpty()) {
-            throw new IllegalStateException("No such exercise");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ApiConstants.exerciseNotFound);
         }
         return exercise.get();
     }

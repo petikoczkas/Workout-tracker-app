@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -91,7 +92,7 @@ class WorkoutServiceTest {
     @Test
     void testGetWorkoutThrowsExceptionWhenNotFound() {
         when(workoutRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(IllegalStateException.class, () -> workoutService.getWorkout(1L));
+        assertThrows(ResponseStatusException.class, () -> workoutService.getWorkout(1L));
     }
 
     @Test

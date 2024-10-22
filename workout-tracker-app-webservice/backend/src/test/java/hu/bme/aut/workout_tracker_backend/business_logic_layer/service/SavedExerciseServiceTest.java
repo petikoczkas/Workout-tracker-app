@@ -5,11 +5,13 @@ import hu.bme.aut.workout_tracker_backend.data_layer.exercise.Exercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.exercise.ExerciseRepository;
 import hu.bme.aut.workout_tracker_backend.data_layer.saved_exercise.SavedExercise;
 import hu.bme.aut.workout_tracker_backend.data_layer.saved_exercise.SavedExerciseRepository;
+import org.apache.coyote.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +94,6 @@ class SavedExerciseServiceTest {
     void testGetUserSavedExercisesThrowsExceptionWhenUserNotFound() {
         when(savedExerciseRepository.findByUserEmail("user@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> savedExerciseService.getUserSavedExercises("user@example.com"));
+        assertThrows(ResponseStatusException.class, () -> savedExerciseService.getUserSavedExercises("user@example.com"));
     }
 }

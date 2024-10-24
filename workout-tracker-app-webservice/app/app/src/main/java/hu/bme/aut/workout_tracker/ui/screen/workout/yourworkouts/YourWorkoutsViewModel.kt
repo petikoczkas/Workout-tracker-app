@@ -10,7 +10,7 @@ import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.yourworkouts.YourWorkoutsUiState.YourWorkoutsLoaded
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -15,8 +15,8 @@ import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsInit
 import hu.bme.aut.workout_tracker.ui.screen.charts.ChartsUiState.ChartsLoaded
-import hu.bme.aut.workout_tracker.utils.Constants
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +54,7 @@ class ChartsViewModel @Inject constructor(
     fun getExercises() {
         _uiState.value = ChartsLoaded(
             selectedExercise = Exercise(),
-            selectedChart = Constants.chartsList[0],
+            selectedChart = AppData.chartsList[0],
             showDialog = false
         )
         viewModelScope.launch {
@@ -71,15 +71,15 @@ class ChartsViewModel @Inject constructor(
 
     fun getSelectedChart(id: Int, chartName: String): ChartEntryModel {
         when (chartName) {
-            Constants.chartsList[0] -> {
+            AppData.chartsList[0] -> {
                 return getVolumeChartData(id)
             }
 
-            Constants.chartsList[1] -> {
+            AppData.chartsList[1] -> {
                 return getAverageOneRepMaxChartData(id)
             }
 
-            Constants.chartsList[2] -> {
+            AppData.chartsList[2] -> {
                 return getOneRepMaxChartData(id)
             }
         }

@@ -29,7 +29,7 @@ import hu.bme.aut.workout_tracker.ui.view.circularprogressindicator.WorkoutTrack
 import hu.bme.aut.workout_tracker.ui.view.dialog.AddExerciseDialog
 import hu.bme.aut.workout_tracker.ui.view.dialog.WorkoutTrackerAlertDialog
 import hu.bme.aut.workout_tracker.ui.view.dropdownmenu.WorkoutTrackerDropDownMenu
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
 
 @Composable
 fun AddExerciseScreen(
@@ -70,7 +70,7 @@ fun AddExerciseScreen(
                     WorkoutTrackerDropDownMenu(
                         selectedItem = (uiState as AddExerciseLoaded).selectedItem,
                         onSelectedItemChange = viewModel::onSelectedItemChange,
-                        items = Constants.BODY_PARTS,
+                        items = AppData.BODY_PARTS,
                         modifier = Modifier
                             .padding(horizontal = workoutTrackerDimens.gapNormal)
                             .testTag("WorkoutTrackerDropDownMenu")

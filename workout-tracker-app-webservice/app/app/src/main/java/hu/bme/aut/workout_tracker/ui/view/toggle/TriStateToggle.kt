@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerDimens
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
-import hu.bme.aut.workout_tracker.utils.Constants.chartsList
+import hu.bme.aut.workout_tracker.utils.AppData.chartsList
 
 @Composable
 fun TriStateToggle(

@@ -2,21 +2,26 @@ package hu.bme.aut.workout_tracker.ui.screen.charts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.google.common.truth.Truth.assertThat
 import hu.bme.aut.workout_tracker.data.model.Chart
 import hu.bme.aut.workout_tracker.data.model.ChartType
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import hu.bme.aut.workout_tracker.utils.Constants
-import io.mockk.*
+import hu.bme.aut.workout_tracker.utils.AppData
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import com.google.common.truth.Truth.assertThat
 
 @ExperimentalCoroutinesApi
 class ChartsViewModelTest {
@@ -97,7 +102,7 @@ class ChartsViewModelTest {
     @Test
     fun `test onSelectedChartChange updates state`() {
         viewModel.getExercises()
-        val dummyChart = Constants.chartsList[0]
+        val dummyChart = AppData.chartsList[0]
         viewModel.onSelectedChartChange(dummyChart)
 
         val uiState = viewModel.uiState.value
@@ -119,7 +124,7 @@ class ChartsViewModelTest {
         )
         coEvery { workoutTrackerPresenter.getUserCharts(any()) } returns listOf(dummyChart)
 
-        val chartData = viewModel.getSelectedChart(1, Constants.chartsList[0])
+        val chartData = viewModel.getSelectedChart(1, AppData.chartsList[0])
         assertThat(chartData.entries[0].size).isEqualTo(1)
     }
 }

@@ -9,7 +9,7 @@ import hu.bme.aut.workout_tracker.data.model.Exercise
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "savedData")
 
-object Constants {
+object AppData {
     val TOKEN = stringPreferencesKey("token")
     val USER_EMAIL = stringPreferencesKey("userEmail")
 

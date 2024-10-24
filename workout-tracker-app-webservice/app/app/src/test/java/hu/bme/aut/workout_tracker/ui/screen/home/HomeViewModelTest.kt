@@ -8,7 +8,7 @@ import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +62,7 @@ class HomeViewModelTest {
         val exercises = listOf(Exercise())
 
         coEvery { workoutTrackerPresenter.getCurrentUser() } returns user
-        coEvery { workoutTrackerPresenter.getUserCharts(Constants.currentUserEmail) } returns charts
+        coEvery { workoutTrackerPresenter.getUserCharts(AppData.currentUserEmail) } returns charts
         coEvery { workoutTrackerPresenter.getStandingsExercises() } returns exercises
 
         viewModel.init()
@@ -76,7 +76,7 @@ class HomeViewModelTest {
     fun `test getFavoriteWorkouts fetches favorite workouts`() = runTest {
         val favoriteWorkouts = listOf(Workout())
 
-        coEvery { workoutTrackerPresenter.getUserFavoriteWorkouts(Constants.currentUserEmail) } returns favoriteWorkouts
+        coEvery { workoutTrackerPresenter.getUserFavoriteWorkouts(AppData.currentUserEmail) } returns favoriteWorkouts
 
         viewModel.getFavoriteWorkouts()
 
@@ -108,7 +108,7 @@ class HomeViewModelTest {
         )
 
         coEvery { workoutTrackerPresenter.getCurrentUser() } returns User()
-        coEvery { workoutTrackerPresenter.getUserCharts(Constants.currentUserEmail) } returns charts
+        coEvery { workoutTrackerPresenter.getUserCharts(AppData.currentUserEmail) } returns charts
 
         viewModel.init()
 

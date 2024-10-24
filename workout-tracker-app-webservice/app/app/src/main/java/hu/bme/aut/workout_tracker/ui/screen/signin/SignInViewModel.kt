@@ -11,10 +11,10 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInInit
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInLoaded
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState.SignInSuccess
-import hu.bme.aut.workout_tracker.utils.Constants.TOKEN
-import hu.bme.aut.workout_tracker.utils.Constants.USER_EMAIL
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
-import hu.bme.aut.workout_tracker.utils.Constants.token
+import hu.bme.aut.workout_tracker.utils.AppData.TOKEN
+import hu.bme.aut.workout_tracker.utils.AppData.USER_EMAIL
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData.token
 import hu.bme.aut.workout_tracker.utils.isValidEmail
 import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.flow.MutableStateFlow

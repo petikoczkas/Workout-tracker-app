@@ -7,12 +7,24 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.*
-import org.junit.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -41,13 +53,13 @@ class AddExerciseViewModelTest {
         viewModel = AddExerciseViewModel(mockPresenter)
         coEvery { mockPresenter.getWorkout(any()) } returns workout
         coEvery { mockPresenter.getExercises() } returns exercises
-        mockkStatic("hu.bme.aut.workout_tracker.utils.Constants")
+        mockkStatic("hu.bme.aut.workout_tracker.utils.AppData")
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        unmockkStatic("hu.bme.aut.workout_tracker.utils.Constants")
+        unmockkStatic("hu.bme.aut.workout_tracker.utils.AppData")
     }
 
     @Test

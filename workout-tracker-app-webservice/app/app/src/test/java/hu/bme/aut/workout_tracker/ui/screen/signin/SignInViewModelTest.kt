@@ -1,16 +1,22 @@
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import io.mockk.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.*
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import com.google.common.truth.Truth.assertThat
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInUiState
 import hu.bme.aut.workout_tracker.ui.screen.signin.SignInViewModel
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -79,21 +85,21 @@ class SignInViewModelTest {
 
     @Test
     fun `isLoggedIn should return true when token and currentUserEmail are not empty`() {
-        Constants.token = "Bearer test-token"
-        Constants.currentUserEmail = "test@example.com"
+        AppData.token = "Bearer test-token"
+        AppData.currentUserEmail = "test@example.com"
 
         assertThat(viewModel.isLoggedIn()).isTrue()
     }
 
     @Test
     fun `isLoggedIn should return false when token or currentUserEmail are empty`() {
-        Constants.token = ""
-        Constants.currentUserEmail = "test@example.com"
+        AppData.token = ""
+        AppData.currentUserEmail = "test@example.com"
 
         assertThat(viewModel.isLoggedIn()).isFalse()
 
-        Constants.token = "Bearer test-token"
-        Constants.currentUserEmail = ""
+        AppData.token = "Bearer test-token"
+        AppData.currentUserEmail = ""
 
         assertThat(viewModel.isLoggedIn()).isFalse()
     }

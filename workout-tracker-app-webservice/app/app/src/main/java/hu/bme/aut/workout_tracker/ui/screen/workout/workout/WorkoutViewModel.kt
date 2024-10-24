@@ -14,8 +14,8 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutLoadedUiState.Loaded
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.workout.WorkoutUiState.WorkoutLoaded
-import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData.addedExercises
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

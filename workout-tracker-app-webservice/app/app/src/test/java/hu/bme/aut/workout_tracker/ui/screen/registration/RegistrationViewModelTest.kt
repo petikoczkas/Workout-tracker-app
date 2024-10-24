@@ -1,21 +1,13 @@
 package hu.bme.aut.workout_tracker.ui.screen.registration
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import com.google.common.truth.Truth.assertThat
-import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import hu.bme.aut.workout_tracker.utils.Constants
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest

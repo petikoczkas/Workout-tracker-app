@@ -13,7 +13,7 @@ import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsInit
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsLoaded
 import hu.bme.aut.workout_tracker.ui.screen.settings.SettingsUiState.SettingsSaved
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
 import hu.bme.aut.workout_tracker.utils.dataStore
 import hu.bme.aut.workout_tracker.utils.getByteArray
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -104,8 +104,8 @@ class SettingsViewModel @Inject constructor(
     fun signOut(context: Context) {
         viewModelScope.launch {
             context.dataStore.edit {
-                it[Constants.TOKEN] = ""
-                it[Constants.USER_EMAIL] = ""
+                it[AppData.TOKEN] = ""
+                it[AppData.USER_EMAIL] = ""
             }
         }
         workoutTrackerPresenter.signOut()

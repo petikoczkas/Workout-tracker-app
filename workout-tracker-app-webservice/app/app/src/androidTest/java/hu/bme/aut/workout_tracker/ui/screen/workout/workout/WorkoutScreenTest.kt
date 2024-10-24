@@ -12,7 +12,7 @@ import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.theme.WorkoutTrackerTheme
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

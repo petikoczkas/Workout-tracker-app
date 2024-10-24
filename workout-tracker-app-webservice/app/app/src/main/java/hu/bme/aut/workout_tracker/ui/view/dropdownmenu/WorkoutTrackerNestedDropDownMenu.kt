@@ -19,7 +19,7 @@ import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.data.model.Exercise
 import hu.bme.aut.workout_tracker.ui.theme.workoutTrackerTypography
 import hu.bme.aut.workout_tracker.ui.view.textfield.WorkoutTrackerTextField
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +36,7 @@ fun WorkoutTrackerNestedDropDownMenu(
         mutableStateOf(false)
     }
     var selectedParent by remember {
-        mutableStateOf(Constants.BODY_PARTS[0])
+        mutableStateOf(AppData.BODY_PARTS[0])
     }
 
     ExposedDropdownMenuBox(
@@ -63,7 +63,7 @@ fun WorkoutTrackerNestedDropDownMenu(
             onDismissRequest = { parentExpanded = false },
             modifier = Modifier.exposedDropdownSize()
         ) {
-            Constants.BODY_PARTS.forEach { selectedOption ->
+            AppData.BODY_PARTS.forEach { selectedOption ->
                 DropdownMenuItem(
                     text = {
                         Text(

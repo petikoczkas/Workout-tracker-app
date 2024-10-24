@@ -13,8 +13,8 @@ import hu.bme.aut.workout_tracker.data.model.auth.UserAuthLogin
 import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import hu.bme.aut.workout_tracker.data.util.ByteArrayAdapter
 import hu.bme.aut.workout_tracker.data.util.ResultConverterFactory
-import hu.bme.aut.workout_tracker.utils.Constants.currentUserEmail
-import hu.bme.aut.workout_tracker.utils.Constants.token
+import hu.bme.aut.workout_tracker.utils.AppData.currentUserEmail
+import hu.bme.aut.workout_tracker.utils.AppData.token
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,12 +37,12 @@ class WorkoutTrackerInteractor @Inject constructor() {
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
-        val intercepter = HttpLoggingInterceptor().apply {
+        val interceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
         }
 
         val client = OkHttpClient.Builder().apply {
-            this.addInterceptor(intercepter)
+            this.addInterceptor(interceptor)
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)

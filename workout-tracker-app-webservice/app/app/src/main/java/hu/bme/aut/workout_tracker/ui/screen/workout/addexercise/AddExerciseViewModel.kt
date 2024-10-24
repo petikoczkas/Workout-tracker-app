@@ -12,8 +12,8 @@ import hu.bme.aut.workout_tracker.data.model.Workout
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseInit
 import hu.bme.aut.workout_tracker.ui.screen.workout.addexercise.AddExerciseUiState.AddExerciseLoaded
-import hu.bme.aut.workout_tracker.utils.Constants.BODY_PARTS
-import hu.bme.aut.workout_tracker.utils.Constants.addedExercises
+import hu.bme.aut.workout_tracker.utils.AppData.BODY_PARTS
+import hu.bme.aut.workout_tracker.utils.AppData.addedExercises
 import hu.bme.aut.workout_tracker.utils.capitalizeWords
 import hu.bme.aut.workout_tracker.utils.removeEmptyLines
 import kotlinx.coroutines.flow.MutableStateFlow

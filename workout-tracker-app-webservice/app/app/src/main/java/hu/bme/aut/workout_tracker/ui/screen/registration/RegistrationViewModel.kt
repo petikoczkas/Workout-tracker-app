@@ -10,7 +10,7 @@ import hu.bme.aut.workout_tracker.data.model.auth.UserAuthRegister
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
 import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationLoaded
 import hu.bme.aut.workout_tracker.ui.screen.registration.RegistrationUiState.RegistrationSuccess
-import hu.bme.aut.workout_tracker.utils.Constants
+import hu.bme.aut.workout_tracker.utils.AppData
 import hu.bme.aut.workout_tracker.utils.isValidEmail
 import hu.bme.aut.workout_tracker.utils.isValidPassword
 import hu.bme.aut.workout_tracker.utils.passwordMatches
@@ -83,9 +83,9 @@ class RegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             dataStore.data
                 .map { preferences ->
-                    preferences[Constants.USER_EMAIL] ?: ""
+                    preferences[AppData.USER_EMAIL] ?: ""
                 }.collect {
-                    Constants.currentUserEmail = it
+                    AppData.currentUserEmail = it
                 }
         }
     }
@@ -94,10 +94,10 @@ class RegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             dataStore.data
                 .map { preferences ->
-                    preferences[Constants.TOKEN] ?: ""
+                    preferences[AppData.TOKEN] ?: ""
                 }.collect {
-                    if (Constants.token.isEmpty()) {
-                        Constants.token = it
+                    if (AppData.token.isEmpty()) {
+                        AppData.token = it
                     }
                 }
         }
@@ -119,8 +119,8 @@ class RegistrationViewModel @Inject constructor(
             onSuccess = { token ->
                 viewModelScope.launch {
                     dataStore.edit {
-                        it[Constants.TOKEN] = "Bearer $token"
-                        it[Constants.USER_EMAIL] = email
+                        it[AppData.TOKEN] = "Bearer $token"
+                        it[AppData.USER_EMAIL] = email
                     }
                 }
                 _uiState.value = RegistrationSuccess

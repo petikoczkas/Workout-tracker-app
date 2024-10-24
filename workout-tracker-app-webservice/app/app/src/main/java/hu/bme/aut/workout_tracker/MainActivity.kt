@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
 
                     val serverStatus by viewModel.isServerAvailable.collectAsState()
                     viewModel.updateServerAvailability()
-                    NoServerConnectionDialog(isAvailable = serverStatus)
+                    if (isConnected) NoServerConnectionDialog(isAvailable = serverStatus)
                     RootNavigationGraph(navController = rememberNavController())
                 }
             }

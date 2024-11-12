@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
             serverStatusTimer = Timer()
             serverStatusTimer?.schedule(object : TimerTask() {
                 override fun run() {
-                    CoroutineScope(Dispatchers.Main).launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         viewModel.updateServerAvailability()
                     }
                 }

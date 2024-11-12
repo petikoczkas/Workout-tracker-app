@@ -111,7 +111,9 @@ class ApiControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"user@example.com\", \"password\":\"password\", \"roles\":\"ROLE_USER\"}"))
+                        .content("{\"email\":\"user@example.com\", " +
+                                "\"password\":\"password\", " +
+                                "\"roles\":\"ROLE_USER\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User added"));
     }

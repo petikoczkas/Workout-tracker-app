@@ -14,9 +14,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
-import androidx.annotation.RequiresApi
 import hu.bme.aut.workout_tracker.R
 import hu.bme.aut.workout_tracker.ui.widget.StepCounterWidgetReceiver
 import java.util.Calendar
@@ -26,15 +24,14 @@ class StepCounterService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private val stepCounterWidgetReceiver = StepCounterWidgetReceiver()
     private var stepSensor: Sensor? = null
-    private var currentStepCount = 0
-    private var initialStepCount = 0
+    var currentStepCount = 0
+    var initialStepCount = 0
 
     companion object {
         private const val PREFS_NAME = "StepCounterPrefs"
         private const val KEY_INITIAL_STEP_COUNT = "initialStepCount"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         registerReceiver(
@@ -79,14 +76,9 @@ class StepCounterService : Service(), SensorEventListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun startForegroundService() {
         val channelId =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel("step_counter_service", "Step Counter Service")
-            } else {
-                ""
-            }
+            createNotificationChannel("step_counter_service", "Step Counter Service")
 
         val notification = Notification.Builder(this, channelId)
             .setContentTitle("Step Counter Service")
@@ -101,7 +93,6 @@ class StepCounterService : Service(), SensorEventListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(channelId: String, channelName: String): String {
         val channel =
             NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
@@ -152,19 +143,10 @@ class StepCounterService : Service(), SensorEventListener {
         initialStepCount = sharedPreferences.getInt(KEY_INITIAL_STEP_COUNT, 0)
     }
 
-    class ResetReceiver : BroadcastReceiver() {
+    inner class ResetReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (context != null) {
-                val sharedPreferences =
-                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                with(sharedPreferences.edit()) {
-                    putInt(KEY_INITIAL_STEP_COUNT, 0)
-                    apply()
-                }
-                val serviceIntent = Intent(context, StepCounterService::class.java)
-                context.stopService(serviceIntent)
-                context.startService(serviceIntent)
-            }
+            initialStepCount += currentStepCount
+            saveInitialStepCount()
         }
     }
 }

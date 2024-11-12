@@ -116,6 +116,8 @@ dependencies {
     testImplementation("com.squareup.retrofit2:converter-gson:2.9.0")
     testImplementation("org.robolectric:robolectric:4.6.1")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.powermock:powermock-api-mockito:1.4.12")
+    testImplementation("org.powermock:powermock-module-junit4:1.6.2")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

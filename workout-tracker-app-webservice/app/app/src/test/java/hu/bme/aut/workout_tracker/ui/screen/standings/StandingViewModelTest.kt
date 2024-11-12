@@ -2,14 +2,25 @@ package hu.bme.aut.workout_tracker.ui.screen.standings
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import hu.bme.aut.workout_tracker.data.model.*
+import hu.bme.aut.workout_tracker.data.model.Chart
+import hu.bme.aut.workout_tracker.data.model.ChartType
+import hu.bme.aut.workout_tracker.data.model.Exercise
+import hu.bme.aut.workout_tracker.data.model.User
 import hu.bme.aut.workout_tracker.ui.WorkoutTrackerPresenter
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.*
-import org.junit.*
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -22,7 +33,7 @@ class StandingViewModelTest {
 
     private lateinit var viewModel: StandingViewModel
     private val mockPresenter = mockk<WorkoutTrackerPresenter>(relaxed = true)
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
     private val currentUser = User(email = "test@example.com", firstName = "John", lastName = "Doe", photo = byteArrayOf())
     private val charts = listOf(
         Chart(
